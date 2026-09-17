@@ -296,7 +296,7 @@ are scored by word recall against the publisher's text layer, to catch silently 
 list-item recall, <b>table cell F1</b>, CER after stripping Markdown, and s/page. Candidates include the libraries themselves <i>and this service
 end to end through its API</i>, with both pipelines.</p>
 <table>
-  <tr><th>Candidate</th><th class="n">Heading F1</th><th class="n">List recall</th><th class="n">Table F1</th><th class="n">CER</th><th class="n">s/page</th><th class="n">Real docs BoW F1 (min)</th><th class="n">Peak RSS</th><th>Licence</th></tr>
+  <tr><th style="width:27%">Candidate</th><th class="n">Heading F1</th><th class="n">List recall</th><th class="n">Table F1</th><th class="n">CER</th><th class="n">s/page</th><th class="n">Real docs BoW F1 (min)</th><th class="n">Peak RSS</th><th>Licence</th></tr>
   <tr><td>PyMuPDF <code>get_text</code> (baseline)</td><td class="n">0.00</td><td class="n">0.42</td><td class="n">0.00</td><td class="n">0.700</td><td class="n">0.002</td><td class="n">1.00 (1.00)</td><td class="n">55 MB</td><td>AGPL / commercial</td></tr>
   <tr><td>pymupdf4llm 0.0.24 (+ coverage guard)</td><td class="n">0.41</td><td class="n">0.44</td><td class="n">0.32</td><td class="n">0.668</td><td class="n">0.025</td><td class="n">0.98 (0.95)</td><td class="n">82 MB</td><td>AGPL / commercial</td></tr>
   <tr><td>pymupdf4llm 1.28 (+ layout model)</td><td class="n">0.82</td><td class="n">1.00</td><td class="n">0.34</td><td class="n">0.453</td><td class="n">0.446</td><td class="n">0.98 (0.96)</td><td class="n">869 MB</td><td>AGPL / commercial</td></tr>
@@ -305,10 +305,8 @@ end to end through its API</i>, with both pipelines.</p>
   <tr><td><b>DocIntel service, standard pipeline</b></td><td class="n">0.87</td><td class="n">0.90</td><td class="n">0.50</td><td class="n">0.238</td><td class="n">0.80</td><td class="n">0.98 (0.96)</td><td class="n">–</td><td>this project</td></tr>
   <tr><td><b>DocIntel service, layout pipeline</b></td><td class="n best">1.00</td><td class="n best">1.00</td><td class="n best">1.00</td><td class="n best">0.009</td><td class="n">7.74</td><td class="n">0.98 (0.95)</td><td class="n">–</td><td>this project</td></tr>
 </table>
-<div class="grid2">
-  <figure><img src="../benchmark/results/structure/structure_by_doc_type.png" alt="Structure by document type"><figcaption><b>Figure 8.</b> Table cell F1 and heading F1 per document type.
+<figure><img src="../benchmark/results/structure/structure_by_doc_type.png" alt="Structure by document type"><figcaption><b>Figure 8.</b> Table cell F1 and heading F1 per document type.
   Macro scores include scans, where tools without OCR score 0.</figcaption></figure>
-  <div>
     <table>
       <tr><th>Heading F1 / table F1</th><th class="n">digital PDF</th><th class="n">scanned PDF</th><th class="n">photo</th><th class="n">DOCX</th></tr>
       <tr><td>pymupdf4llm 0.0.24</td><td class="n">0.81 / 0.95</td><td class="n">0 / 0</td><td class="n">– / 0</td><td class="n">n/a</td></tr>
@@ -321,8 +319,7 @@ end to end through its API</i>, with both pipelines.</p>
     The fixes (baseline merging, XY-cut ordering, unruled-table detection, wrapped-heading merge, OCR heading detection) raised digital-PDF
     list recall to 1.00, table F1 from 0.96 to 1.00, two-column CER to 0.000 and scanned heading F1 from 0.00 to 0.62. Real documents kept a word
     recall of 0.96 or better throughout.</p>
-  </div>
-</div>
+  
 
 <h3>5.4 Decisions</h3>
 <div class="grid2">
@@ -421,12 +418,29 @@ Duplicate deliveries, redelivered messages and re-dispatches find the row not cl
 
 <h3>Chaos test results</h3>
 <p><code>scripts/chaos_test.py</code> injects each failure into the running compose stack and asserts the outcome through the public API only.</p>
-<!--CHAOS-->
+<table><tr><th style="width:17%">Scenario</th><th style="width:7%">Result</th><th style="width:24%">Expected</th><th>Observed (from the public API)</th><th class="n">Time</th></tr>
+<tr><td><code>rejected_inputs</code></td><td><span class=pass>✓ PASS</span></td><td class="small">unsupported/empty → 4xx at upload; damaged files → terminal state with explicit error code (repairable PDFs succeed with a warning)</td><td class="small">program.exe → HTTP 415; archive.zip → HTTP 415; empty.txt → HTTP 400; binary_named_as.txt → HTTP 415; corrupted.pdf → SUCCEEDED (warnings: 3); garbage.pdf → FAILED CORRUPTED_FILE; truncated.jpg → FAILED CORRUPTED_FILE; encrypted.pdf → FAILED ENCRYPTED_DOCUMENT; huge_400mp.png → FAILED LIMIT_EXCEEDED</td><td class="n">5s</td></tr>
+<tr><td><code>worker_kill</code></td><td><span class=pass>✓ PASS</span></td><td class="small">job re-queued after heartbeat timeout and SUCCEEDED on attempt 2</td><td class="small">SUCCEEDED after 2 attempts; recovered+finished 109s after kill; events: received → dispatched → started → worker_lost → dispatched → started → succeeded</td><td class="n">119s</td></tr>
+<tr><td><code>cancel_running</code></td><td><span class=pass>✓ PASS</span></td><td class="small">a running job stops at the next page and ends CANCELLED</td><td class="small">CANCELLED at 11%</td><td class="n">6s</td></tr>
+<tr><td><code>broker_data_loss</code></td><td><span class=pass>✓ PASS</span></td><td class="small">sweeper detects jobs missing from the broker and re-dispatches them</td><td class="small">[&#x27;SUCCEEDED&#x27;, &#x27;SUCCEEDED&#x27;, &#x27;SUCCEEDED&#x27;] in 61s; message_missing events: True</td><td class="n">64s</td></tr>
+<tr><td><code>broker_down_on_upload</code></td><td><span class=pass>✓ PASS</span></td><td class="small">upload still accepted (202); job dispatched automatically when the broker returns</td><td class="small">HTTP 202; final SUCCEEDED; events: received → dispatched → dispatch_failed → message_missing → dispatched → started → succeeded</td><td class="n">18s</td></tr>
+<tr><td><code>storage_down_during_processing</code></td><td><span class=pass>✓ PASS</span></td><td class="small">job goes RETRYING with backoff, then SUCCEEDED; uploads during the outage get 503 STORAGE_UNAVAILABLE</td><td class="small">upload during outage → HTTP 503 STORAGE_UNAVAILABLE; job SUCCEEDED after 2 attempts; events: received → dispatched → started → retry_scheduled → dispatched → started → succeeded</td><td class="n">18s</td></tr>
+<tr><td><code>database_down</code></td><td><span class=pass>✓ PASS</span></td><td class="small">HTTP 503 DATABASE_UNAVAILABLE while down, /v1/system reports degraded, recovers automatically</td><td class="small">/v1/jobs → 503 DATABASE_UNAVAILABLE; /v1/system → 503 [&#x27;Database unavailable: uploads and status queries will fail until it recovers.&#x27;]; after restart → 200</td><td class="n">11s</td></tr>
+<tr><td><code>document_missing</code></td><td><span class=pass>✓ PASS</span></td><td class="small">FAILED DOCUMENT_MISSING on the first attempt (retrying cannot help)</td><td class="small">FAILED DOCUMENT_MISSING (attempts 1)</td><td class="n">5s</td></tr>
+<tr><td><code>cancel_while_worker_dead</code></td><td><span class=pass>✓ PASS</span></td><td class="small">CANCELLED by the sweeper once the heartbeat is stale (no re-queue)</td><td class="small">CANCELLED (attempts 1); events: received → dispatched → started → cancel_requested → cancelled</td><td class="n">68s</td></tr>
+<tr><td><code>queue_expiry</code></td><td><span class=pass>✓ PASS</span></td><td class="small">QUEUED job older than the queue TTL → FAILED EXPIRED</td><td class="small">sweep {&#x27;requeued&#x27;: 0, &#x27;failed&#x27;: 0, &#x27;redispatched&#x27;: 0, &#x27;expired&#x27;: 1, &#x27;broker_checked&#x27;: True} → FAILED EXPIRED</td><td class="n">35s</td></tr>
+<tr><td><code>processing_timeout</code></td><td><span class=pass>✓ PASS</span></td><td class="small">FAILED TIMEOUT with actionable advice; no retry loop</td><td class="small">FAILED TIMEOUT after 5.28s, attempts 1: Processing exceeded the time limit (5s). Large scanned documents are slow to OCR: split the document</td><td class="n">39s</td></tr>
+<tr><td><code>poison_pill</code></td><td><span class=pass>✓ PASS</span></td><td class="small">after 3 crashed attempts the job ends FAILED WORKER_LOST with an explanation</td><td class="small">3 kills → FAILED WORKER_LOST after 3 attempts: The worker processing this document stopped responding (last heartbeat 56s ago) on 3 of 3 attempts. This usually means t</td><td class="n">185s</td></tr>
+<tr><td><code>stack_kill</code></td><td><span class=pass>✓ PASS</span></td><td class="small">every job (queued, running, finished) reaches SUCCEEDED after a full restart</td><td class="small">scanned_report_30p.pdf: PROCESSING→SUCCEEDED (attempts 2); scanned_letter.pdf: SUCCEEDED→SUCCEEDED (attempts 1); mixed_text_and_scan.pdf: PROCESSING→SUCCEEDED (attempts 2); report.docx: SUCCEEDED→SUCCEEDED (attempts 1); invoice_photo.jpg: QUEUED→SUCCEEDED (attempts 1)</td><td class="n">107s</td></tr>
+</table><p class="small">13/13 passed, run (2026-09-16 23:11) on the compose stack (arm64, OrbStack, layout profile running). Worker loss is detected after 45 s without a heartbeat and the sweeper runs every 20 s, so recovery includes up to ~65 s of detection plus the re-run. The <code>processing_timeout</code> scenario first <b>failed</b> during development: a soft limit wrapped by ONNX Runtime was retried 3× as an internal error. That bug was fixed. <code>document_missing</code> and <code>cancel_while_worker_dead</code> cover two bugs found in the audit.</p>
 
 <h3>Burst load test</h3>
 <p><code>scripts/load_test.py</code> uploads a mixed burst of documents with 16 parallel clients, so documents arrive faster than they can be processed. It then checks that every job
 terminates, and that cheap documents are not starved by the OCR backlog.</p>
-<!--LOAD-->
+<ul class="small"><li>Documents uploaded: <b>122</b> by 16 parallel clients; accepted <b>122</b> in 1.0 s (upload latency p50 116 ms, p95 238 ms).</li><li>Terminal states: {&#x27;SUCCEEDED&#x27;: 122}; still pending after the deadline: <b>0</b>.</li><li>All jobs drained in <b>50 s</b>: 175 pages, 28,133 LLM tokens, throughput 145 documents/min.</li></ul>
+<table><tr><th>Queue</th><th class="n">Jobs</th><th class="n">Wait p50 (s)</th><th class="n">Wait p95 (s)</th><th class="n">Wait max (s)</th><th class="n">Mean processing (s)</th><th class="n">Peak depth</th></tr><tr><td><code>heavy</code></td><td class="n">59</td><td class="n">35.3</td><td class="n">39.5</td><td class="n">41.8</td><td class="n">1.46</td><td class="n">57</td></tr><tr><td><code>light</code></td><td class="n">63</td><td class="n">0.6</td><td class="n">0.8</td><td class="n">0.8</td><td class="n">0.07</td><td class="n">49</td></tr></table>
+<p class="small"><b>Reading.</b> Uploads stay fast because the API only stores the file and a row. The OCR queue backs up, which is expected with 2 OCR processes on a laptop.
+Meanwhile the light queue keeps sub-second waits: routing by cost protects cheap documents. Throughput scales linearly with <code>--scale worker-heavy=N</code>.</p>
 
 <!-- ============================================================ 8 -->
 <h2>8. Part 6 · Monitoring &amp; UI</h2>
@@ -454,11 +468,13 @@ from a clean checkout. That proves the single-command setup on a machine other t
   <tr><td>Unit (<code>pytest</code>, app image)</td><td>format detection and spoofing, every extractor (text and Markdown), OCR engines, rotation, e-mail attachments, embedded-image OCR, chunker invariants, typed errors</td><td class="n">47</td><td class="pass">✓ all pass</td></tr>
   <tr><td>Unit (layout image)</td><td>Docling pipeline: scanned table rebuilt, digital PDF, image, non-applicable formats</td><td class="n">3 (+15 shared)</td><td class="pass">✓ all pass</td></tr>
   <tr><td>Integration (<code>tests/integration</code>)</td><td>through HTTP: 17 formats end to end (text, Markdown, chunks, JSONL, result, events); 415/400/413/422 errors; failed-file messages; warnings; dedup cache; cancel and retry; webhook delivery; filters; downloads; system/formats/stats/UI; layout pipeline</td><td class="n">40</td><td class="pass">✓ all pass</td></tr>
-  <tr><td>Chaos (<code>scripts/chaos_test.py</code>)</td><td>13 failure injections (table in §7)</td><td class="n">13</td><td><!--CHAOSSUMMARY--></td></tr>
-  <tr><td>Load (<code>scripts/load_test.py</code>)</td><td>mixed burst; all terminal; upload latency; queue isolation</td><td class="n">1</td><td><!--LOADSUMMARY--></td></tr>
+  <tr><td>Chaos (<code>scripts/chaos_test.py</code>)</td><td>13 failure injections (table in §7)</td><td class="n">13</td><td><span class="pass">✓ 13/13 pass</span></td></tr>
+  <tr><td>Load (<code>scripts/load_test.py</code>)</td><td>mixed burst; all terminal; upload latency; queue isolation</td><td class="n">1</td><td><span class="pass">✓ pass</span> (122/122 succeeded)</td></tr>
   <tr><td>Benchmarks A and B</td><td>parser/OCR accuracy and structure, with the service measured end to end</td><td class="n">–</td><td>reproducible with <code>docker run</code></td></tr>
-  <tr><td>CI (GitHub Actions, x86_64)</td><td>build → unit → <code>docker compose up --wait</code> → integration → 9 chaos scenarios → load test</td><td class="n">–</td><td><!--CI--></td></tr>
+  <tr><td>CI (GitHub Actions, x86_64)</td><td>build → unit → <code>docker compose up --wait</code> → integration → 9 chaos scenarios → load test</td><td class="n">–</td><td><span class="pass">✓ green</span> (run 35184845357, 12 min): unit 47, integration 39 + 1 skipped (layout profile not started in CI), chaos 9/9, load 59/59</td></tr>
 </table>
+<p class="small">On the CI runner (2–4 shared vCPUs, no warm caches) the load test also passed. The light-queue wait was higher there (p95 9.4 s against 0.8 s on the laptop)
+because every container shares those few cores, but no job was lost or left pending.</p>
 
 <table>
   <tr><th style="width:30%">Requirement (assignment)</th><th style="width:40%">Implementation</th><th>Evidence</th></tr>
@@ -502,15 +518,22 @@ workers on queue depth (e.g. KEDA).</p>
 
 <!-- ============================================================ 10 -->
 <h2>11. Appendix · How to run &amp; reproduce</h2>
-<pre>docker compose up --build              # api :8000 (UI, /dashboard, /docs) · flower :5555 · minio :9001
-docker compose --profile layout up -d --build          # optional high-fidelity pipeline (Docling worker)
-docker compose --profile test run --rm tests           # 40 integration tests against the running stack
-python3 scripts/load_test.py                           # burst load test → docs/load_test_results.md
-docker compose run --rm --no-deps api pytest -q      # 47 unit tests
-python3 scripts/chaos_test.py                        # failure injection → docs/chaos_results.md
-docker build -t docintel-bench benchmark/ &amp;&amp; docker run --rm -v "$PWD/benchmark":/bench docintel-bench     # benchmark A
-docker build -f benchmark/Dockerfile.structure -t docintel-bench-structure benchmark/                       # benchmark B
-docker run --rm --add-host host.docker.internal:host-gateway -v "$PWD/benchmark":/bench docintel-bench-structure python run_structure_benchmark.py</pre>
+<pre># run (api :8000 with UI, /dashboard and /docs · flower :5555 · minio :9001)
+docker compose up --build
+docker compose --profile layout up -d --build            # optional Docling worker
+
+# verify
+docker compose run --rm --no-deps api pytest -q         # 47 unit tests
+docker compose --profile test run --rm tests            # 40 integration tests (live stack)
+python3 scripts/chaos_test.py                           # 13 failure injections
+python3 scripts/load_test.py                            # burst load test
+
+# benchmarks
+docker build -t docintel-bench benchmark/
+docker run --rm -v "$PWD/benchmark":/bench docintel-bench                       # A
+docker build -f benchmark/Dockerfile.structure -t docintel-bench-structure benchmark/
+docker run --rm --add-host host.docker.internal:host-gateway \
+  -v "$PWD/benchmark":/bench docintel-bench-structure python run_structure_benchmark.py   # B</pre>
 <table>
   <tr><th>Path</th><th>Content</th></tr>
   <tr><td><code>app/api</code></td><td>FastAPI app, schemas, dashboard aggregations</td></tr>
