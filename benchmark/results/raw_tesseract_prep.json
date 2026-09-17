@@ -1,0 +1,655 @@
+{
+  "engine": "tesseract_prep",
+  "type": "ocr",
+  "threads": 4,
+  "cold_start_s": 0.101,
+  "first_call_s": 0.276,
+  "rss_load_delta_mb": 48.8,
+  "peak_rss_mb": 348.1,
+  "records": [
+    {
+      "engine": "tesseract_prep",
+      "sample": "clean_0",
+      "category": "clean",
+      "pages": 1,
+      "seconds": 0.2673,
+      "page_seconds": [
+        0.2673
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "blur_0",
+      "category": "blur",
+      "pages": 1,
+      "seconds": 0.3202,
+      "page_seconds": [
+        0.3202
+      ],
+      "cer": 0.0086,
+      "wer": 0.0405,
+      "bow_f1": 0.95,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to tegal@exampie.com before Friday. tf you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\n\nReal services rarety process a request synchronously. Documents arrive faster than\nthey can be processed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "noise_0",
+      "category": "noise",
+      "pages": 1,
+      "seconds": 0.2813,
+      "page_seconds": [
+        0.2813
+      ],
+      "cer": 0.0022,
+      "wer": 0.0135,
+      "bow_f1": 0.9875,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "rotated_0",
+      "category": "rotated",
+      "pages": 1,
+      "seconds": 0.2337,
+      "page_seconds": [
+        0.2337
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "lowres_0",
+      "category": "lowres",
+      "pages": 1,
+      "seconds": 0.2462,
+      "page_seconds": [
+        0.2462
+      ],
+      "cer": 0.0194,
+      "wer": 0.0811,
+      "bow_f1": 0.9375,
+      "ref_chars": 464,
+      "hyp_chars": 465,
+      "output_preview": "Please send the signed contract to leqal@exammplie com betore Friday. It you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17.30 Pacihc time.\n\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users "
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "photo_0",
+      "category": "photo",
+      "pages": 1,
+      "seconds": 0.2319,
+      "page_seconds": [
+        0.2319
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "inverted_0",
+      "category": "inverted",
+      "pages": 1,
+      "seconds": 0.4614,
+      "page_seconds": [
+        0.4614
+      ],
+      "cer": 0.3082,
+      "wer": 0.4054,
+      "bow_f1": 0.5882,
+      "ref_chars": 464,
+      "hyp_chars": 430,
+      "output_preview": "PICaSCSS COCHIN CSSIQnNeCCmOntrat in Gmcgal@exain pln Of mp SR TTGEY en EVE\nTUCSON SEI DOUME US CME ROU fC Cnr nn > SNIE SRA AO\n\n> El0 > jetty ¿Milo\n\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users cannot hold a connection open whil"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "jpeg_q15_0",
+      "category": "jpeg_q15",
+      "pages": 1,
+      "seconds": 0.2212,
+      "page_seconds": [
+        0.2212
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "clean_1",
+      "category": "clean",
+      "pages": 1,
+      "seconds": 0.2319,
+      "page_seconds": [
+        0.2319
+      ],
+      "cer": 0.0046,
+      "wer": 0.0282,
+      "bow_f1": 0.9718,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma sincrona. ¿Qué ocurre cuando llegan mas\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\n\ntrabajo para procesarlo después.\n\nLa facturación electrónica exige que cada comprobante inc"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "blur_1",
+      "category": "blur",
+      "pages": 1,
+      "seconds": 0.3079,
+      "page_seconds": [
+        0.3079
+      ],
+      "cer": 0.0046,
+      "wer": 0.0282,
+      "bow_f1": 0.9718,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma sincrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesario después.\n\nLa facturación electrónica exige que cada comprobante incl"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "noise_1",
+      "category": "noise",
+      "pages": 1,
+      "seconds": 0.2293,
+      "page_seconds": [
+        0.2293
+      ],
+      "cer": 0.0046,
+      "wer": 0.0282,
+      "bow_f1": 0.9718,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma sincrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\n\ntrabajo para procesarlo después.\n\nLa facturación electrónica exige que cada comprobante inc"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "rotated_1",
+      "category": "rotated",
+      "pages": 1,
+      "seconds": 0.2317,
+      "page_seconds": [
+        0.2317
+      ],
+      "cer": 0.0023,
+      "wer": 0.0141,
+      "bow_f1": 0.9859,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma sincrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\n\ntrabajo para procesarlo después.\n\nLa facturación electrónica exige que cada comprobante inc"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "lowres_1",
+      "category": "lowres",
+      "pages": 1,
+      "seconds": 0.1954,
+      "page_seconds": [
+        0.1954
+      ],
+      "cer": 0.0277,
+      "wer": 0.1408,
+      "bow_f1": 0.9014,
+      "ref_chars": 433,
+      "hyp_chars": 429,
+      "output_preview": "Los servicios reales rara vez procesan una solicirud de forma sincrona, ¿Qué ocurte cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después\n\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "photo_1",
+      "category": "photo",
+      "pages": 1,
+      "seconds": 0.2228,
+      "page_seconds": [
+        0.2228
+      ],
+      "cer": 0.0069,
+      "wer": 0.0282,
+      "bow_f1": 0.9859,
+      "ref_chars": 433,
+      "hyp_chars": 435,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma sincrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después. /\n\nLa facturación electrónica exige que cada comprobante in"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "inverted_1",
+      "category": "inverted",
+      "pages": 1,
+      "seconds": 0.3327,
+      "page_seconds": [
+        0.3327
+      ],
+      "cer": 0.2979,
+      "wer": 0.5211,
+      "bow_f1": 0.563,
+      "ref_chars": 433,
+      "hyp_chars": 370,
+      "output_preview": "OS Se vicioS reales fargavez DIOCeSdalmnges Cie tO non Que curas ando dlesalliiad\ndocumentos dedos Musel Sistema Due dead tender ae q SolUco  S acepla archivo BP lar daria no aL)\n\nLa facturación electrónica exige que cada comprobante incluya el RFC del emisor, la fecha de expedición,\n\nel régimen fis"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "jpeg_q15_1",
+      "category": "jpeg_q15",
+      "pages": 1,
+      "seconds": 0.2524,
+      "page_seconds": [
+        0.2524
+      ],
+      "cer": 0.0069,
+      "wer": 0.0282,
+      "bow_f1": 0.9718,
+      "ref_chars": 433,
+      "hyp_chars": 434,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma sincrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\n\nLa facturación electrónica exige que cada comprobante incl"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "clean_2",
+      "category": "clean",
+      "pages": 1,
+      "seconds": 0.2491,
+      "page_seconds": [
+        0.2491
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "blur_2",
+      "category": "blur",
+      "pages": 1,
+      "seconds": 0.3556,
+      "page_seconds": [
+        0.3556
+      ],
+      "cer": 0.0216,
+      "wer": 0.1081,
+      "bow_f1": 0.9193,
+      "ref_chars": 464,
+      "hyp_chars": 463,
+      "output_preview": "Please send the signed contract to legaj O example.com before Friday. f you have questions\nabout clause 7.2, call our office af +1 (415) 555-0199 between 9:00 and 17:30 Pacific ime.\n\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "noise_2",
+      "category": "noise",
+      "pages": 1,
+      "seconds": 0.2267,
+      "page_seconds": [
+        0.2267
+      ],
+      "cer": 0.0022,
+      "wer": 0.027,
+      "bow_f1": 0.9811,
+      "ref_chars": 464,
+      "hyp_chars": 463,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "rotated_2",
+      "category": "rotated",
+      "pages": 1,
+      "seconds": 0.1181,
+      "page_seconds": [
+        0.1181
+      ],
+      "cer": 1.0,
+      "wer": 1.0,
+      "bow_f1": 0.0,
+      "ref_chars": 464,
+      "hyp_chars": 0,
+      "output_preview": ""
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "lowres_2",
+      "category": "lowres",
+      "pages": 1,
+      "seconds": 0.2347,
+      "page_seconds": [
+        0.2347
+      ],
+      "cer": 0.1013,
+      "wer": 0.4189,
+      "bow_f1": 0.6962,
+      "ref_chars": 464,
+      "hyp_chars": 450,
+      "output_preview": "Please send the signed contract to leqal@exampre com oefore Hnday if you have questions\nabout clause / 2, call our office at +1 (415) 555-0199 between 9 00 and 1/ 30 Pacttic ime\n\nReal services “arely process a ‘equest synchronousy Documents arrive faster nan they can be\nprocessca, ard users cannot h"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "photo_2",
+      "category": "photo",
+      "pages": 1,
+      "seconds": 0.2713,
+      "page_seconds": [
+        0.2713
+      ],
+      "cer": 0.0172,
+      "wer": 0.0946,
+      "bow_f1": 0.9308,
+      "ref_chars": 464,
+      "hyp_chars": 463,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, cali our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\n\nReal Services Tarely process a request synchronously. Documents arrive taster than they can be\nprocessed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "inverted_2",
+      "category": "inverted",
+      "pages": 1,
+      "seconds": 0.3713,
+      "page_seconds": [
+        0.3713
+      ],
+      "cer": 0.2371,
+      "wer": 0.3649,
+      "bow_f1": 0.6533,
+      "ref_chars": 464,
+      "hyp_chars": 445,
+      "output_preview": "Please send incesigqnedrontrachicegal@ example Cone (Orca ida VERY OUR AV eaUeStONS\nBDOULL EVER + Elo Jill MEE mm 405 e550) OC Detweerky Oban Cam SCP AcitiCniniey\n\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users cannot hold a connec"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "jpeg_q15_2",
+      "category": "jpeg_q15",
+      "pages": 1,
+      "seconds": 0.2344,
+      "page_seconds": [
+        0.2344
+      ],
+      "cer": 0.0108,
+      "wer": 0.0676,
+      "bow_f1": 0.975,
+      "ref_chars": 464,
+      "hyp_chars": 463,
+      "output_preview": "Please send the signed contract to legal@example com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\n\nReal services rarely process a request synchronously Documents arrive taster than they can be\nprocessed, and users ca"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "two_column_0",
+      "category": "two_column",
+      "pages": 1,
+      "seconds": 0.3935,
+      "page_seconds": [
+        0.3935
+      ],
+      "cer": 0.0012,
+      "wer": 0.0077,
+      "bow_f1": 0.9888,
+      "ref_chars": 850,
+      "hyp_chars": 850,
+      "output_preview": "Estimada señora Núñez: le confirmamos que\nsu pedido número 88213 será entregado el\npróximo miércoles 12 de junio. Si necesita\ncambiar la dirección, escríbanos a\natenciónttienda.mx.\n\nReal services rarely process a request\nsynchronously. Documents arrive faster than\nthey can be processed, and users ca"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "small_font_0",
+      "category": "small_font",
+      "pages": 1,
+      "seconds": 0.3456,
+      "page_seconds": [
+        0.3456
+      ],
+      "cer": 0.0095,
+      "wer": 0.0404,
+      "bow_f1": 0.9697,
+      "ref_chars": 632,
+      "hyp_chars": 630,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma sincrona. ¿Qué ocurre cuando Megan más documentos de los que el sistema puede atender? La solución es aceptar el\n\narchivo, guardarlo y encolar el trabajo para procesarlo después.\n\nOptical character recognition converts images of text into"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "invoice_0",
+      "category": "invoice",
+      "pages": 1,
+      "seconds": 0.285,
+      "page_seconds": [
+        0.285
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 405,
+      "hyp_chars": 405,
+      "output_preview": "INVOICE / FACTURA No. INV-96160\n\nDate: 13/03/2024 Due: 13/04/2024\n\nBill to: Comercializadora del Sureste S.A. de C.V.\nEmail: cuentas.por.pagar@sureste.com.mx Tel: +52 999 123 4567\nConsulting services (April) 12 $85.00 $1,020.00\nData migration fee 1 $780.00 $780.00\n\nUSB-C docking station 2 $139.90 $2"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "two_column_1",
+      "category": "two_column",
+      "pages": 1,
+      "seconds": 0.3255,
+      "page_seconds": [
+        0.3255
+      ],
+      "cer": 0.0013,
+      "wer": 0.0087,
+      "bow_f1": 0.992,
+      "ref_chars": 754,
+      "hyp_chars": 754,
+      "output_preview": "Optical character recognition converts images of text into\nmachine readable characters. Accuracy depends on\nresolution, contrast, skew and noise, so preprocessing\n\noften matters as much as the model.\n\nThe warehouse received 1,250 units of product SKU-4471\non March 3, 2024. Quality control rejected 3"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "small_font_1",
+      "category": "small_font",
+      "pages": 1,
+      "seconds": 0.3801,
+      "page_seconds": [
+        0.3801
+      ],
+      "cer": 0.0042,
+      "wer": 0.0261,
+      "bow_f1": 0.9829,
+      "ref_chars": 716,
+      "hyp_chars": 716,
+      "output_preview": "Real services rarely process a request synchronously. Documents arrive faster than they can be processed, and users cannot hold a connection open while heavy\nwork runs in the background. A reliable design accepts the upload, stores It, queues the work and lets users track progress.\n\nLos servicios re"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "invoice_1",
+      "category": "invoice",
+      "pages": 1,
+      "seconds": 0.4137,
+      "page_seconds": [
+        0.4137
+      ],
+      "cer": 0.0048,
+      "wer": 0.0175,
+      "bow_f1": 0.994,
+      "ref_chars": 416,
+      "hyp_chars": 414,
+      "output_preview": "INVOICE / FACTURA No. INV-79426\n\nDate: 05/11/2024 Due: 05/12/2024\n\nBill to: Comercializadora del Sureste S.A. de C.V.\n\nEmail: cuentas.por.pagar@sureste.com.mx Tel: +52 999 123 4567\n\nLicencia de software anual 3 $1,200.50 $3,601.50\n\nSoporte técnico prioritario 5 $64.75 $323.75\n\nConsulting services (A"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "two_column_2",
+      "category": "two_column",
+      "pages": 1,
+      "seconds": 0.3608,
+      "page_seconds": [
+        0.3608
+      ],
+      "cer": 0.7425,
+      "wer": 0.8971,
+      "bow_f1": 1.0,
+      "ref_chars": 862,
+      "hyp_chars": 862,
+      "output_preview": "Our quarterly revenue grew 18.4% year over year, Optical character recognition converts images of text\n\nreaching $2.37 million, while operating costs into machine readable characters. Accuracy depends\ndecreased by 6%. The board approved a new hiring on resolution, contrast, skew and noise, so\n\nplan "
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "small_font_2",
+      "category": "small_font",
+      "pages": 1,
+      "seconds": 0.2734,
+      "page_seconds": [
+        0.2734
+      ],
+      "cer": 0.0052,
+      "wer": 0.0353,
+      "bow_f1": 1.0,
+      "ref_chars": 580,
+      "hyp_chars": 577,
+      "output_preview": "Optical character recognition converts images of text into machine readable characters. Accuracy depends on resolution, contrast, skew and\nnoise, so preprocessing often matters as much as the model\n\nOur quarterly revenue grew 18.4% year over year, reaching $2.37 million, while operating costs decrea"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "invoice_2",
+      "category": "invoice",
+      "pages": 1,
+      "seconds": 0.2494,
+      "page_seconds": [
+        0.2494
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 405,
+      "hyp_chars": 405,
+      "output_preview": "INVOICE / FACTURA No. INV-70883\n\nDate: 02/10/2024 Due: 02/11/2024\n\nBill to: Comercializadora del Sureste S.A. de C.V.\nEmail: cuentas.por.pagar@sureste.com.mx Tel: +52 999 123 4567\nSoporte técnico prioritario 5 $64.75 $323.75\nLicencia de software anual 3 $1,200.50 $3,601.50\nData migration fee 1 $780."
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "scanned_0",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.515,
+      "page_seconds": [
+        0.2691,
+        0.2459
+      ],
+      "cer": 0.0033,
+      "wer": 0.0138,
+      "bow_f1": 0.9934,
+      "ref_chars": 898,
+      "hyp_chars": 900,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "scanned_1",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.559,
+      "page_seconds": [
+        0.2675,
+        0.2915
+      ],
+      "cer": 0.0056,
+      "wer": 0.0276,
+      "bow_f1": 0.9835,
+      "ref_chars": 898,
+      "hyp_chars": 900,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma sincrona. ¿Qué ocurre cuando llegan mas\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\n\ntrabajo para procesarlo después.\n\nLa facturación electrónica exige que cada comprobante inc"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "scanned_2",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.5792,
+      "page_seconds": [
+        0.2525,
+        0.3267
+      ],
+      "cer": 0.0032,
+      "wer": 0.0135,
+      "bow_f1": 1.0,
+      "ref_chars": 929,
+      "hyp_chars": 932,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\n\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users c"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "real_p1_150",
+      "category": "real_150dpi",
+      "pages": 1,
+      "seconds": 1.0423,
+      "page_seconds": [
+        1.0423
+      ],
+      "cer": 0.015,
+      "wer": 0.0942,
+      "bow_f1": 0.975,
+      "ref_chars": 1805,
+      "hyp_chars": 1788,
+      "output_preview": "UIT02: Document Intelligence\nAsynchronous Pipeline\n\nReal sen ices rarely process a request synchronously, file ingestion especially Documents arrive\nfaster than they can be processed: processing times depend on several factors such as file format\nand size, and users cant hold a connection open while"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "real_p1_300",
+      "category": "real_300dpi",
+      "pages": 1,
+      "seconds": 0.8924,
+      "page_seconds": [
+        0.8924
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1805,
+      "hyp_chars": 1805,
+      "output_preview": "U1T02: Document Intelligence\nAsynchronous Pipeline\n\nReal services rarely process a request synchronously, file ingestion especially. Documents arrive\nfaster than they can be processed; processing times depend on several factors such as file format\nand size, and users can’t hold a connection open whi"
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "real_p2_150",
+      "category": "real_150dpi",
+      "pages": 1,
+      "seconds": 0.6038,
+      "page_seconds": [
+        0.6038
+      ],
+      "cer": 0.0357,
+      "wer": 0.1711,
+      "bow_f1": 0.9493,
+      "ref_chars": 1065,
+      "hyp_chars": 1055,
+      "output_preview": "Part 5: Failure handling\n\nThe system must survive edge scenarios’ unsupported formats, corrupted files, and workers (or\nthe whole stack) being killed and restarted mid-processing: no job may be lost and no document\nmay stay in a non-terminal state forever\n\nAdd all necessary wamings, error messages, "
+    },
+    {
+      "engine": "tesseract_prep",
+      "sample": "real_p2_300",
+      "category": "real_300dpi",
+      "pages": 1,
+      "seconds": 0.7458,
+      "page_seconds": [
+        0.7458
+      ],
+      "cer": 0.0066,
+      "wer": 0.0329,
+      "bow_f1": 0.9881,
+      "ref_chars": 1065,
+      "hyp_chars": 1070,
+      "output_preview": "Part 5: Failure handling\n\nThe system must survive edge scenarios: unsupported formats, corrupted files, and workers (or\nthe whole stack) being killed and restarted mid-processing; no job may be lost and no document\nmay stay in a non-terminal state forever.\n\nAdd all necessary warnings, error messages"
+    }
+  ],
+  "footprint_mb": 88.3
+}

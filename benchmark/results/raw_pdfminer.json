@@ -1,0 +1,267 @@
+{
+  "engine": "pdfminer",
+  "type": "pdf",
+  "threads": 4,
+  "cold_start_s": 0.088,
+  "rss_load_delta_mb": 31.5,
+  "peak_rss_mb": 50.8,
+  "records": [
+    {
+      "engine": "pdfminer",
+      "sample": "scanned_0",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00059,
+      "page_seconds": [
+        0.00029
+      ],
+      "output_preview": "\f\f",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "scanned_1",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00061,
+      "page_seconds": [
+        0.0003
+      ],
+      "output_preview": "\f\f",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "scanned_2",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.0006,
+      "page_seconds": [
+        0.0003
+      ],
+      "output_preview": "\f\f",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_single_0",
+      "category": "pdf_single",
+      "pages": 1,
+      "seconds": 0.00472,
+      "page_seconds": [
+        0.00472
+      ],
+      "output_preview": "La inteligencia de documentos combina extracción de texto, reconocimiento óptico de caracteres y\nanálisis de metadatos. Así, un archivo escaneado se convierte en información útil y consultable.\n\nLa facturación electrónica exige que cada comprobante incluya el RFC del emisor, la fecha de\nexpedición, ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1032,
+      "hyp_chars": 1032
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_two_column_0",
+      "category": "pdf_two_column",
+      "pages": 1,
+      "seconds": 0.00653,
+      "page_seconds": [
+        0.00653
+      ],
+      "output_preview": "La inteligencia de documentos combina\nextracción de texto, reconocimiento óptico\nde caracteres y análisis de metadatos. Así,\nun archivo escaneado se convierte en\ninformación útil y consultable.\n\nOptical character recognition converts\nimages of text into machine readable\ncharacters. Accuracy depends ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1570,
+      "hyp_chars": 1570
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_table_0",
+      "category": "pdf_table",
+      "pages": 1,
+      "seconds": 0.00426,
+      "page_seconds": [
+        0.00426
+      ],
+      "output_preview": "Factura / Invoice INV-20931\n\nDescription\n\nConsulting services (April)\n\nCloud hosting - standard plan\n\nSoporte técnico prioritario\n\nUSB-C docking station\n\nData migration fee\n\nLicencia de software anual\n\nQty\n\n12\n\n1\n\n5\n\n2\n\n1\n\n3\n\nUnit price\n\nAmount\n\n$85.00\n\n$249.99\n\n$64.75\n\n$139.90\n\n$780.00\n\n$1,020.00\n\n",
+      "cer": 0.625,
+      "wer": 0.7917,
+      "bow_f1": 1.0,
+      "ref_chars": 328,
+      "hyp_chars": 328
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_out_of_order_0",
+      "category": "pdf_out_of_order",
+      "pages": 1,
+      "seconds": 0.00595,
+      "page_seconds": [
+        0.00595
+      ],
+      "output_preview": "Informe trimestral / Quarterly report\n\nLa facturación electrónica exige que cada\ncomprobante incluya el RFC del emisor, la\nfecha de expedición, el régimen fiscal y el\nuso del CFDI. Los errores más comunes están\nen el código postal.\n\nEl niño comió piñatas de azúcar en la fiesta\nde cumpleaños de su ab",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1255,
+      "hyp_chars": 1255
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_char_positioned_0",
+      "category": "pdf_char_positioned",
+      "pages": 1,
+      "seconds": 0.02253,
+      "page_seconds": [
+        0.02253
+      ],
+      "output_preview": "The warehouse received 1,250 units of product SKU-4471 on March 3, 2024. Quality control rejected 37\nunits because of damaged packaging, and the remaining stock was moved to aisle 14, shelf B.\n\nOptical character recognition converts images of text into machine readable characters. Accuracy depends o",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 773,
+      "hyp_chars": 773
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_rotated_0",
+      "category": "pdf_rotated",
+      "pages": 1,
+      "seconds": 0.03449,
+      "page_seconds": [
+        0.03449
+      ],
+      "output_preview": "l\n\ne\nt\ns\n\nu\ns\ne\nr\ns\n\nt\nr\na\nc\nk\n\np\nr\no\ng\nr\ne\ns\ns\n.\n\na\n\nc\no\nn\nn\ne\nc\nt\ni\no\nn\n\no\np\ne\nn\nw\nh\n\ni\nl\n\ne\n\nh\ne\na\nv\ny\nw\no\nr\nk\n\nr\nu\nn\ns\n\ni\n\nn\n\nt\nh\ne\n\nb\na\nc\nk\ng\nr\no\nu\nn\nd\n.\n\nA\nr\ne\n\nl\ni\n\na\nb\ne\n\nl\n\nd\ne\ns\ni\ng\nn\n\na\nc\nc\ne\np\nt\ns\n\nt\nh\ne\n\nl\n\nu\np\no\na\nd\n,\n\ns\nt\no\nr\ne\ns\n\ni\nt\n,\n\nq\nu\ne\nu\ne\ns\n\nt\nh\ne\nw\no\nr\nk\n\na\nn\nd\n\nR\ne\na\n\nl\n\ns\n",
+      "cer": 1.209,
+      "wer": 5.1216,
+      "bow_f1": 0.018,
+      "ref_chars": 909,
+      "hyp_chars": 1523
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_single_1",
+      "category": "pdf_single",
+      "pages": 1,
+      "seconds": 0.00494,
+      "page_seconds": [
+        0.00494
+      ],
+      "output_preview": "El niño comió piñatas de azúcar en la fiesta de cumpleaños de su abuela, en Mérida, Yucatán. ¡Qué\ndía tan bonito! Después caminaron por el malecón y compraron café y pan dulce.\n\nPlease send the signed contract to legal@example.com before Friday. If you have questions about\nclause 7.2, call our offic",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1033,
+      "hyp_chars": 1033
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_two_column_1",
+      "category": "pdf_two_column",
+      "pages": 1,
+      "seconds": 0.00633,
+      "page_seconds": [
+        0.00633
+      ],
+      "output_preview": "Please send the signed contract to\nlegal@example.com before Friday. If you\nhave questions about clause 7.2, call our\noffice at +1 (415) 555-0199 between 9:00\nand 17:30 Pacific time.\n\nEstimada señora Núñez: le confirmamos que\nsu pedido número 88213 será entregado el\npróximo miércoles 12 de junio. Si ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1553,
+      "hyp_chars": 1553
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_table_1",
+      "category": "pdf_table",
+      "pages": 1,
+      "seconds": 0.00429,
+      "page_seconds": [
+        0.00429
+      ],
+      "output_preview": "Factura / Invoice INV-20931\n\nDescription\n\nConsulting services (April)\n\nUSB-C docking station\n\nLicencia de software anual\n\nData migration fee\n\nCapacitación en línea\n\nCloud hosting - standard plan\n\nQty\n\n12\n\n2\n\n3\n\n1\n\n8\n\n1\n\nUnit price\n\nAmount\n\n$85.00\n\n$139.90\n\n$1,020.00\n\n$279.80\n\n$1,200.50\n\n$3,601.50\n\n$",
+      "cer": 0.6708,
+      "wer": 0.7917,
+      "bow_f1": 1.0,
+      "ref_chars": 322,
+      "hyp_chars": 322
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_out_of_order_1",
+      "category": "pdf_out_of_order",
+      "pages": 1,
+      "seconds": 0.00575,
+      "page_seconds": [
+        0.00575
+      ],
+      "output_preview": "Informe trimestral / Quarterly report\n\nPlease send the signed contract to\nlegal@example.com before Friday. If you\nhave questions about clause 7.2, call our\noffice at +1 (415) 555-0199 between 9:00\nand 17:30 Pacific time.\n\nEstimada señora Núñez: le confirmamos que\nsu pedido número 88213 será entregad",
+      "cer": 0.2938,
+      "wer": 0.2667,
+      "bow_f1": 1.0,
+      "ref_chars": 1232,
+      "hyp_chars": 1232
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_char_positioned_1",
+      "category": "pdf_char_positioned",
+      "pages": 1,
+      "seconds": 0.02525,
+      "page_seconds": [
+        0.02525
+      ],
+      "output_preview": "Estimada señora Núñez: le confirmamos que su pedido número 88213 será entregado el próximo miércoles\n12 de junio. Si necesita cambiar la dirección, escríbanos a atención@tienda.mx.\n\nPlease send the signed contract to legal@example.com before Friday. If you have questions about clause 7.2,\ncall our o",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 780,
+      "hyp_chars": 780
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_rotated_1",
+      "category": "pdf_rotated",
+      "pages": 1,
+      "seconds": 0.02434,
+      "page_seconds": [
+        0.02434
+      ],
+      "output_preview": "p\na\nc\nk\na\ng\nn\ng\n,\n\ni\n\na\nn\nd\n\nt\nh\ne\n\nr\ne\nm\na\nn\nn\ng\n\ni\n\ni\n\ns\nt\no\nc\nk\nw\na\ns\nm\no\nv\ne\nd\n\nt\no\n\na\ni\ns\nl\ne\n1\n4\n\n,\n\ns\nh\ne\nl\nf\nB\n\n.\n\ni\n\nc\na\nm\nn\na\nr\no\nn\n\np\no\nr\n\ne\n\nl\n\nl\n\nm\na\ne\nc\nó\nn\n\ny\n\nc\no\nm\np\nr\na\nr\no\nn\n\nc\na\nf\né\n\ny\n\np\na\nn\n\nd\nu\nl\nc\ne\n.\n\nE\n\nl\n\ni\n\nn\nñ\no\n\nc\no\nm\nó\n\ni\n\ni\n\np\nñ\na\nt\na\ns\n\nd\ne\n\na\nz\nú\nc\na\nr\n\ne\nn\n\nl\n\na\n\nf",
+      "cer": 1.2896,
+      "wer": 5.1345,
+      "bow_f1": 0.0281,
+      "ref_chars": 732,
+      "hyp_chars": 1227
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "pdf_multipage",
+      "category": "pdf_multipage",
+      "pages": 28,
+      "seconds": 0.2354,
+      "page_seconds": [
+        0.00841
+      ],
+      "output_preview": "La inteligencia de documentos combina extracción de texto, reconocimiento óptico\nde caracteres y análisis de metadatos. Así, un archivo escaneado se convierte en\ninformación útil y consultable.\n\nPlease send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 72488,
+      "hyp_chars": 72488
+    },
+    {
+      "engine": "pdfminer",
+      "sample": "real_u1t02",
+      "category": "real_pdf",
+      "pages": 2,
+      "seconds": 0.02265,
+      "page_seconds": [
+        0.01132
+      ],
+      "output_preview": "U1T02: Document Intelligence \nAsynchronous Pipeline \n\nReal services rarely process a request synchronously, file ingestion especially. Documents arrive \nfaster than they can be processed; processing times depend on several factors such as file format \nand size, and users can’t hold a connection open",
+      "hyp_chars": 2871
+    }
+  ],
+  "footprint_mb": 7.6
+}

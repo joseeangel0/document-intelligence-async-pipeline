@@ -1,0 +1,12 @@
+# Chaos test results (2026-09-16 21:14)
+
+| Scenario | Result | Expected | Observed | Duration |
+|---|---|---|---|---|
+| `rejected_inputs` | ✅ PASS | unsupported/empty → 4xx at upload; damaged files → terminal state with explicit error code (repairable PDFs succeed with a warning) | program.exe → HTTP 415; archive.zip → HTTP 415; empty.txt → HTTP 400; binary_named_as.txt → HTTP 415; corrupted.pdf → SUCCEEDED (warnings: 3); garbage.pdf → FAILED CORRUPTED_FILE; truncated.jpg → FAILED CORRUPTED_FILE; encrypted.pdf → FAILED ENCRYPTED_DOCUMENT; huge_400mp.png → FAILED LIMIT_EXCEEDED | 6s |
+| `worker_kill` | ✅ PASS | job re-queued after heartbeat timeout and SUCCEEDED on attempt 2 | SUCCEEDED after 2 attempts; recovered+finished 98s after kill; events: received → dispatched → started → worker_lost → dispatched → started → succeeded | 108s |
+| `cancel_running` | ✅ PASS | a running job stops at the next page and ends CANCELLED | CANCELLED at 11% | 6s |
+| `broker_data_loss` | ✅ PASS | sweeper detects jobs missing from the broker and re-dispatches them | ['SUCCEEDED', 'SUCCEEDED', 'SUCCEEDED'] in 61s; message_missing events: True | 64s |
+| `broker_down_on_upload` | ✅ PASS | upload still accepted (202); job dispatched automatically when the broker returns | HTTP 202; final SUCCEEDED; events: received → dispatched → dispatch_failed → message_missing → dispatched → started → succeeded | 19s |
+| `storage_down_during_processing` | ✅ PASS | job goes RETRYING with backoff, then SUCCEEDED; uploads during the outage get 503 STORAGE_UNAVAILABLE | upload during outage → HTTP 503 STORAGE_UNAVAILABLE; job SUCCEEDED after 2 attempts; events: received → dispatched → started → retry_scheduled → dispatched → started → succeeded | 17s |
+| `database_down` | ✅ PASS | HTTP 503 DATABASE_UNAVAILABLE while down, /v1/system reports degraded, recovers automatically | /v1/jobs → 503 DATABASE_UNAVAILABLE; /v1/system → 503 ['Database unavailable: uploads and status queries will fail until it recovers.']; after restart → 200 | 11s |
+| `stack_kill` | ✅ PASS | every job (queued, running, finished) reaches SUCCEEDED after a full restart | scanned_report_30p.pdf: PROCESSING→SUCCEEDED (attempts 2); scanned_letter.pdf: PROCESSING→SUCCEEDED (attempts 2); mixed_text_and_scan.pdf: QUEUED→SUCCEEDED (attempts 1); report.docx: SUCCEEDED→SUCCEEDED (attempts 1); invoice_photo.jpg: QUEUED→SUCCEEDED (attempts 1) | 106s |

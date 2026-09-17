@@ -1,0 +1,5 @@
+La digitalización de documentos permite que la información sea buscable y reutilizable. ¿Cuántas páginas escaneadas existen todavía en los archivos de una universidad? Probablemente millones.
+
+El reconocimiento óptico de caracteres convierte imágenes en texto. La precisión depende de la resolución, del contraste y de la tipografía; por eso conviene medir antes de elegir una herramienta. ¡Midamos!
+
+Año tras año, el volumen de facturas, contratos y constancias crece. Un sistema asíncrono evita que el usuario espere con la conexión abierta mientras el servidor procesa archivos pesados.

@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52514e"/>
+    </marker>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/>
+    </marker>
+    <style>
+      .box { fill: #ffffff; stroke: #c3c2b7; stroke-width: 1.2; }
+      .store { fill: #f4f8fd; stroke: #86b6ef; stroke-width: 1.2; }
+      .work { fill: #f3f9f3; stroke: #8cc48c; stroke-width: 1.2; }
+      .ops { fill: #faf7f0; stroke: #d9c9a0; stroke-width: 1.2; }
+      .t { font-size: 15px; font-weight: 700; fill: #0b0b0b; }
+      .s { font-size: 11.5px; fill: #52514e; }
+      .l { font-size: 11.5px; fill: #0b0b0b; }
+      .lb { font-size: 11.5px; fill: #1c5cab; font-weight: 600; }
+      .n { font-size: 11px; font-weight: 700; fill: #fff; }
+      .edge { stroke: #52514e; stroke-width: 1.4; fill: none; marker-end: url(#a); }
+      .flow { stroke: #2a78d6; stroke-width: 1.8; fill: none; marker-end: url(#ab); }
+      .ctl { stroke: #b08a2e; stroke-width: 1.3; fill: none; stroke-dasharray: 5 4; marker-end: url(#a); }
+      .zone { fill: none; stroke: #e1e0d9; stroke-width: 1; }
+      .zl { font-size: 11px; fill: #898781; letter-spacing: .08em; }
+    </style>
+  </defs>
+
+  <!-- zones -->
+  <rect class="zone" x="10" y="40" width="175" height="540" rx="10"/>
+  <text class="zl" x="22" y="30">CLIENTS</text>
+  <rect class="zone" x="205" y="40" width="205" height="540" rx="10"/>
+  <text class="zl" x="217" y="30">API TIER</text>
+  <rect class="zone" x="430" y="40" width="250" height="540" rx="10"/>
+  <text class="zl" x="442" y="30">STATE (DOCKER VOLUMES)</text>
+  <rect class="zone" x="700" y="40" width="290" height="540" rx="10"/>
+  <text class="zl" x="712" y="30">PROCESSING &amp; OPERATIONS</text>
+
+  <!-- clients -->
+  <rect class="box" x="25" y="230" width="145" height="120" rx="8"/>
+  <text class="t" x="40" y="256">Users</text>
+  <text class="s" x="40" y="278">Upload UI  (/)</text>
+  <text class="s" x="40" y="296">Dashboard (/dashboard)</text>
+  <text class="s" x="40" y="314">curl · HTTP clients</text>
+  <text class="s" x="40" y="332">webhook receivers</text>
+
+  <!-- api -->
+  <rect class="box" x="220" y="215" width="175" height="150" rx="8"/>
+  <text class="t" x="235" y="241">api · FastAPI</text>
+  <text class="s" x="235" y="263">sniff type (magic bytes)</text>
+  <text class="s" x="235" y="281">enforce size limits</text>
+  <text class="s" x="235" y="299">sha256 · dedup cache</text>
+  <text class="s" x="235" y="317">job tracking &amp; results</text>
+  <text class="s" x="235" y="335">/v1/system · /v1/stats</text>
+  <text class="s" x="235" y="353">:8000</text>
+
+  <!-- stores -->
+  <rect class="store" x="445" y="60" width="220" height="120" rx="8"/>
+  <text class="t" x="460" y="86">MinIO (S3 API)</text>
+  <text class="s" x="460" y="108">documents/sha256/…  raw files</text>
+  <text class="s" x="460" y="126">results/jobs/{id}/text.txt</text>
+  <text class="s" x="460" y="144">results/jobs/{id}/result.json</text>
+  <text class="s" x="460" y="162">heavy payloads live here</text>
+
+  <rect class="store" x="445" y="230" width="220" height="120" rx="8"/>
+  <text class="t" x="460" y="256">PostgreSQL</text>
+  <text class="s" x="460" y="278">documents · jobs · job_events</text>
+  <text class="s" x="460" y="296">status, progress, heartbeat,</text>
+  <text class="s" x="460" y="314">attempts, errors, metadata</text>
+  <text class="s" x="460" y="332">source of truth</text>
+
+  <rect class="store" x="445" y="400" width="220" height="120" rx="8"/>
+  <text class="t" x="460" y="426">Redis (broker, AOF)</text>
+  <text class="s" x="460" y="448">queue heavy · light · maintenance</text>
+  <text class="s" x="460" y="466">message = claim check</text>
+  <text class="s" x="460" y="484">{"job_id": "…"}  (~1 KB)</text>
+  <text class="s" x="460" y="502">acks_late · unacked hash</text>
+
+  <!-- workers -->
+  <rect class="work" x="760" y="75" width="215" height="110" rx="8"/>
+  <text class="t" x="775" y="101">worker-heavy ×N</text>
+  <text class="s" x="775" y="123">queue: heavy</text>
+  <text class="s" x="775" y="141">PDF (PyMuPDF) · images</text>
+  <text class="s" x="775" y="159">OCR: RapidOCR · Tesseract 5</text>
+  <text class="s" x="775" y="177">2 procs × 2 threads · 4 GB</text>
+
+  <rect class="work" x="760" y="215" width="215" height="95" rx="8"/>
+  <text class="t" x="775" y="241">worker-light ×N</text>
+  <text class="s" x="775" y="263">queues: light, maintenance</text>
+  <text class="s" x="775" y="281">txt · html · docx · pptx · xlsx · rtf</text>
+  <text class="s" x="775" y="299">sweeps · webhooks</text>
+
+  <rect class="ops" x="760" y="345" width="215" height="80" rx="8"/>
+  <text class="t" x="775" y="371">scheduler (beat)</text>
+  <text class="s" x="775" y="393">every 20 s → recovery sweep</text>
+  <text class="s" x="775" y="411">(also on every worker start)</text>
+
+  <rect class="ops" x="760" y="460" width="215" height="80" rx="8"/>
+  <text class="t" x="775" y="486">Flower</text>
+  <text class="s" x="775" y="508">task events, workers, queues</text>
+  <text class="s" x="775" y="526">:5555</text>
+
+  <!-- worker bus -->
+  <line x1="735" y1="120" x2="735" y2="270" stroke="#8cc48c" stroke-width="3"/>
+  <line x1="735" y1="130" x2="760" y2="130" stroke="#8cc48c" stroke-width="3"/>
+  <line x1="735" y1="262" x2="760" y2="262" stroke="#8cc48c" stroke-width="3"/>
+
+  <!-- flows -->
+  <path class="flow" d="M170,275 H218"/>
+  <circle cx="194" cy="262" r="8" fill="#2a78d6"/><text class="n" x="190.5" y="266">1</text>
+
+  <path class="flow" d="M340,215 V120 H443"/>
+  <circle cx="380" cy="120" r="8" fill="#2a78d6"/><text class="n" x="376.5" y="124">2</text>
+  <text class="lb" x="352" y="108">put file</text>
+
+  <path class="flow" d="M395,290 H443"/>
+  <circle cx="419" cy="278" r="8" fill="#2a78d6"/><text class="n" x="415.5" y="282">3</text>
+
+  <path class="flow" d="M340,365 V460 H443"/>
+  <circle cx="380" cy="460" r="8" fill="#2a78d6"/><text class="n" x="376.5" y="464">4</text>
+  <text class="lb" x="332" y="440" text-anchor="end">publish id</text>
+  <text class="lb" x="332" y="456" text-anchor="end">after commit</text>
+
+  <path class="flow" d="M665,460 H716 V200 H733"/>
+  <circle cx="716" cy="440" r="8" fill="#2a78d6"/><text class="n" x="712.5" y="444">5</text>
+  <text class="lb" x="730" y="345" text-anchor="middle" transform="rotate(-90 730 345)">consume</text>
+
+  <path class="edge" d="M735,150 H690 V130 H667"/>
+  <circle cx="690" cy="150" r="8" fill="#52514e"/><text class="n" x="686.5" y="154">6</text>
+  <path class="edge" d="M735,250 H667"/>
+  <circle cx="700" cy="250" r="8" fill="#52514e"/><text class="n" x="696.5" y="254">7</text>
+
+  <path class="ctl" d="M760,395 H700 V330 H667"/>
+  <path class="ctl" d="M760,410 H690 V505 H667"/>
+
+  <path class="edge" d="M218,330 H170" />
+  <circle cx="194" cy="343" r="8" fill="#52514e"/><text class="n" x="190.5" y="347">8</text>
+
+  <!-- legend -->
+  <g transform="translate(25,405)">
+    <text class="l" x="0" y="0" font-weight="700">Flow</text>
+    <text class="s" x="0" y="20">1 upload (multipart)</text>
+    <text class="s" x="0" y="37">2 store file in MinIO</text>
+    <text class="s" x="0" y="54">3 insert job (QUEUED)</text>
+    <text class="s" x="0" y="71">4 publish claim check</text>
+    <text class="s" x="0" y="88">5 worker consumes</text>
+    <text class="s" x="0" y="105">6 fetch file / store text</text>
+    <text class="s" x="0" y="122">7 claim · heartbeat · finish</text>
+    <text class="s" x="0" y="139">8 poll status · get text</text>
+    <line x1="0" y1="157" x2="26" y2="157" stroke="#b08a2e" stroke-dasharray="5 4" stroke-width="1.3"/>
+    <text class="s" x="32" y="161">recovery sweep</text>
+  </g>
+</svg>

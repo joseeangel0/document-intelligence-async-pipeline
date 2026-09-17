@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DocIntel · Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="stylesheet" href="/static/style.css">
+<style>
+  .row2 { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  .row3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 1000px) { .row2, .row3 { grid-template-columns: minmax(0, 1fr); } }
+  .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .controls .grow { flex: 1; }
+  .seg button { border-radius: 0; margin-left: -1px; }
+  .seg button:first-child { border-radius: 8px 0 0 8px; }
+  .seg button:last-child { border-radius: 0 8px 8px 0; }
+  .seg button.on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .health { display: flex; gap: 8px; flex-wrap: wrap; }
+  .empty { color: var(--muted); font-size: 13px; padding: 8px 0; }
+  .fname { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: bottom; }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>📊 Pipeline dashboard</h1>
+  <nav>
+    <a href="/">Documents</a>
+    <a href="/dashboard" class="active">Dashboard</a>
+    <a href="/docs" target="_blank">API docs</a>
+    <a id="flowerLink" href="http://localhost:5555" target="_blank">Flower</a>
+    <a id="minioLink" href="http://localhost:9001" target="_blank">MinIO</a>
+  </nav>
+</header>
+<main>
+  <div class="controls">
+    <div class="health" id="health"><span class="pill">checking…</span></div>
+    <span class="grow"></span>
+    <span class="small muted" id="updated"></span>
+    <div class="seg" id="window">
+      <button data-w="15">15m</button><button data-w="60" class="on">1h</button><button data-w="360">6h</button><button data-w="1440">24h</button><button data-w="10080">7d</button>
+    </div>
+  </div>
+  <div id="alerts"></div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="grid row2" style="margin-top:16px">
+    <section class="card">
+      <h2>Throughput <span class="sub" id="bucketLabel"></span></h2>
+      <div class="legend"><span style="--c: var(--good)">Succeeded</span><span style="--c: var(--critical)">Failed</span></div>
+      <div class="chart" id="throughput"></div>
+    </section>
+    <section class="card">
+      <h2>Queues &amp; workers</h2>
+      <div id="queues"></div>
+    </section>
+  </div>
+
+  <div class="grid row3" style="margin-top:16px">
+    <section class="card">
+      <h2>Jobs by document type <span class="sub">in window</span></h2>
+      <div class="chart" id="byKind"></div>
+    </section>
+    <section class="card">
+      <h2>Failures by error code <span class="sub">in window</span></h2>
+      <div id="errors"></div>
+    </section>
+    <section class="card">
+      <h2>Reliability events <span class="sub">automatic recovery</span></h2>
+      <div id="reliability"></div>
+    </section>
+  </div>
+
+  <div class="grid row2" style="margin-top:16px">
+    <section class="card">
+      <h2>Active jobs</h2>
+      <div class="table-wrap" id="active"></div>
+    </section>
+    <section class="card">
+      <h2>Recent failures</h2>
+      <div id="failures"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtDur = (s) => s == null ? "—" : s < 1 ? `${Math.round(s * 1000)} ms` : s < 120 ? `${s.toFixed(1)} s` : `${(s / 60).toFixed(1)} min`;
+const fmtNum = (n) => (n ?? 0).toLocaleString();
+let windowMinutes = 60;
+
+document.querySelectorAll("#window button").forEach(b => b.onclick = () => {
+  windowMinutes = +b.dataset.w;
+  document.querySelectorAll("#window button").forEach(x => x.classList.toggle("on", x === b));
+  refresh();
+});
+
+function tile(label, value, hint = "") {
+  return `<div class="tile"><div class="label">${esc(label)}</div><div class="value">${value}</div><div class="hint">${hint}</div></div>`;
+}
+
+function niceMax(v) {
+  if (v <= 4) return 4;
+  const p = Math.pow(10, Math.floor(Math.log10(v)));
+  return [1, 2, 2.5, 5, 10].map(m => m * p).find(m => m >= v);
+}
+
+// Stacked bars over time: succeeded (bottom) + failed (top), 2px surface gap, rounded data-end.
+function throughputChart(el, series, bucketSeconds) {
+  const W = Math.max(el.clientWidth, 280), H = 220, m = { l: 34, r: 8, t: 8, b: 22 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const max = niceMax(Math.max(1, ...series.map(d => d.succeeded + d.failed)));
+  const step = iw / Math.max(series.length, 1);
+  const bw = Math.max(1, Math.min(18, step - 2));
+  const y = (v) => ih - (v / max) * ih;
+  const ticks = [0, max / 2, max];
+  const fmtT = (t) => new Date(t * 1000).toLocaleTimeString([], bucketSeconds >= 3600 ? { month: "short", day: "numeric", hour: "2-digit" } : { hour: "2-digit", minute: "2-digit" });
+  const labelEvery = Math.ceil(series.length / Math.max(2, Math.floor(iw / 70)));
+  let bars = "";
+  series.forEach((d, i) => {
+    const x = m.l + i * step + (step - bw) / 2;
+    const hs = ih - y(d.succeeded), hf = ih - y(d.failed);
+    const r = Math.min(4, bw / 2);
+    if (d.succeeded) bars += `<path fill="var(--good)" d="${roundTop(x, m.t + y(d.succeeded), bw, hs, d.failed ? 0 : r)}"/>`;
+    if (d.failed) {
+      const top = m.t + y(d.succeeded + d.failed);
+      bars += `<path fill="var(--critical)" d="${roundTop(x, top, bw, Math.max(hf - (d.succeeded ? 2 : 0), 1), r)}"/>`;
+    }
+    bars += `<rect x="${m.l + i * step}" y="${m.t}" width="${step}" height="${ih}" fill="transparent" data-i="${i}"/>`;
+  });
+  const grid = ticks.map(t => `<line class="${t ? "gridline" : "baseline"}" x1="${m.l}" x2="${W - m.r}" y1="${m.t + y(t)}" y2="${m.t + y(t)}"/><text x="${m.l - 6}" y="${m.t + y(t) + 4}" text-anchor="end">${t}</text>`).join("");
+  const xl = series.map((d, i) => i % labelEvery === 0 ? `<text x="${m.l + i * step + step / 2}" y="${H - 6}" text-anchor="middle">${fmtT(d.t)}</text>` : "").join("");
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Jobs finished per interval"><g class="axis">${grid}${xl}</g>${bars}</svg><div class="tooltip"></div>`;
+  const tip = el.querySelector(".tooltip");
+  el.querySelector("svg").onmousemove = (e) => {
+    const i = e.target.dataset?.i;
+    if (i == null) { tip.style.display = "none"; return; }
+    const d = series[i];
+    tip.innerHTML = `<div class="t">${fmtT(d.t)}</div>✓ Succeeded <b>${d.succeeded}</b><br>✕ Failed <b>${d.failed}</b>`;
+    const box = el.getBoundingClientRect();
+    tip.style.display = "block";
+    tip.style.left = `${Math.min(e.clientX - box.left + 12, box.width - 130)}px`;
+    tip.style.top = `${e.clientY - box.top - 10}px`;
+  };
+  el.querySelector("svg").onmouseleave = () => tip.style.display = "none";
+}
+
+function roundTop(x, y, w, h, r) {
+  if (h <= 0) return "";
+  r = Math.min(r, h);
+  return `M${x},${y + h} V${y + r} Q${x},${y} ${x + r},${y} H${x + w - r} Q${x + w},${y} ${x + w},${y + r} V${y + h} Z`;
+}
+
+// Horizontal bars, one series (slot 1), value labels at bar ends.
+function kindChart(el, rows) {
+  if (!rows.length) { el.innerHTML = `<div class="empty">No jobs in this window.</div>`; return; }
+  const max = Math.max(...rows.map(r => r.jobs));
+  el.innerHTML = `<table>${rows.map(r => `
+    <tr data-kind="${esc(r.kind)}">
+      <td style="width:60px;border:0;padding:5px 8px 5px 0" class="small">${esc(r.kind)}</td>
+      <td style="border:0;padding:5px 0;width:100%"><div style="display:flex;align-items:center;gap:6px">
+        <div style="height:14px;width:${Math.max(2, (r.jobs / max) * 100)}%;max-width:calc(100% - 40px);background:var(--series-1);border-radius:0 4px 4px 0"></div>
+        <span class="small num">${r.jobs}</span></div></td>
+      <td style="border:0;padding:5px 0 5px 8px;white-space:nowrap" class="small muted num">${fmtDur(r.avg_duration_s)}</td>
+    </tr>`).join("")}</table><div class="small muted" style="margin-top:6px">Bar = jobs · right column = average processing time</div><div class="tooltip"></div>`;
+  const tip = el.querySelector(".tooltip");
+  el.querySelectorAll("tr[data-kind]").forEach((tr, i) => {
+    tr.onmousemove = (e) => {
+      const r = rows[i], box = el.getBoundingClientRect();
+      tip.innerHTML = `<div class="t">${esc(r.kind)}</div>${r.jobs} jobs · ✓ ${r.succeeded} · ✕ ${r.failed}<br>${fmtNum(r.pages)} pages · avg ${fmtDur(r.avg_duration_s)}`;
+      tip.style.display = "block";
+      tip.style.left = `${Math.min(e.clientX - box.left + 12, box.width - 160)}px`;
+      tip.style.top = `${e.clientY - box.top + 12}px`;
+    };
+    tr.onmouseleave = () => tip.style.display = "none";
+  });
+}
+
+async function refresh() {
+  let data, system;
+  try {
+    const [s, sys] = await Promise.all([fetch(`/v1/stats?window_minutes=${windowMinutes}`), fetch("/v1/system")]);
+    system = await sys.json();
+    if (!s.ok) throw new Error((await s.json())?.error?.message || `HTTP ${s.status}`);
+    data = await s.json();
+  } catch (e) {
+    $("#alerts").innerHTML = `<div class="alert error"><strong>✕</strong>Cannot load statistics: ${esc(e.message)}</div>`;
+    return;
+  }
+  const c = system.components || {};
+  const pills = [["Database", c.database?.ok], ["Object storage", c.object_storage?.ok], ["Broker", c.broker?.ok],
+                 [`Workers (${(c.workers?.online || []).length})`, c.workers?.ok]];
+  $("#health").innerHTML = pills.map(([n, ok]) => `<span class="pill ${ok ? "ok" : "down"}">${esc(n)}</span>`).join("");
+  $("#alerts").innerHTML = system.messages?.length ? `<div class="alert warning"><strong>⚠</strong>${system.messages.map(esc).join("<br>")}</div>` : "";
+  $("#flowerLink").href = data.links.flower; $("#minioLink").href = data.links.minio_console;
+  $("#updated").textContent = `updated ${new Date().toLocaleTimeString()}`;
+
+  const w = data.window, sc = data.status_counts;
+  const finished = w.succeeded + w.failed;
+  const rate = finished ? `${((w.succeeded / finished) * 100).toFixed(1)}%` : "—";
+  const inFlight = sc.QUEUED + sc.PROCESSING + sc.RETRYING;
+  $("#tiles").innerHTML = [
+    tile("Jobs received", fmtNum(w.created), `${fmtNum(w.cache_hits)} served from cache`),
+    tile("Success rate", rate, `✓ ${fmtNum(w.succeeded)} · ✕ ${fmtNum(w.failed)}`),
+    tile("In flight now", fmtNum(inFlight), `${sc.PROCESSING} processing · ${sc.QUEUED} queued · ${sc.RETRYING} retrying`),
+    tile("Processing time p50", fmtDur(w.p50_duration), `p95 ${fmtDur(w.p95_duration)}`),
+    tile("Avg queue wait", fmtDur(w.avg_wait), "upload → worker start"),
+    tile("Pages extracted", fmtNum(w.pages), `${fmtNum(w.chars)} characters`),
+    tile("Jobs with warnings", fmtNum(w.with_warnings), "low confidence, repairs, mismatches…"),
+  ].join("");
+
+  const bucket = data.bucket_seconds >= 3600 ? "per hour" : data.bucket_seconds >= 300 ? "per 5 minutes" : "per minute";
+  $("#bucketLabel").textContent = `jobs finished ${bucket}`;
+  throughputChart($("#throughput"), data.timeline, data.bucket_seconds);
+  kindChart($("#byKind"), data.by_kind);
+
+  const q = data.queues || {};
+  $("#queues").innerHTML = (data.broker_ok ? `
+    <table><thead><tr><th>Queue</th><th style="text-align:right">Waiting</th></tr></thead><tbody>
+      ${["heavy", "light", "maintenance"].map(n => `<tr><td>${n}</td><td class="num" style="text-align:right">${fmtNum(q[n])}</td></tr>`).join("")}
+      <tr><td>reserved / scheduled retries</td><td class="num" style="text-align:right">${fmtNum(q.reserved_or_scheduled)}</td></tr>
+    </tbody></table>` : `<div class="alert error">✕ Broker unreachable</div>`) + `
+    <table style="margin-top:12px"><thead><tr><th>Worker</th><th>Queues</th><th style="text-align:right">Busy</th></tr></thead><tbody>
+      ${data.workers.length ? data.workers.map(wk => `<tr><td class="small mono">${esc(wk.name)}</td><td class="small">${esc(wk.queues.join(", "))}</td>
+        <td class="num" style="text-align:right">${wk.active_tasks}/${wk.concurrency ?? "?"}</td></tr>`).join("")
+        : `<tr><td colspan="3"><div class="alert warning">⚠ No workers online — jobs will wait in the queue.</div></td></tr>`}
+    </tbody></table>`;
+
+  $("#errors").innerHTML = data.errors.length ? `<table><tbody>${data.errors.map(e =>
+    `<tr><td class="mono">${esc(e.code)}</td><td class="num" style="text-align:right">${e.count}</td></tr>`).join("")}</tbody></table>`
+    : `<div class="empty">✓ No failures in this window.</div>`;
+
+  const rel = data.reliability_events;
+  const relRows = [["worker_lost", "Jobs recovered after a worker died"], ["message_missing", "Lost queue messages re-dispatched"],
+                   ["retry_scheduled", "Automatic retries (transient errors)"], ["dispatch_failed", "Uploads while broker was down"],
+                   ["manual_retry", "Manual retries"], ["cancelled", "Cancelled jobs"]];
+  $("#reliability").innerHTML = `<table><tbody>${relRows.map(([k, label]) =>
+    `<tr><td class="small">${label}</td><td class="num" style="text-align:right">${fmtNum(rel[k] || 0)}</td></tr>`).join("")}</tbody></table>`;
+
+  $("#active").innerHTML = data.active_jobs.length ? `<table><thead><tr><th>Document</th><th>Status</th><th>Progress</th><th class="hide-sm">Heartbeat</th></tr></thead><tbody>
+    ${data.active_jobs.map(j => `<tr><td><a class="fname" href="/?job=${j.id}" title="${esc(j.filename)}">${esc(j.filename)}</a></td>
+      <td><span class="badge ${j.status}">${j.status}</span>${j.attempts > 1 ? ` <span class="small muted">try ${j.attempts}</span>` : ""}</td>
+      <td style="min-width:140px"><div class="progress"><div style="width:${j.progress}%"></div></div><div class="small muted">${esc(j.stage)}${j.stage_detail ? ": " + esc(j.stage_detail) : ""}</div></td>
+      <td class="hide-sm small num ${j.heartbeat_age_s > 20 ? "" : "muted"}">${j.heartbeat_age_s == null ? "—" : `${j.heartbeat_age_s > 20 ? "⚠ " : ""}${j.heartbeat_age_s}s ago`}</td></tr>`).join("")}
+    </tbody></table>` : `<div class="empty">Nothing in flight.</div>`;
+
+  $("#failures").innerHTML = data.recent_failures.length ? data.recent_failures.map(f =>
+    `<div style="padding:6px 0;border-bottom:1px solid var(--grid)"><a class="fname" href="/?job=${f.id}">${esc(f.filename)}</a>
+      <span class="mono small" style="color:var(--critical-ink)">✕ ${esc(f.error_code)}</span>
+      <div class="small muted">${esc(f.error_message)}</div></div>`).join("") : `<div class="empty">✓ No failures.</div>`;
+}
+
+refresh();
+setInterval(refresh, 3000);
+window.addEventListener("resize", () => refresh());
+</script>
+</body>
+</html>

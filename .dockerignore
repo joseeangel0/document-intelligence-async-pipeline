@@ -1,0 +1,9 @@
+.git
+**/__pycache__
+**/*.pyc
+benchmark/data
+benchmark/results
+report/build
+*.pdf
+!samples/*.pdf
+.venv

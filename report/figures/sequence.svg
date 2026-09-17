@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 712" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0b0b0b"/>
+    </marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#898781"/>
+    </marker>
+    <style>
+      .hd { fill: #ffffff; stroke: #52514e; stroke-width: 1.2; }
+      .hs { fill: #f4f8fd; stroke: #86b6ef; stroke-width: 1.2; }
+      .hw { fill: #f3f9f3; stroke: #8cc48c; stroke-width: 1.2; }
+      .ht { font-size: 13px; font-weight: 700; text-anchor: middle; fill: #0b0b0b; }
+      .life { stroke: #c3c2b7; stroke-width: 1; stroke-dasharray: 4 4; }
+      .m { stroke: #0b0b0b; stroke-width: 1.3; marker-end: url(#a); fill: none; }
+      .ret { stroke: #898781; stroke-width: 1.2; marker-end: url(#r); stroke-dasharray: 5 3; fill: none; }
+      .tx { font-size: 11.5px; fill: #0b0b0b; }
+      .tr { font-size: 11.5px; fill: #52514e; }
+      .code { font-family: Menlo, monospace; font-size: 10.5px; fill: #1c5cab; }
+      .phase { fill: #f6f6f4; }
+      .ph { font-size: 11px; font-weight: 700; fill: #898781; letter-spacing: .06em; }
+      .loop { fill: none; stroke: #b08a2e; stroke-width: 1.1; }
+      .lt { font-size: 11px; fill: #7a5a10; font-weight: 700; }
+    </style>
+  </defs>
+
+  <!-- phase bands -->
+  <rect class="phase" x="0" y="60" width="1000" height="210"/>
+  <text class="ph" x="8" y="76">UPLOAD · CLAIM CHECK IN (≈ tens of ms)</text>
+  <rect class="phase" x="0" y="540" width="1000" height="172"/>
+  <text class="ph" x="8" y="556">RESULTS · CLAIM CHECK OUT</text>
+  <text class="ph" x="8" y="292">PROCESSING (ASYNC, SECONDS TO MINUTES)</text>
+
+  <!-- headers: x = 70, 250, 430, 590, 750, 920 -->
+  <rect class="hd" x="20" y="12" width="100" height="34" rx="6"/><text class="ht" x="70" y="34">Client</text>
+  <rect class="hd" x="200" y="12" width="100" height="34" rx="6"/><text class="ht" x="250" y="34">API</text>
+  <rect class="hs" x="380" y="12" width="100" height="34" rx="6"/><text class="ht" x="430" y="34">MinIO</text>
+  <rect class="hs" x="540" y="12" width="100" height="34" rx="6"/><text class="ht" x="590" y="34">PostgreSQL</text>
+  <rect class="hs" x="700" y="12" width="100" height="34" rx="6"/><text class="ht" x="750" y="34">Redis</text>
+  <rect class="hw" x="870" y="12" width="110" height="34" rx="6"/><text class="ht" x="925" y="34">Worker</text>
+
+  <line class="life" x1="70" y1="46" x2="70" y2="706"/>
+  <line class="life" x1="250" y1="46" x2="250" y2="706"/>
+  <line class="life" x1="430" y1="46" x2="430" y2="706"/>
+  <line class="life" x1="590" y1="46" x2="590" y2="706"/>
+  <line class="life" x1="750" y1="46" x2="750" y2="706"/>
+  <line class="life" x1="925" y1="46" x2="925" y2="706"/>
+
+  <!-- upload -->
+  <path class="m" d="M70,100 H248"/>
+  <text class="tx" x="80" y="94">POST /v1/documents (file, options)</text>
+  <path class="m" d="M250,118 h24 v14 h-22"/>
+  <text class="tr" x="280" y="130">stream to disk · sha256 · magic bytes · limits</text>
+
+  <path class="m" d="M250,160 H428"/>
+  <text class="code" x="258" y="154">PUT documents/sha256/ab/…pdf</text>
+
+  <path class="m" d="M250,190 H588"/>
+  <text class="code" x="258" y="184">INSERT document, job(QUEUED), events · COMMIT</text>
+
+  <path class="m" d="M250,220 H748"/>
+  <text class="code" x="258" y="214">publish {"job_id": "…"} → queue heavy   (after commit)</text>
+
+  <path class="ret" d="M248,250 H72"/>
+  <text class="tr" x="80" y="244">202 Accepted {id, status: QUEUED, links}</text>
+
+  <!-- processing -->
+  <path class="m" d="M923,318 H752"/>
+  <text class="code" x="765" y="312">reserve message (unacked)</text>
+
+  <path class="m" d="M923,350 H592"/>
+  <text class="code" x="600" y="344">atomic claim: UPDATE → PROCESSING, attempts+1</text>
+
+  <path class="m" d="M923,380 H432"/>
+  <text class="code" x="440" y="374">GET documents/sha256/ab/…pdf (the claim is redeemed)</text>
+
+  <rect class="loop" x="560" y="390" width="430" height="68" rx="4"/>
+  <text class="lt" x="568" y="408">loop per page</text>
+  <path class="m" d="M925,408 h24 v14 h-22"/>
+  <text class="tr" x="700" y="420">text layer or OCR · check cancel</text>
+  <path class="m" d="M923,450 H592"/>
+  <text class="code" x="600" y="444">heartbeat_at, progress, stage</text>
+
+  <path class="m" d="M923,478 H432"/>
+  <text class="code" x="440" y="472">PUT results/jobs/{id}/text.txt · result.json</text>
+
+  <path class="m" d="M923,506 H592"/>
+  <text class="code" x="600" y="500">UPDATE SUCCEEDED, metadata WHERE worker_id = me</text>
+
+  <path class="m" d="M923,530 H752"/>
+  <text class="code" x="765" y="524">ack (message removed)</text>
+
+  <!-- polling -->
+  <path class="m" d="M70,580 H248"/>
+  <text class="tx" x="80" y="574">GET /v1/jobs/{id}  (poll)</text>
+  <path class="m" d="M250,594 H588"/>
+  <text class="code" x="258" y="590">SELECT job</text>
+  <path class="ret" d="M248,610 H72"/>
+  <text class="tr" x="80" y="624">status · stage · progress % · warnings · error</text>
+
+  <path class="m" d="M70,650 H248"/>
+  <text class="tx" x="80" y="644">GET /v1/jobs/{id}/text</text>
+  <path class="m" d="M250,664 H428"/>
+  <text class="code" x="258" y="658">GET results/jobs/{id}/text.txt</text>
+  <path class="ret" d="M248,680 H72"/>
+  <text class="tr" x="80" y="694">streamed text/plain</text>
+</svg>

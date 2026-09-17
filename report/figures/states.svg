@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 425" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52514e"/>
+    </marker>
+    <marker id="w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b08a2e"/>
+    </marker>
+    <style>
+      .st { stroke-width: 1.5; }
+      .name { font-size: 14px; font-weight: 700; fill: #0b0b0b; }
+      .sub { font-size: 11px; fill: #52514e; }
+      .lbl { font-size: 11.5px; fill: #0b0b0b; }
+      .lbw { font-size: 11.5px; fill: #7a5a10; }
+      .e { stroke: #52514e; stroke-width: 1.4; fill: none; marker-end: url(#a); }
+      .ew { stroke: #b08a2e; stroke-width: 1.4; fill: none; marker-end: url(#w); stroke-dasharray: 6 4; }
+    </style>
+  </defs>
+
+  <!-- rejected -->
+  <rect x="20" y="300" width="170" height="92" rx="10" fill="#f6f6f4" stroke="#c3c2b7" class="st"/>
+  <text class="name" x="35" y="325">Rejected at upload</text>
+  <text class="sub" x="35" y="345">no job is created</text>
+  <text class="sub" x="35" y="362">415 unsupported · 413 too large</text>
+  <text class="sub" x="35" y="379">400 empty · 422 bad options</text>
+
+  <!-- start -->
+  <circle cx="45" cy="160" r="9" fill="#0b0b0b"/>
+  <text class="lbl" x="30" y="140">POST</text>
+  <path class="e" d="M54,160 H158"/>
+  <text class="lbl" x="66" y="152">stored + row</text>
+  <path class="e" d="M45,170 V298"/>
+  <text class="lbl" x="52" y="240">invalid</text>
+
+  <!-- QUEUED -->
+  <rect x="160" y="125" width="150" height="70" rx="12" fill="#ffffff" stroke="#898781" class="st"/>
+  <text class="name" x="175" y="152">QUEUED</text>
+  <text class="sub" x="175" y="172">message in broker</text>
+  <text class="sub" x="175" y="187">(re-sent if missing)</text>
+
+  <!-- PROCESSING -->
+  <rect x="420" y="125" width="170" height="70" rx="12" fill="#eaf2fc" stroke="#2a78d6" class="st"/>
+  <text class="name" x="435" y="152">PROCESSING</text>
+  <text class="sub" x="435" y="172">atomic claim · attempt n</text>
+  <text class="sub" x="435" y="187">heartbeat every 5 s</text>
+
+  <!-- RETRYING -->
+  <rect x="420" y="300" width="170" height="70" rx="12" fill="#fff6e0" stroke="#fab219" class="st"/>
+  <text class="name" x="435" y="327">RETRYING</text>
+  <text class="sub" x="435" y="347">backoff 10 s, 20 s…</text>
+  <text class="sub" x="435" y="362">next_retry_at shown</text>
+
+  <!-- terminals -->
+  <rect x="790" y="30" width="180" height="70" rx="12" fill="#eef8ee" stroke="#0ca30c" stroke-width="2.5"/>
+  <text class="name" x="805" y="57">✓ SUCCEEDED</text>
+  <text class="sub" x="805" y="77">text + metadata stored</text>
+  <text class="sub" x="805" y="92">(may carry warnings)</text>
+
+  <rect x="790" y="160" width="180" height="70" rx="12" fill="#fdecec" stroke="#d03b3b" stroke-width="2.5"/>
+  <text class="name" x="805" y="187">✕ FAILED</text>
+  <text class="sub" x="805" y="207">error_code + message</text>
+  <text class="sub" x="805" y="222">incl. EXPIRED (24 h queued)</text>
+
+  <rect x="790" y="300" width="180" height="70" rx="12" fill="#f6f6f4" stroke="#52514e" stroke-width="2.5"/>
+  <text class="name" x="805" y="327">⊘ CANCELLED</text>
+  <text class="sub" x="805" y="347">by user; running jobs stop</text>
+  <text class="sub" x="805" y="362">at the next page checkpoint</text>
+
+  <!-- transitions -->
+  <path class="e" d="M310,152 H418"/>
+  <text class="lbl" x="322" y="143">worker claims</text>
+
+  <path class="e" d="M590,145 H690 V65 H788"/>
+  <text class="lbl" x="610" y="58">extraction done</text>
+
+  <path class="e" d="M590,175 H700 V195 H788"/>
+  <text class="lbl" x="600" y="215">bad input: CORRUPTED_FILE,</text>
+  <text class="lbl" x="600" y="230">ENCRYPTED, LIMIT_EXCEEDED,</text>
+  <text class="lbl" x="600" y="245">TIMEOUT, attempts used up</text>
+
+  <path class="e" d="M540,195 V298"/>
+  <text class="lbl" x="548" y="262">transient error</text>
+  <text class="lbl" x="548" y="277">(storage/DB down)</text>
+
+  <path class="e" d="M470,300 V197"/>
+  <text class="lbl" x="352" y="262">claimed again</text>
+
+  <path class="e" d="M590,345 H788"/>
+  <text class="lbl" x="660" y="337">cancel</text>
+
+  <!-- worker lost: processing -> queued (sweeper) -->
+  <path class="ew" d="M470,125 V95 H235 V123"/>
+  <text class="lbw" x="250" y="87">sweeper: heartbeat silent 45 s → re-queue (attempts left)</text>
+
+  <!-- expired -->
+  <path class="ew" d="M235,195 V410 H880 V372"/>
+  <text class="lbw" x="250" y="402">cancel while still waiting (QUEUED / RETRYING)</text>
+
+  <!-- manual retry -->
+  <path class="ew" d="M970,195 H990 V12 H200 V123"/>
+  <text class="lbw" x="380" y="24">POST /v1/jobs/{id}/retry (FAILED or CANCELLED) → QUEUED, attempts reset</text>
+</svg>

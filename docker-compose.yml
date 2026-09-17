@@ -1,0 +1,128 @@
+name: docintel
+
+x-app: &app
+  build: .
+  image: docintel:latest
+  restart: unless-stopped
+  env_file:
+    - path: .env
+      required: false
+  environment: &app-env
+    DATABASE_URL: postgresql+psycopg://docintel:docintel@postgres:5432/docintel
+    REDIS_URL: redis://redis:6379/0
+    S3_ENDPOINT_URL: http://minio:9000
+    S3_ACCESS_KEY: docintel
+    S3_SECRET_KEY: docintel-secret
+  depends_on:
+    postgres: { condition: service_healthy }
+    redis: { condition: service_healthy }
+    minio: { condition: service_healthy }
+
+services:
+  # ------------------------------------------------------------------ infrastructure
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docintel
+      POSTGRES_PASSWORD: docintel
+      POSTGRES_DB: docintel
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docintel -d docintel"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # AOF persistence: queued messages survive a broker restart.
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: docintel
+      MINIO_ROOT_PASSWORD: docintel-secret
+    ports:
+      - "9001:9001"   # web console
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # ------------------------------------------------------------------ application
+  api:
+    <<: *app
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  # Cheap formats (txt, html, office): high concurrency, never starved by OCR work.
+  worker-light:
+    <<: *app
+    command: ["celery", "-A", "app.worker.tasks", "worker", "-Q", "light,maintenance", "-n", "light@%h",
+              "--concurrency", "4", "--loglevel", "INFO"]
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.worker.celery_app inspect ping -d light@$$HOSTNAME --timeout 5 | grep -q pong"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+
+  # PDFs and images (may need OCR): CPU bound, concurrency ~ cores reserved for OCR.
+  worker-heavy:
+    <<: *app
+    command: ["celery", "-A", "app.worker.tasks", "worker", "-Q", "heavy", "-n", "heavy@%h",
+              "--concurrency", "${HEAVY_CONCURRENCY:-2}", "--loglevel", "INFO"]
+    environment:
+      <<: *app-env
+      OCR_THREADS: ${OCR_THREADS:-2}   # ONNX Runtime threads per OCR process (concurrency x threads ~ cores)
+    stop_grace_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 4g
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.worker.celery_app inspect ping -d heavy@$$HOSTNAME --timeout 5 | grep -q pong"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+
+  # Periodic recovery sweep (requeue lost jobs, re-dispatch missing messages, expire stale jobs).
+  scheduler:
+    <<: *app
+    command: ["celery", "-A", "app.worker.tasks", "beat", "--loglevel", "INFO",
+              "--schedule", "/tmp/celerybeat-schedule"]
+
+  flower:
+    <<: *app
+    command: ["celery", "-A", "app.worker.celery_app", "flower", "--port=5555",
+              "--persistent=True", "--db=/tmp/flower.db", "--state_save_interval=10000"]
+    ports:
+      - "5555:5555"
+    depends_on:
+      redis: { condition: service_healthy }
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:

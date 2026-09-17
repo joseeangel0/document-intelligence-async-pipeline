@@ -1,0 +1,12 @@
+type,engine,label,license,footprint_mb,cold_start_s,first_call_s,rss_load_delta_mb,peak_rss_mb,macro_cer,macro_wer,macro_bow_f1,sec_per_page_mean,sec_per_page_p95,total_pages,scored_samples
+ocr,tesseract,Tesseract 5.3,Apache-2.0,14.8,0.079,0.229,26.9,252.4,0.2144,0.2295,0.8257,0.27835,0.55828,43,36
+ocr,tesseract_prep,Tesseract 5.3 + OpenCV prep,Apache-2.0 (+ OpenCV Apache-2.0),88.3,0.101,0.276,48.8,348.1,0.0796,0.1257,0.9124,0.3324,0.7316,43,36
+ocr,rapidocr_v6,RapidOCR PP-OCRv6 small,Apache-2.0 (models Apache-2.0),221.4,0.337,0.741,126.3,1099.1,0.0005,0.0054,0.9973,0.90568,1.6407,43,36
+ocr,rapidocr_v5_latin,RapidOCR PP-OCRv5 latin,Apache-2.0 (models Apache-2.0),203.8,0.335,0.59,106.0,1128.9,0.0018,0.0064,0.9972,0.94366,1.6937,43,36
+ocr,easyocr,EasyOCR 1.7,Apache-2.0,811.5,2.734,8.469,455.2,6375.9,0.0433,0.1382,0.9657,6.95748,12.99906,43,36
+pdf,pymupdf,PyMuPDF,AGPL-3.0 or commercial,49.9,0.08,,41.2,60.6,0.1162,0.1404,1.0,0.00078,0.00134,17,13
+pdf,pymupdf_sorted,PyMuPDF (sort=True),AGPL-3.0 or commercial,49.9,0.079,,41.4,60.8,0.0933,0.1128,1.0,0.0026,0.00437,17,13
+pdf,pypdfium2,pypdfium2,Apache-2.0 / BSD-3 (PDFium),6.3,0.102,,38.2,57.5,0.222,0.2731,1.0,0.00049,0.00085,17,13
+pdf,pdfplumber,pdfplumber,MIT,14.3,0.13,,176.9,198.5,0.2199,0.3884,0.8717,0.01157,0.02576,17,13
+pdf,pypdf,pypdf,BSD-3-Clause,2.6,0.106,,42.5,63.8,0.2147,0.9122,0.8604,0.00281,0.01304,17,13
+pdf,pdfminer,pdfminer.six,MIT,7.6,0.088,,31.5,50.8,0.292,0.8647,0.8604,0.01,0.0271,17,13

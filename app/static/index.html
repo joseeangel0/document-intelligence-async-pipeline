@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DocIntel · Documents</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+<link rel="stylesheet" href="/static/style.css">
+<style>
+  .layout { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; }
+  @media (max-width: 1000px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+  .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
+  .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .toolbar .grow { flex: 1; }
+  .fname { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+  #detail { position: sticky; top: 64px; }
+  .actions { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+  details summary { cursor: pointer; color: var(--ink-2); margin: 10px 0 6px; }
+  .uploads { margin-top: 10px; font-size: 13px; }
+  .uploads div { padding: 3px 0; }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>📄 Document Intelligence</h1>
+  <span id="sysPill" class="pill">checking…</span>
+  <nav>
+    <a href="/" class="active">Documents</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/docs" target="_blank">API docs</a>
+    <a href="http://localhost:5555" target="_blank">Flower</a>
+  </nav>
+</header>
+<main>
+  <div id="sysAlert"></div>
+  <div class="grid layout">
+    <div class="grid">
+      <section class="card">
+        <h2>Upload documents <span class="sub" id="limits"></span></h2>
+        <div class="dropzone" id="drop" tabindex="0" role="button">
+          <strong>Drop files here</strong> or click to choose<br>
+          <span class="small muted" id="formatsHint">PDF, images, text, Office…</span>
+        </div>
+        <input type="file" id="file" multiple hidden>
+        <div class="options">
+          <label class="field">OCR languages
+            <select id="language"></select>
+          </label>
+          <label class="field">OCR mode
+            <select id="ocrMode">
+              <option value="auto">auto (only pages without text)</option>
+              <option value="force">force (OCR every page)</option>
+              <option value="off">off (text layer only)</option>
+            </select>
+          </label>
+          <label class="field">OCR engine
+            <select id="engine"></select>
+          </label>
+          <label class="field">Client reference
+            <input type="text" id="clientRef" placeholder="optional" maxlength="256">
+          </label>
+        </div>
+        <div class="options">
+          <label class="check"><input type="checkbox" id="entities" checked> Extract entities</label>
+          <label class="check"><input type="checkbox" id="force"> Re-process duplicates</label>
+        </div>
+        <div class="uploads" id="uploads"></div>
+      </section>
+
+      <section class="card">
+        <div class="toolbar">
+          <h2 style="margin:0">Jobs</h2>
+          <span class="grow"></span>
+          <input type="text" id="search" placeholder="Filter by filename" style="width:170px">
+          <select id="statusFilter">
+            <option value="">All statuses</option>
+            <option>QUEUED</option><option>PROCESSING</option><option>RETRYING</option>
+            <option>SUCCEEDED</option><option>FAILED</option><option>CANCELLED</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Document</th><th>Status</th><th>Progress</th><th class="hide-sm">Pages</th><th class="hide-sm">Time</th><th class="hide-sm">Created</th></tr></thead>
+            <tbody id="jobs"><tr><td colspan="6" class="muted">Loading…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="small muted" id="jobsFooter" style="margin-top:8px"></div>
+      </section>
+    </div>
+
+    <section class="card" id="detail">
+      <p class="muted">Select a job to see its status, warnings, timeline and extracted text.</p>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtBytes = (n) => n < 1024 ? `${n} B` : n < 1048576 ? `${(n/1024).toFixed(1)} KB` : `${(n/1048576).toFixed(1)} MB`;
+const fmtTime = (iso) => iso ? new Date(iso).toLocaleTimeString() : "—";
+const fmtDur = (s) => s == null ? "—" : s < 1 ? `${Math.round(s*1000)} ms` : s < 120 ? `${s.toFixed(1)} s` : `${(s/60).toFixed(1)} min`;
+let selected = new URLSearchParams(location.search).get("job");
+let resultCache = {};
+let pageTab = "all";
+
+async function api(path, opts) {
+  const res = await fetch(path, opts);
+  let body = null;
+  try { body = await res.json(); } catch (_) {}
+  return { ok: res.ok, status: res.status, body };
+}
+
+// ---------------------------------------------------------------- formats & options
+async function loadFormats() {
+  const { ok, body } = await api("/v1/formats");
+  if (!ok) return;
+  const exts = body.formats.flatMap(f => f.extensions);
+  $("#file").accept = exts.join(",");
+  $("#formatsHint").textContent = exts.map(e => e.slice(1)).join(" · ");
+  $("#limits").textContent = `max ${body.limits.max_upload_mb} MB · ${body.limits.max_pdf_pages} PDF pages`;
+  const engines = Object.keys(body.ocr.engines);
+  $("#engine").innerHTML = engines.map(e => `<option ${e === body.ocr.default_engine ? "selected" : ""}>${esc(e)}</option>`).join("");
+  const langs = body.ocr.engines[body.ocr.default_engine] || [];
+  const combos = [body.ocr.default_languages, ...langs.filter(l => l !== body.ocr.default_languages)];
+  $("#language").innerHTML = combos.map(l => `<option>${esc(l)}</option>`).join("");
+}
+
+// ---------------------------------------------------------------- upload
+const drop = $("#drop");
+drop.onclick = () => $("#file").click();
+drop.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") $("#file").click(); };
+drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); uploadFiles(e.dataTransfer.files); };
+$("#file").onchange = (e) => { uploadFiles(e.target.files); e.target.value = ""; };
+
+async function uploadFiles(files) {
+  for (const file of files) {
+    const line = document.createElement("div");
+    line.innerHTML = `⏳ Uploading <b>${esc(file.name)}</b> (${fmtBytes(file.size)})…`;
+    $("#uploads").prepend(line);
+    const form = new FormData();
+    form.append("file", file);
+    form.append("language", $("#language").value);
+    form.append("ocr_mode", $("#ocrMode").value);
+    form.append("ocr_engine", $("#engine").value);
+    form.append("extract_entities", $("#entities").checked);
+    form.append("force", $("#force").checked);
+    if ($("#clientRef").value) form.append("client_reference", $("#clientRef").value);
+    try {
+      const { ok, status, body } = await api("/v1/documents", { method: "POST", body: form });
+      if (ok) {
+        const cached = status === 200 ? " — identical file already processed, result reused" : "";
+        line.innerHTML = `✓ <b>${esc(file.name)}</b> accepted as job <a href="#" data-job="${body.id}">${body.id.slice(0, 8)}</a>${cached}`
+          + (body.warnings.length ? `<div class="alert warning"><strong>⚠</strong>${body.warnings.map(esc).join("<br>")}</div>` : "");
+        selectJob(body.id);
+      } else {
+        const err = body?.error || { code: `HTTP ${status}`, message: "Upload failed" };
+        line.innerHTML = `<div class="alert error"><strong>✕ ${esc(file.name)}:</strong>${esc(err.message)} <span class="mono">(${esc(err.code)})</span></div>`;
+      }
+    } catch (e) {
+      line.innerHTML = `<div class="alert error"><strong>✕ ${esc(file.name)}:</strong>the service is unreachable (${esc(e.message)}).</div>`;
+    }
+    refreshJobs();
+  }
+}
+$("#uploads").onclick = (e) => { const id = e.target.dataset?.job; if (id) { e.preventDefault(); selectJob(id); } };
+
+// ---------------------------------------------------------------- jobs list
+async function refreshJobs() {
+  const params = new URLSearchParams({ limit: 50 });
+  if ($("#statusFilter").value) params.set("status", $("#statusFilter").value);
+  if ($("#search").value) params.set("q", $("#search").value);
+  const { ok, body } = await api(`/v1/jobs?${params}`);
+  if (!ok) { $("#jobs").innerHTML = `<tr><td colspan="6"><div class="alert error">${esc(body?.error?.message || "Could not load jobs")}</div></td></tr>`; return; }
+  $("#jobsFooter").textContent = `${body.items.length} of ${body.total} jobs · refreshes automatically`;
+  $("#jobs").innerHTML = body.items.length ? body.items.map(j => `
+    <tr class="clickable ${j.id === selected ? "selected" : ""}" data-id="${j.id}">
+      <td><span class="fname" title="${esc(j.document.filename)}">${esc(j.document.filename)}</span>
+          <span class="small muted">${esc(j.document.kind)} · ${fmtBytes(j.document.size_bytes)}${j.warnings.length ? ` · ⚠ ${j.warnings.length}` : ""}</span></td>
+      <td><span class="badge ${j.status}">${j.status}</span>${j.attempts > 1 ? `<div class="small muted">attempt ${j.attempts}/${j.max_attempts}</div>` : ""}</td>
+      <td>${j.is_terminal ? `<span class="small muted">${j.error ? esc(j.error.code) : j.cached_from_job_id ? "cached" : "done"}</span>`
+          : `<div class="progress"><div style="width:${j.progress}%"></div></div><div class="small muted">${esc(j.stage)}</div>`}</td>
+      <td class="hide-sm num">${j.page_count ?? "—"}</td>
+      <td class="hide-sm num">${fmtDur(j.duration_s)}</td>
+      <td class="hide-sm small muted">${fmtTime(j.created_at)}</td>
+    </tr>`).join("") : `<tr><td colspan="6" class="muted">No jobs yet — upload a document.</td></tr>`;
+}
+$("#jobs").onclick = (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) selectJob(tr.dataset.id); };
+$("#statusFilter").onchange = refreshJobs;
+let searchTimer; $("#search").oninput = () => { clearTimeout(searchTimer); searchTimer = setTimeout(refreshJobs, 250); };
+
+// ---------------------------------------------------------------- detail
+function selectJob(id) {
+  selected = id; pageTab = "all";
+  history.replaceState(null, "", `?job=${id}`);
+  document.querySelectorAll("#jobs tr").forEach(tr => tr.classList.toggle("selected", tr.dataset.id === id));
+  refreshDetail(true);
+}
+
+let lastRender = "";
+async function refreshDetail(force = false) {
+  if (!selected) return;
+  const id = selected;
+  const [{ ok, body: job }, { body: events }] = await Promise.all([api(`/v1/jobs/${id}`), api(`/v1/jobs/${id}/events`)]);
+  if (id !== selected) return;
+  if (!ok) { $("#detail").innerHTML = `<div class="alert error">${esc(job?.error?.message || "Job not found")}</div>`; return; }
+  let result = resultCache[id];
+  if (job.status === "SUCCEEDED" && !result) {
+    const r = await api(`/v1/jobs/${id}/result`);
+    if (r.ok) result = resultCache[id] = r.body;
+  }
+  const key = [id, job.status, job.progress, job.stage_detail, (events || []).length, pageTab, !!result].join("|");
+  if (!force && key === lastRender) return;  // don't re-render (and collapse sections) when nothing changed
+  lastRender = key;
+  const scrollTop = $("#detail pre.text")?.scrollTop || 0;
+  $("#detail").innerHTML = renderDetail(job, events || [], result);
+  const pre = $("#detail pre.text"); if (pre) pre.scrollTop = scrollTop;
+}
+
+function renderDetail(j, events, result) {
+  const meta = result?.metadata || {};
+  const stats = meta.stats || {};
+  const lang = j.language ? `${j.language.code} (${Math.round(j.language.confidence * 100)}%)` : "—";
+  const entities = meta.entities ? Object.entries(meta.entities).map(([k, vals]) =>
+      `<dt>${esc(k.replace("_", " "))}</dt><dd>${vals.slice(0, 8).map(v => `<span class="chip" title="${esc(v)}">${esc(v)}</span>`).join("")}${vals.length > 8 ? ` <span class="muted small">+${vals.length - 8}</span>` : ""}</dd>`).join("") : "";
+  const docMeta = meta.pdf || meta.image || meta.docx || meta.pptx || meta.xlsx || meta.html || meta.text || null;
+  const docMetaRows = docMeta ? Object.entries(docMeta).filter(([, v]) => v !== null && v !== "" && !(typeof v === "object" && !Array.isArray(v) && !Object.keys(v).length))
+      .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(Array.isArray(v) ? v.join(" × ") : typeof v === "object" ? JSON.stringify(v) : v)}</dd>`).join("") : "";
+
+  let text = "";
+  if (result) {
+    const pages = result.pages || [];
+    const tabs = pages.length > 1 ? `<div class="tabs"><button class="${pageTab === "all" ? "on" : ""}" data-tab="all">All</button>${
+      pages.map(p => `<button class="${pageTab == p.number ? "on" : ""}" data-tab="${p.number}" title="${esc(p.method)}${p.ocr_confidence != null ? ` · conf ${p.ocr_confidence}` : ""}">${p.number}${p.method.startsWith("ocr") ? "·ocr" : ""}</button>`).join("")}</div>` : "";
+    const page = pageTab === "all" ? null : pages.find(p => p.number == pageTab);
+    const shown = page ? page.text : result.text;
+    const pageInfo = page ? `<div class="small muted" style="margin-bottom:6px">Page ${page.number} · ${esc(page.method)}${page.ocr_confidence != null ? ` · OCR confidence ${page.ocr_confidence}` : ""} · ${page.char_count} chars · ${page.duration_ms ?? "?"} ms</div>` : "";
+    text = `<h2 style="margin-top:14px">Extracted text</h2>${tabs}${pageInfo}<pre class="text">${esc(shown) || '<span class="muted">(empty)</span>'}</pre>`;
+  }
+
+  const icon = { info: "•", warning: "⚠", error: "✕" };
+  return `
+    <h2 style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="fname" style="max-width:100%">${esc(j.document.filename)}</span>
+      <span class="badge ${j.status}">${j.status}</span></h2>
+    <div class="small muted">${esc(j.status_message)} ${j.is_terminal ? "" : `— ${esc(j.stage)}${j.stage_detail ? `: ${esc(j.stage_detail)}` : ""}`}</div>
+    ${!j.is_terminal ? `<div class="progress" style="margin:8px 0"><div style="width:${j.progress}%"></div></div>` : ""}
+    ${j.error ? `<div class="alert error"><strong>✕ ${esc(j.error.code)}</strong>${esc(j.error.message)}</div>` : ""}
+    ${j.status === "RETRYING" && j.next_retry_at ? `<div class="alert warning"><strong>↻</strong>Next automatic attempt at ${fmtTime(j.next_retry_at)} (attempt ${j.attempts + 1}/${j.max_attempts}).</div>` : ""}
+    ${j.warnings.length ? `<div class="alert warning"><strong>⚠ ${j.warnings.length} warning${j.warnings.length > 1 ? "s" : ""}</strong><ul>${j.warnings.map(w => `<li>${esc(w)}</li>`).join("")}</ul></div>` : ""}
+    ${j.cached_from_job_id ? `<div class="alert info"><strong>ℹ</strong>Result reused from job <a href="#" data-job="${j.cached_from_job_id}">${j.cached_from_job_id.slice(0, 8)}</a> (identical file and options).</div>` : ""}
+    <div class="actions">
+      ${j.status === "SUCCEEDED" ? `<a class="btn" href="${j.links.text}?download=true">⬇ .txt</a><a class="btn" href="${j.links.result}" target="_blank">{ } JSON</a>` : ""}
+      <a class="btn" href="${j.links.document}" target="_blank">Original</a>
+      ${!j.is_terminal ? `<button data-action="cancel">Cancel</button>` : ""}
+      ${["FAILED", "CANCELLED"].includes(j.status) ? `<button data-action="retry">Retry</button>` : ""}
+    </div>
+    <dl class="kv">
+      <dt>Job</dt><dd class="mono">${j.id}</dd>
+      <dt>Type</dt><dd>${esc(j.document.kind)} · ${esc(j.document.mime_type)} · ${fmtBytes(j.document.size_bytes)}</dd>
+      <dt>Options</dt><dd>${Object.entries(j.options).map(([k, v]) => `<span class="chip">${esc(k)}=${esc(v)}</span>`).join("")}</dd>
+      <dt>Queue</dt><dd>${esc(j.queue)} · attempt ${j.attempts}/${j.max_attempts}</dd>
+      <dt>Timing</dt><dd>waited ${fmtDur(j.queue_wait_s)} · processed in ${fmtDur(j.duration_s)}</dd>
+      ${result ? `<dt>Result</dt><dd>${stats.page_count} page(s) · ${stats.word_count?.toLocaleString()} words · ${stats.char_count?.toLocaleString()} chars · language ${esc(lang)}${stats.mean_ocr_confidence != null ? ` · OCR confidence ${stats.mean_ocr_confidence}` : ""}</dd>` : ""}
+      ${j.client_reference ? `<dt>Reference</dt><dd>${esc(j.client_reference)}</dd>` : ""}
+    </dl>
+    ${entities ? `<details open><summary>Entities</summary><dl class="kv">${entities}</dl></details>` : ""}
+    ${docMetaRows ? `<details><summary>Document metadata</summary><dl class="kv">${docMetaRows}</dl></details>` : ""}
+    <details ${j.is_terminal ? "" : "open"}><summary>Timeline (${events.length})</summary>
+      <ul class="timeline">${events.map(e => `<li><span class="small muted num">${fmtTime(e.at)}</span><span class="ic ${e.level}">${icon[e.level] || "•"}</span><span>${esc(e.message)}</span></li>`).join("")}</ul>
+    </details>
+    ${text}`;
+}
+
+$("#detail").onclick = async (e) => {
+  const tab = e.target.dataset?.tab;
+  if (tab) { pageTab = tab; refreshDetail(true); return; }
+  const jobLink = e.target.dataset?.job;
+  if (jobLink) { e.preventDefault(); selectJob(jobLink); return; }
+  const action = e.target.dataset?.action;
+  if (action) {
+    e.target.disabled = true;
+    const { ok, body } = await api(`/v1/jobs/${selected}/${action}`, { method: "POST" });
+    if (!ok) alertBox(body?.error?.message || "Action failed");
+    delete resultCache[selected];
+    refreshDetail(true); refreshJobs();
+  }
+};
+function alertBox(msg) { $("#sysAlert").innerHTML = `<div class="alert error">${esc(msg)}</div>`; }
+
+// ---------------------------------------------------------------- system status
+async function refreshSystem() {
+  try {
+    const { body } = await api("/v1/system");
+    const ok = body?.status === "ok";
+    $("#sysPill").className = `pill ${ok ? "ok" : "down"}`;
+    $("#sysPill").textContent = ok ? "All systems operational" : "Degraded";
+    $("#sysAlert").innerHTML = body?.messages?.length
+      ? `<div class="alert warning"><strong>⚠ System status</strong><ul>${body.messages.map(m => `<li>${esc(m)}</li>`).join("")}</ul></div>` : "";
+  } catch (e) {
+    $("#sysPill").className = "pill down"; $("#sysPill").textContent = "API unreachable";
+    $("#sysAlert").innerHTML = `<div class="alert error"><strong>✕</strong>The API is unreachable. Your uploaded jobs are safe and will continue when it is back.</div>`;
+  }
+}
+
+loadFormats();
+refreshJobs(); refreshSystem(); refreshDetail();
+setInterval(() => { refreshJobs(); refreshDetail(); }, 2000);
+setInterval(refreshSystem, 10000);
+</script>
+</body>
+</html>

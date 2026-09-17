@@ -1,0 +1,445 @@
+== pymupdf
+  pymupdf      scanned_0              cer=nan chars=0 t=0.2ms
+  pymupdf      scanned_1              cer=nan chars=0 t=0.2ms
+  pymupdf      scanned_2              cer=nan chars=0 t=0.2ms
+  pymupdf      pdf_single_0           cer=0.000 chars=1032 t=1.0ms
+  pymupdf      pdf_two_column_0       cer=0.000 chars=1570 t=1.0ms
+  pymupdf      pdf_table_0            cer=0.000 chars=328 t=0.8ms
+  pymupdf      pdf_out_of_order_0     cer=0.806 chars=1255 t=0.9ms
+  pymupdf      pdf_char_positioned_0  cer=0.000 chars=773 t=1.3ms
+  pymupdf      pdf_rotated_0          cer=0.000 chars=909 t=0.8ms
+  pymupdf      pdf_single_1           cer=0.000 chars=1033 t=0.8ms
+  pymupdf      pdf_two_column_1       cer=0.000 chars=1553 t=0.9ms
+  pymupdf      pdf_table_1            cer=0.000 chars=322 t=0.6ms
+  pymupdf      pdf_out_of_order_1     cer=0.821 chars=1232 t=0.9ms
+  pymupdf      pdf_char_positioned_1  cer=0.000 chars=780 t=1.3ms
+  pymupdf      pdf_rotated_1          cer=0.000 chars=732 t=0.7ms
+  pymupdf      pdf_multipage          cer=0.000 chars=72488 t=14.6ms
+  pymupdf      real_u1t02             cer=nan chars=2871 t=3.1ms
+   pymupdf finished in 0s
+== pymupdf_sorted
+  pymupdf_sorted scanned_0              cer=nan chars=0 t=0.2ms
+  pymupdf_sorted scanned_1              cer=nan chars=0 t=0.2ms
+  pymupdf_sorted scanned_2              cer=nan chars=0 t=0.2ms
+  pymupdf_sorted pdf_single_0           cer=0.000 chars=1032 t=2.9ms
+  pymupdf_sorted pdf_two_column_0       cer=0.000 chars=1570 t=4.1ms
+  pymupdf_sorted pdf_table_0            cer=0.000 chars=328 t=1.4ms
+  pymupdf_sorted pdf_out_of_order_0     cer=0.653 chars=1255 t=3.6ms
+  pymupdf_sorted pdf_char_positioned_0  cer=0.000 chars=773 t=2.8ms
+  pymupdf_sorted pdf_rotated_0          cer=0.000 chars=909 t=2.8ms
+  pymupdf_sorted pdf_single_1           cer=0.000 chars=1033 t=3.1ms
+  pymupdf_sorted pdf_two_column_1       cer=0.000 chars=1553 t=3.9ms
+  pymupdf_sorted pdf_table_1            cer=0.000 chars=322 t=1.2ms
+  pymupdf_sorted pdf_out_of_order_1     cer=0.653 chars=1232 t=3.3ms
+  pymupdf_sorted pdf_char_positioned_1  cer=0.000 chars=780 t=2.9ms
+  pymupdf_sorted pdf_rotated_1          cer=0.000 chars=732 t=2.3ms
+  pymupdf_sorted pdf_multipage          cer=0.000 chars=72488 t=153.9ms
+  pymupdf_sorted real_u1t02             cer=nan chars=2871 t=8.2ms
+   pymupdf_sorted finished in 1s
+== pypdfium2
+/usr/local/lib/python3.12/site-packages/pypdfium2/_helpers/textpage.py:80: UserWarning: get_text_range() call with default params will be implicitly redirected to get_text_bounded()
+  warnings.warn("get_text_range() call with default params will be implicitly redirected to get_text_bounded()")
+  pypdfium2    scanned_0              cer=nan chars=0 t=0.2ms
+  pypdfium2    scanned_1              cer=nan chars=0 t=0.1ms
+  pypdfium2    scanned_2              cer=nan chars=0 t=0.2ms
+  pypdfium2    pdf_single_0           cer=0.000 chars=1032 t=0.6ms
+  pypdfium2    pdf_two_column_0       cer=0.000 chars=1570 t=0.6ms
+  pypdfium2    pdf_table_0            cer=0.000 chars=328 t=0.4ms
+  pypdfium2    pdf_out_of_order_0     cer=0.806 chars=1255 t=0.5ms
+  pypdfium2    pdf_char_positioned_0  cer=0.000 chars=773 t=0.9ms
+  pypdfium2    pdf_rotated_0          cer=0.724 chars=909 t=0.5ms
+  pypdfium2    pdf_single_1           cer=0.000 chars=1033 t=0.5ms
+  pypdfium2    pdf_two_column_1       cer=0.000 chars=1553 t=0.6ms
+  pypdfium2    pdf_table_1            cer=0.000 chars=322 t=0.4ms
+  pypdfium2    pdf_out_of_order_1     cer=0.821 chars=1232 t=0.5ms
+  pypdfium2    pdf_char_positioned_1  cer=0.000 chars=780 t=0.9ms
+  pypdfium2    pdf_rotated_1          cer=0.758 chars=732 t=0.4ms
+  pypdfium2    pdf_multipage          cer=0.000 chars=72488 t=15.8ms
+  pypdfium2    real_u1t02             cer=nan chars=2871 t=1.6ms
+   pypdfium2 finished in 0s
+== pdfplumber
+  pdfplumber   scanned_0              cer=nan chars=0 t=0.7ms
+  pdfplumber   scanned_1              cer=nan chars=0 t=0.7ms
+  pdfplumber   scanned_2              cer=nan chars=0 t=0.7ms
+  pdfplumber   pdf_single_0           cer=0.000 chars=1032 t=9.8ms
+  pdfplumber   pdf_two_column_0       cer=0.000 chars=1570 t=14.5ms
+  pdfplumber   pdf_table_0            cer=0.000 chars=328 t=5.3ms
+  pdfplumber   pdf_out_of_order_0     cer=0.653 chars=1255 t=11.8ms
+  pdfplumber   pdf_char_positioned_0  cer=0.141 chars=664 t=25.5ms
+  pdfplumber   pdf_rotated_0          cer=0.724 chars=909 t=8.7ms
+  pdfplumber   pdf_single_1           cer=0.000 chars=1033 t=10.1ms
+  pdfplumber   pdf_two_column_1       cer=0.000 chars=1553 t=14.6ms
+  pdfplumber   pdf_table_1            cer=0.000 chars=322 t=5.3ms
+  pdfplumber   pdf_out_of_order_1     cer=0.653 chars=1232 t=11.9ms
+  pdfplumber   pdf_char_positioned_1  cer=0.149 chars=664 t=26.9ms
+  pdfplumber   pdf_rotated_1          cer=0.758 chars=732 t=7.5ms
+  pdfplumber   pdf_multipage          cer=0.000 chars=72488 t=682.7ms
+  pdfplumber   real_u1t02             cer=nan chars=2871 t=38.9ms
+   pdfplumber finished in 3s
+== pypdf
+  pypdf        scanned_0              cer=nan chars=0 t=0.3ms
+  pypdf        scanned_1              cer=nan chars=0 t=0.4ms
+  pypdf        scanned_2              cer=nan chars=0 t=0.3ms
+  pypdf        pdf_single_0           cer=0.000 chars=1032 t=1.6ms
+  pypdf        pdf_two_column_0       cer=0.000 chars=1570 t=1.6ms
+  pypdf        pdf_table_0            cer=0.000 chars=328 t=1.4ms
+  pypdf        pdf_out_of_order_0     cer=0.806 chars=1255 t=1.6ms
+  pypdf        pdf_char_positioned_0  cer=0.699 chars=1313 t=13.3ms
+  pypdf        pdf_rotated_0          cer=0.000 chars=909 t=1.1ms
+  pypdf        pdf_single_1           cer=0.000 chars=1033 t=1.2ms
+  pypdf        pdf_two_column_1       cer=0.000 chars=1553 t=1.5ms
+  pypdf        pdf_table_1            cer=0.000 chars=322 t=1.4ms
+  pypdf        pdf_out_of_order_1     cer=0.821 chars=1232 t=1.6ms
+  pypdf        pdf_char_positioned_1  cer=0.681 chars=1311 t=13.0ms
+  pypdf        pdf_rotated_1          cer=0.000 chars=732 t=1.0ms
+  pypdf        pdf_multipage          cer=0.000 chars=72488 t=43.6ms
+  pypdf        real_u1t02             cer=nan chars=2871 t=11.0ms
+   pypdf finished in 1s
+== pdfminer
+  pdfminer     scanned_0              cer=nan chars=0 t=0.6ms
+  pdfminer     scanned_1              cer=nan chars=0 t=0.6ms
+  pdfminer     scanned_2              cer=nan chars=0 t=0.6ms
+  pdfminer     pdf_single_0           cer=0.000 chars=1032 t=4.7ms
+  pdfminer     pdf_two_column_0       cer=0.000 chars=1570 t=6.5ms
+  pdfminer     pdf_table_0            cer=0.625 chars=328 t=4.3ms
+  pdfminer     pdf_out_of_order_0     cer=0.000 chars=1255 t=6.0ms
+  pdfminer     pdf_char_positioned_0  cer=0.000 chars=773 t=22.5ms
+  pdfminer     pdf_rotated_0          cer=1.209 chars=1523 t=34.5ms
+  pdfminer     pdf_single_1           cer=0.000 chars=1033 t=4.9ms
+  pdfminer     pdf_two_column_1       cer=0.000 chars=1553 t=6.3ms
+  pdfminer     pdf_table_1            cer=0.671 chars=322 t=4.3ms
+  pdfminer     pdf_out_of_order_1     cer=0.294 chars=1232 t=5.8ms
+  pdfminer     pdf_char_positioned_1  cer=0.000 chars=780 t=25.3ms
+  pdfminer     pdf_rotated_1          cer=1.290 chars=1227 t=24.3ms
+  pdfminer     pdf_multipage          cer=0.000 chars=72488 t=235.4ms
+  pdfminer     real_u1t02             cer=nan chars=2871 t=22.6ms
+   pdfminer finished in 1s
+== tesseract
+  tesseract          clean_0                cer=0.000 wer=0.000 t=0.23s
+  tesseract          blur_0                 cer=0.002 wer=0.013 t=0.30s
+  tesseract          noise_0                cer=0.888 wer=0.946 t=0.27s
+  tesseract          rotated_0              cer=0.000 wer=0.000 t=0.23s
+  tesseract          lowres_0               cer=0.000 wer=0.000 t=0.18s
+  tesseract          photo_0                cer=0.700 wer=0.730 t=0.25s
+  tesseract          inverted_0             cer=0.000 wer=0.000 t=0.41s
+  tesseract          jpeg_q15_0             cer=0.002 wer=0.013 t=0.25s
+  tesseract          clean_1                cer=0.002 wer=0.014 t=0.25s
+  tesseract          blur_1                 cer=0.005 wer=0.028 t=0.32s
+  tesseract          noise_1                cer=1.000 wer=1.000 t=0.19s
+  tesseract          rotated_1              cer=0.005 wer=0.028 t=0.21s
+  tesseract          lowres_1               cer=0.002 wer=0.014 t=0.19s
+  tesseract          photo_1                cer=0.545 wer=0.578 t=0.24s
+  tesseract          inverted_1             cer=0.005 wer=0.028 t=0.31s
+  tesseract          jpeg_q15_1             cer=0.002 wer=0.014 t=0.20s
+  tesseract          clean_2                cer=0.000 wer=0.000 t=0.24s
+  tesseract          blur_2                 cer=0.006 wer=0.027 t=0.29s
+  tesseract          noise_2                cer=1.000 wer=1.000 t=0.19s
+  tesseract          rotated_2              cer=1.000 wer=1.000 t=0.11s
+  tesseract          lowres_2               cer=0.002 wer=0.027 t=0.18s
+  tesseract          photo_2                cer=0.295 wer=0.324 t=0.27s
+  tesseract          inverted_2             cer=0.000 wer=0.000 t=0.28s
+  tesseract          jpeg_q15_2             cer=0.002 wer=0.027 t=0.22s
+  tesseract          two_column_0           cer=0.001 wer=0.008 t=0.41s
+  tesseract          small_font_0           cer=0.002 wer=0.010 t=0.26s
+  tesseract          invoice_0              cer=0.000 wer=0.000 t=0.23s
+  tesseract          two_column_1           cer=0.001 wer=0.009 t=0.30s
+  tesseract          small_font_1           cer=0.000 wer=0.000 t=0.34s
+  tesseract          invoice_1              cer=0.000 wer=0.000 t=0.24s
+  tesseract          two_column_2           cer=0.743 wer=0.897 t=0.36s
+  tesseract          small_font_2           cer=0.000 wer=0.000 t=0.27s
+  tesseract          invoice_2              cer=0.005 wer=0.018 t=0.26s
+  tesseract          scanned_0              cer=0.483 wer=0.490 t=0.43s
+  tesseract          scanned_1              cer=0.519 wer=0.517 t=0.38s
+  tesseract          scanned_2              cer=0.500 wer=0.500 t=0.40s
+  tesseract          real_p1_150            cer=0.000 wer=0.000 t=0.58s
+  tesseract          real_p1_300            cer=0.000 wer=0.000 t=0.74s
+  tesseract          real_p2_150            cer=0.004 wer=0.013 t=0.39s
+  tesseract          real_p2_300            cer=0.004 wer=0.013 t=0.57s
+   tesseract finished in 13s
+== tesseract_prep
+  tesseract_prep     clean_0                cer=0.000 wer=0.000 t=0.27s
+  tesseract_prep     blur_0                 cer=0.009 wer=0.041 t=0.32s
+  tesseract_prep     noise_0                cer=0.002 wer=0.013 t=0.28s
+  tesseract_prep     rotated_0              cer=0.000 wer=0.000 t=0.23s
+  tesseract_prep     lowres_0               cer=0.019 wer=0.081 t=0.25s
+  tesseract_prep     photo_0                cer=0.000 wer=0.000 t=0.23s
+  tesseract_prep     inverted_0             cer=0.308 wer=0.405 t=0.46s
+  tesseract_prep     jpeg_q15_0             cer=0.000 wer=0.000 t=0.22s
+  tesseract_prep     clean_1                cer=0.005 wer=0.028 t=0.23s
+  tesseract_prep     blur_1                 cer=0.005 wer=0.028 t=0.31s
+  tesseract_prep     noise_1                cer=0.005 wer=0.028 t=0.23s
+  tesseract_prep     rotated_1              cer=0.002 wer=0.014 t=0.23s
+  tesseract_prep     lowres_1               cer=0.028 wer=0.141 t=0.20s
+  tesseract_prep     photo_1                cer=0.007 wer=0.028 t=0.22s
+  tesseract_prep     inverted_1             cer=0.298 wer=0.521 t=0.33s
+  tesseract_prep     jpeg_q15_1             cer=0.007 wer=0.028 t=0.25s
+  tesseract_prep     clean_2                cer=0.000 wer=0.000 t=0.25s
+  tesseract_prep     blur_2                 cer=0.022 wer=0.108 t=0.36s
+  tesseract_prep     noise_2                cer=0.002 wer=0.027 t=0.23s
+  tesseract_prep     rotated_2              cer=1.000 wer=1.000 t=0.12s
+  tesseract_prep     lowres_2               cer=0.101 wer=0.419 t=0.23s
+  tesseract_prep     photo_2                cer=0.017 wer=0.095 t=0.27s
+  tesseract_prep     inverted_2             cer=0.237 wer=0.365 t=0.37s
+  tesseract_prep     jpeg_q15_2             cer=0.011 wer=0.068 t=0.23s
+  tesseract_prep     two_column_0           cer=0.001 wer=0.008 t=0.39s
+  tesseract_prep     small_font_0           cer=0.009 wer=0.040 t=0.35s
+  tesseract_prep     invoice_0              cer=0.000 wer=0.000 t=0.28s
+  tesseract_prep     two_column_1           cer=0.001 wer=0.009 t=0.33s
+  tesseract_prep     small_font_1           cer=0.004 wer=0.026 t=0.38s
+  tesseract_prep     invoice_1              cer=0.005 wer=0.018 t=0.41s
+  tesseract_prep     two_column_2           cer=0.743 wer=0.897 t=0.36s
+  tesseract_prep     small_font_2           cer=0.005 wer=0.035 t=0.27s
+  tesseract_prep     invoice_2              cer=0.000 wer=0.000 t=0.25s
+  tesseract_prep     scanned_0              cer=0.003 wer=0.014 t=0.52s
+  tesseract_prep     scanned_1              cer=0.006 wer=0.028 t=0.56s
+  tesseract_prep     scanned_2              cer=0.003 wer=0.013 t=0.58s
+  tesseract_prep     real_p1_150            cer=0.015 wer=0.094 t=1.04s
+  tesseract_prep     real_p1_300            cer=0.000 wer=0.000 t=0.89s
+  tesseract_prep     real_p2_150            cer=0.036 wer=0.171 t=0.60s
+  tesseract_prep     real_p2_300            cer=0.007 wer=0.033 t=0.75s
+   tesseract_prep finished in 15s
+== rapidocr_v6
+  rapidocr_v6        clean_0                cer=0.000 wer=0.000 t=0.83s
+  rapidocr_v6        blur_0                 cer=0.004 wer=0.054 t=0.74s
+  rapidocr_v6        noise_0                cer=0.002 wer=0.013 t=0.74s
+  rapidocr_v6        rotated_0              cer=0.000 wer=0.000 t=0.80s
+  rapidocr_v6        lowres_0               cer=0.000 wer=0.000 t=0.81s
+  rapidocr_v6        photo_0                cer=0.000 wer=0.000 t=0.68s
+  rapidocr_v6        inverted_0             cer=0.000 wer=0.000 t=0.78s
+  rapidocr_v6        jpeg_q15_0             cer=0.004 wer=0.054 t=0.74s
+  rapidocr_v6        clean_1                cer=0.000 wer=0.000 t=0.75s
+  rapidocr_v6        blur_1                 cer=0.000 wer=0.000 t=0.69s
+  rapidocr_v6        noise_1                cer=0.000 wer=0.000 t=0.71s
+  rapidocr_v6        rotated_1              cer=0.000 wer=0.000 t=0.69s
+  rapidocr_v6        lowres_1               cer=0.000 wer=0.000 t=0.70s
+  rapidocr_v6        photo_1                cer=0.000 wer=0.000 t=0.64s
+  rapidocr_v6        inverted_1             cer=0.000 wer=0.000 t=0.75s
+  rapidocr_v6        jpeg_q15_1             cer=0.000 wer=0.000 t=0.76s
+  rapidocr_v6        clean_2                cer=0.000 wer=0.000 t=0.78s
+  rapidocr_v6        blur_2                 cer=0.002 wer=0.027 t=0.70s
+  rapidocr_v6        noise_2                cer=0.002 wer=0.013 t=0.83s
+  rapidocr_v6        rotated_2              cer=0.000 wer=0.000 t=0.77s
+  rapidocr_v6        lowres_2               cer=0.000 wer=0.000 t=0.78s
+  rapidocr_v6        photo_2                cer=0.000 wer=0.000 t=0.65s
+  rapidocr_v6        inverted_2             cer=0.000 wer=0.000 t=0.75s
+  rapidocr_v6        jpeg_q15_2             cer=0.000 wer=0.000 t=0.73s
+  rapidocr_v6        two_column_0           cer=0.000 wer=0.000 t=1.13s
+  rapidocr_v6        small_font_0           cer=0.002 wer=0.020 t=1.17s
+  rapidocr_v6        invoice_0              cer=0.000 wer=0.000 t=0.83s
+  rapidocr_v6        two_column_1           cer=0.000 wer=0.000 t=1.00s
+  rapidocr_v6        small_font_1           cer=0.000 wer=0.000 t=1.20s
+  rapidocr_v6        invoice_1              cer=0.000 wer=0.000 t=0.80s
+  rapidocr_v6        two_column_2           cer=0.000 wer=0.000 t=1.09s
+  rapidocr_v6        small_font_2           cer=0.000 wer=0.000 t=1.24s
+  rapidocr_v6        invoice_2              cer=0.000 wer=0.000 t=0.86s
+  rapidocr_v6        scanned_0              cer=0.001 wer=0.007 t=1.54s
+  rapidocr_v6        scanned_1              cer=0.001 wer=0.007 t=1.55s
+  rapidocr_v6        scanned_2              cer=0.000 wer=0.000 t=1.57s
+  rapidocr_v6        real_p1_150            cer=0.000 wer=0.000 t=1.96s
+  rapidocr_v6        real_p1_300            cer=0.000 wer=0.000 t=2.13s
+  rapidocr_v6        real_p2_150            cer=0.000 wer=0.000 t=1.40s
+  rapidocr_v6        real_p2_300            cer=0.000 wer=0.000 t=1.67s
+   rapidocr_v6 finished in 41s
+== rapidocr_v5_latin
+  rapidocr_v5_latin  clean_0                cer=0.000 wer=0.000 t=0.66s
+  rapidocr_v5_latin  blur_0                 cer=0.006 wer=0.027 t=1.46s
+  rapidocr_v5_latin  noise_0                cer=0.000 wer=0.000 t=0.67s
+  rapidocr_v5_latin  rotated_0              cer=0.000 wer=0.000 t=0.65s
+  rapidocr_v5_latin  lowres_0               cer=0.013 wer=0.041 t=1.07s
+  rapidocr_v5_latin  photo_0                cer=0.000 wer=0.000 t=0.64s
+  rapidocr_v5_latin  inverted_0             cer=0.000 wer=0.000 t=0.87s
+  rapidocr_v5_latin  jpeg_q15_0             cer=0.000 wer=0.000 t=0.64s
+  rapidocr_v5_latin  clean_1                cer=0.000 wer=0.000 t=0.65s
+  rapidocr_v5_latin  blur_1                 cer=0.009 wer=0.028 t=0.91s
+  rapidocr_v5_latin  noise_1                cer=0.000 wer=0.000 t=0.64s
+  rapidocr_v5_latin  rotated_1              cer=0.000 wer=0.000 t=0.58s
+  rapidocr_v5_latin  lowres_1               cer=0.000 wer=0.000 t=0.62s
+  rapidocr_v5_latin  photo_1                cer=0.000 wer=0.000 t=0.55s
+  rapidocr_v5_latin  inverted_1             cer=0.000 wer=0.000 t=1.36s
+  rapidocr_v5_latin  jpeg_q15_1             cer=0.000 wer=0.000 t=0.64s
+  rapidocr_v5_latin  clean_2                cer=0.000 wer=0.000 t=0.65s
+  rapidocr_v5_latin  blur_2                 cer=0.011 wer=0.041 t=1.31s
+  rapidocr_v5_latin  noise_2                cer=0.000 wer=0.000 t=0.64s
+  rapidocr_v5_latin  rotated_2              cer=0.000 wer=0.000 t=0.60s
+  rapidocr_v5_latin  lowres_2               cer=0.009 wer=0.027 t=0.90s
+  rapidocr_v5_latin  photo_2                cer=0.000 wer=0.000 t=0.60s
+  rapidocr_v5_latin  inverted_2             cer=0.015 wer=0.054 t=1.11s
+  rapidocr_v5_latin  jpeg_q15_2             cer=0.000 wer=0.000 t=0.63s
+  rapidocr_v5_latin  two_column_0           cer=0.000 wer=0.000 t=1.10s
+  rapidocr_v5_latin  small_font_0           cer=0.000 wer=0.000 t=1.00s
+  rapidocr_v5_latin  invoice_0              cer=0.000 wer=0.000 t=0.80s
+  rapidocr_v5_latin  two_column_1           cer=0.000 wer=0.000 t=0.95s
+  rapidocr_v5_latin  small_font_1           cer=0.000 wer=0.000 t=0.94s
+  rapidocr_v5_latin  invoice_1              cer=0.000 wer=0.000 t=0.72s
+  rapidocr_v5_latin  two_column_2           cer=0.000 wer=0.000 t=1.04s
+  rapidocr_v5_latin  small_font_2           cer=0.000 wer=0.000 t=0.97s
+  rapidocr_v5_latin  invoice_2              cer=0.000 wer=0.000 t=1.17s
+  rapidocr_v5_latin  scanned_0              cer=0.000 wer=0.000 t=1.54s
+  rapidocr_v5_latin  scanned_1              cer=0.001 wer=0.007 t=1.56s
+  rapidocr_v5_latin  scanned_2              cer=0.001 wer=0.007 t=1.58s
+  rapidocr_v5_latin  real_p1_150            cer=0.000 wer=0.000 t=2.23s
+  rapidocr_v5_latin  real_p1_300            cer=0.000 wer=0.000 t=2.64s
+  rapidocr_v5_latin  real_p2_150            cer=0.000 wer=0.000 t=1.60s
+  rapidocr_v5_latin  real_p2_300            cer=0.000 wer=0.000 t=1.70s
+   rapidocr_v5_latin finished in 42s
+== easyocr
+/usr/local/lib/python3.12/site-packages/torch/utils/data/dataloader.py:666: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  warnings.warn(warn_msg)
+  easyocr            clean_0                cer=0.009 wer=0.054 t=7.41s
+  easyocr            blur_0                 cer=0.052 wer=0.338 t=7.69s
+  easyocr            noise_0                cer=0.019 wer=0.135 t=7.58s
+  easyocr            rotated_0              cer=0.011 wer=0.068 t=7.32s
+  easyocr            lowres_0               cer=0.006 wer=0.054 t=2.19s
+  easyocr            photo_0                cer=0.015 wer=0.122 t=4.20s
+  easyocr            inverted_0             cer=0.006 wer=0.041 t=6.76s
+  easyocr            jpeg_q15_0             cer=0.013 wer=0.108 t=2.97s
+  easyocr            clean_1                cer=0.011 wer=0.070 t=5.40s
+  easyocr            blur_1                 cer=0.155 wer=0.606 t=5.69s
+  easyocr            noise_1                cer=0.011 wer=0.070 t=5.42s
+  easyocr            rotated_1              cer=0.538 wer=0.634 t=6.18s
+  easyocr            lowres_1               cer=0.021 wer=0.099 t=1.72s
+  easyocr            photo_1                cer=0.011 wer=0.056 t=3.42s
+  easyocr            inverted_1             cer=0.007 wer=0.042 t=5.26s
+  easyocr            jpeg_q15_1             cer=0.011 wer=0.070 t=2.10s
+  easyocr            clean_2                cer=0.009 wer=0.054 t=5.33s
+  easyocr            blur_2                 cer=0.112 wer=0.554 t=5.78s
+  easyocr            noise_2                cer=0.019 wer=0.149 t=5.45s
+  easyocr            rotated_2              cer=0.341 wer=0.378 t=6.18s
+  easyocr            lowres_2               cer=0.011 wer=0.081 t=1.85s
+  easyocr            photo_2                cer=0.015 wer=0.149 t=3.75s
+  easyocr            inverted_2             cer=0.015 wer=0.108 t=5.53s
+  easyocr            jpeg_q15_2             cer=0.013 wer=0.108 t=2.33s
+  easyocr            two_column_0           cer=0.000 wer=0.000 t=10.71s
+  easyocr            small_font_0           cer=0.008 wer=0.051 t=5.42s
+  easyocr            invoice_0              cer=0.007 wer=0.036 t=8.62s
+  easyocr            two_column_1           cer=0.008 wer=0.052 t=7.55s
+  easyocr            small_font_1           cer=0.013 wer=0.078 t=5.55s
+  easyocr            invoice_1              cer=0.022 wer=0.158 t=7.88s
+  easyocr            two_column_2           cer=0.006 wer=0.037 t=8.86s
+  easyocr            small_font_2           cer=0.003 wer=0.024 t=5.05s
+  easyocr            invoice_2              cer=0.020 wer=0.140 t=7.64s
+  easyocr            scanned_0              cer=0.009 wer=0.055 t=10.98s
+  easyocr            scanned_1              cer=0.017 wer=0.110 t=10.04s
+  easyocr            scanned_2              cer=0.013 wer=0.088 t=11.20s
+  easyocr            real_p1_150            cer=0.009 wer=0.076 t=13.15s
+  easyocr            real_p1_300            cer=0.008 wer=0.072 t=30.17s
+  easyocr            real_p2_150            cer=0.017 wer=0.099 t=11.67s
+  easyocr            real_p2_300            cer=0.015 wer=0.066 t=27.18s
+   easyocr finished in 312s
+# Benchmark summary
+
+Threads per engine: 4. CER/WER: lower is better. BoW F1 (reading-order-insensitive): higher is better. Macro averages are the mean over synthetic categories (real-document rows excluded).
+
+## OCR engines — overall
+
+| Engine | Macro CER | Macro WER | Macro BoW F1 | s/page mean | s/page p95 | Cold start s | Load RSS MB | Peak RSS MB | Install MB | License |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Tesseract 5.3 | 0.214 | 0.230 | 0.826 | 0.28 | 0.56 | 0.08 | 27 | 252 | 15 | Apache-2.0 |
+| Tesseract 5.3 + OpenCV prep | 0.080 | 0.126 | 0.912 | 0.33 | 0.73 | 0.10 | 49 | 348 | 88 | Apache-2.0 (+ OpenCV Apache-2.0) |
+| RapidOCR PP-OCRv6 small | 0.001 | 0.005 | 0.997 | 0.91 | 1.64 | 0.34 | 126 | 1099 | 221 | Apache-2.0 (models Apache-2.0) |
+| RapidOCR PP-OCRv5 latin | 0.002 | 0.006 | 0.997 | 0.94 | 1.69 | 0.34 | 106 | 1129 | 204 | Apache-2.0 (models Apache-2.0) |
+| EasyOCR 1.7 | 0.043 | 0.138 | 0.966 | 6.96 | 13.00 | 2.73 | 455 | 6376 | 812 | Apache-2.0 |
+
+## OCR — CER by category
+
+| Category | Tesseract 5.3 | Tesseract 5.3 + OpenCV prep | RapidOCR PP-OCRv6 small | RapidOCR PP-OCRv5 latin | EasyOCR 1.7 |
+|---|---|---|---|---|---|
+| clean | 0.001 | 0.002 | 0.000 | 0.000 | 0.010 |
+| blur | 0.004 | 0.012 | 0.002 | 0.009 | 0.106 |
+| noise | 0.963 | 0.003 | 0.002 | 0.000 | 0.017 |
+| rotated | 0.335 | 0.334 | 0.000 | 0.000 | 0.296 |
+| lowres | 0.002 | 0.050 | 0.000 | 0.007 | 0.013 |
+| photo | 0.514 | 0.008 | 0.000 | 0.000 | 0.014 |
+| inverted | 0.002 | 0.281 | 0.000 | 0.005 | 0.009 |
+| jpeg_q15 | 0.002 | 0.006 | 0.001 | 0.000 | 0.012 |
+| two_column | 0.248 | 0.248 | 0.000 | 0.000 | 0.005 |
+| small_font | 0.001 | 0.006 | 0.001 | 0.000 | 0.008 |
+| invoice | 0.002 | 0.002 | 0.000 | 0.000 | 0.016 |
+| scanned_pdf | 0.501 | 0.004 | 0.001 | 0.001 | 0.013 |
+| real_150dpi | 0.002 | 0.025 | 0.000 | 0.000 | 0.013 |
+| real_300dpi | 0.002 | 0.003 | 0.000 | 0.000 | 0.012 |
+
+## OCR — WER by category
+
+| Category | Tesseract 5.3 | Tesseract 5.3 + OpenCV prep | RapidOCR PP-OCRv6 small | RapidOCR PP-OCRv5 latin | EasyOCR 1.7 |
+|---|---|---|---|---|---|
+| clean | 0.005 | 0.009 | 0.000 | 0.000 | 0.059 |
+| blur | 0.023 | 0.059 | 0.027 | 0.032 | 0.499 |
+| noise | 0.982 | 0.023 | 0.009 | 0.000 | 0.118 |
+| rotated | 0.343 | 0.338 | 0.000 | 0.000 | 0.360 |
+| lowres | 0.014 | 0.214 | 0.000 | 0.022 | 0.078 |
+| photo | 0.544 | 0.041 | 0.000 | 0.000 | 0.109 |
+| inverted | 0.009 | 0.430 | 0.000 | 0.018 | 0.064 |
+| jpeg_q15 | 0.018 | 0.032 | 0.018 | 0.000 | 0.096 |
+| two_column | 0.304 | 0.304 | 0.000 | 0.000 | 0.030 |
+| small_font | 0.003 | 0.034 | 0.007 | 0.000 | 0.051 |
+| invoice | 0.006 | 0.006 | 0.000 | 0.000 | 0.111 |
+| scanned_pdf | 0.502 | 0.018 | 0.005 | 0.005 | 0.084 |
+| real_150dpi | 0.007 | 0.133 | 0.000 | 0.000 | 0.087 |
+| real_300dpi | 0.007 | 0.016 | 0.000 | 0.000 | 0.069 |
+
+## OCR — BoW F1 by category
+
+| Category | Tesseract 5.3 | Tesseract 5.3 + OpenCV prep | RapidOCR PP-OCRv6 small | RapidOCR PP-OCRv5 latin | EasyOCR 1.7 |
+|---|---|---|---|---|---|
+| clean | 0.995 | 0.991 | 1.000 | 1.000 | 1.000 |
+| blur | 0.982 | 0.947 | 0.987 | 0.987 | 0.678 |
+| noise | 0.057 | 0.980 | 1.000 | 1.000 | 1.000 |
+| rotated | 0.657 | 0.662 | 1.000 | 1.000 | 0.991 |
+| lowres | 0.989 | 0.845 | 1.000 | 0.990 | 0.988 |
+| photo | 0.597 | 0.972 | 1.000 | 1.000 | 0.995 |
+| inverted | 0.991 | 0.602 | 1.000 | 0.990 | 1.000 |
+| jpeg_q15 | 0.989 | 0.982 | 0.987 | 1.000 | 0.991 |
+| two_column | 0.995 | 0.994 | 1.000 | 1.000 | 1.000 |
+| small_font | 0.997 | 0.984 | 0.995 | 1.000 | 0.988 |
+| invoice | 0.996 | 0.998 | 1.000 | 1.000 | 0.960 |
+| scanned_pdf | 0.663 | 0.992 | 0.998 | 1.000 | 0.998 |
+| real_150dpi | 0.997 | 0.962 | 1.000 | 1.000 | 0.975 |
+| real_300dpi | 0.997 | 0.994 | 1.000 | 1.000 | 0.972 |
+
+## OCR — seconds per page by category
+
+| Category | Tesseract 5.3 | Tesseract 5.3 + OpenCV prep | RapidOCR PP-OCRv6 small | RapidOCR PP-OCRv5 latin | EasyOCR 1.7 |
+|---|---|---|---|---|---|
+| clean | 0.24 | 0.25 | 0.79 | 0.65 | 6.04 |
+| blur | 0.30 | 0.33 | 0.71 | 1.23 | 6.39 |
+| noise | 0.22 | 0.25 | 0.76 | 0.65 | 6.15 |
+| rotated | 0.18 | 0.19 | 0.75 | 0.61 | 6.56 |
+| lowres | 0.19 | 0.23 | 0.76 | 0.86 | 1.92 |
+| photo | 0.25 | 0.24 | 0.66 | 0.60 | 3.79 |
+| inverted | 0.34 | 0.39 | 0.76 | 1.11 | 5.85 |
+| jpeg_q15 | 0.22 | 0.24 | 0.74 | 0.63 | 2.47 |
+| two_column | 0.35 | 0.36 | 1.07 | 1.03 | 9.04 |
+| small_font | 0.29 | 0.33 | 1.20 | 0.97 | 5.34 |
+| invoice | 0.24 | 0.32 | 0.83 | 0.90 | 8.04 |
+| scanned_pdf | 0.20 | 0.28 | 0.78 | 0.78 | 5.37 |
+| real_150dpi | 0.48 | 0.82 | 1.68 | 1.91 | 12.41 |
+| real_300dpi | 0.65 | 0.82 | 1.90 | 2.17 | 28.67 |
+
+## PDF text-layer extractors — overall
+
+| Extractor | Macro CER | Macro WER | Macro BoW F1 | ms/page mean | ms/page p95 | Import s | Install MB | License |
+|---|---|---|---|---|---|---|---|---|
+| PyMuPDF | 0.116 | 0.140 | 1.000 | 0.8 | 1.3 | 0.08 | 49.9 | AGPL-3.0 or commercial |
+| PyMuPDF (sort=True) | 0.093 | 0.113 | 1.000 | 2.6 | 4.4 | 0.08 | 49.9 | AGPL-3.0 or commercial |
+| pypdfium2 | 0.222 | 0.273 | 1.000 | 0.5 | 0.8 | 0.10 | 6.3 | Apache-2.0 / BSD-3 (PDFium) |
+| pdfplumber | 0.220 | 0.388 | 0.872 | 11.6 | 25.8 | 0.13 | 14.3 | MIT |
+| pypdf | 0.215 | 0.912 | 0.860 | 2.8 | 13.0 | 0.11 | 2.6 | BSD-3-Clause |
+| pdfminer.six | 0.292 | 0.865 | 0.860 | 10.0 | 27.1 | 0.09 | 7.6 | MIT |
+
+## PDF extractors — by category (CER / ms per page)
+
+`scanned_pdf` has no text layer: the column shows characters returned (0 = correctly signals OCR is needed).
+
+| Category | PyMuPDF | PyMuPDF (sort=True) | pypdfium2 | pdfplumber | pypdf | pdfminer.six |
+|---|---|---|---|---|---|---|
+| scanned_pdf | 0 chars | 0 chars | 0 chars | 0 chars | 0 chars | 0 chars |
+| pdf_single | 0.000 / 0.9 ms | 0.000 / 3.0 ms | 0.000 / 0.5 ms | 0.000 / 10.0 ms | 0.000 / 1.4 ms | 0.000 / 4.8 ms |
+| pdf_two_column | 0.000 / 0.9 ms | 0.000 / 4.0 ms | 0.000 / 0.6 ms | 0.000 / 14.5 ms | 0.000 / 1.5 ms | 0.000 / 6.4 ms |
+| pdf_table | 0.000 / 0.7 ms | 0.000 / 1.3 ms | 0.000 / 0.4 ms | 0.000 / 5.3 ms | 0.000 / 1.4 ms | 0.648 / 4.3 ms |
+| pdf_out_of_order | 0.813 / 0.9 ms | 0.653 / 3.4 ms | 0.813 / 0.5 ms | 0.653 / 11.9 ms | 0.813 / 1.6 ms | 0.147 / 5.9 ms |
+| pdf_char_positioned | 0.000 / 1.3 ms | 0.000 / 2.9 ms | 0.000 / 0.8 ms | 0.145 / 26.2 ms | 0.690 / 13.1 ms | 0.000 / 23.9 ms |
+| pdf_rotated | 0.000 / 0.8 ms | 0.000 / 2.6 ms | 0.741 / 0.5 ms | 0.741 / 8.1 ms | 0.000 / 1.0 ms | 1.249 / 29.4 ms |
+| pdf_multipage | 0.000 / 0.5 ms | 0.000 / 5.5 ms | 0.000 / 0.6 ms | 0.000 / 24.4 ms | 0.000 / 1.6 ms | 0.000 / 8.4 ms |
+| real_pdf | 1.5 ms | 4.1 ms | 0.8 ms | 19.4 ms | 5.5 ms | 11.3 ms |
+

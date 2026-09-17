@@ -1,0 +1,267 @@
+{
+  "engine": "pdfplumber",
+  "type": "pdf",
+  "threads": 4,
+  "cold_start_s": 0.13,
+  "rss_load_delta_mb": 176.9,
+  "peak_rss_mb": 198.5,
+  "records": [
+    {
+      "engine": "pdfplumber",
+      "sample": "scanned_0",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00065,
+      "page_seconds": [
+        0.00033
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "scanned_1",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00068,
+      "page_seconds": [
+        0.00034
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "scanned_2",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00068,
+      "page_seconds": [
+        0.00034
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_single_0",
+      "category": "pdf_single",
+      "pages": 1,
+      "seconds": 0.00982,
+      "page_seconds": [
+        0.00982
+      ],
+      "output_preview": "La inteligencia de documentos combina extracción de texto, reconocimiento óptico de caracteres y\nanálisis de metadatos. Así, un archivo escaneado se convierte en información útil y consultable.\nLa facturación electrónica exige que cada comprobante incluya el RFC del emisor, la fecha de\nexpedición, e",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1032,
+      "hyp_chars": 1032
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_two_column_0",
+      "category": "pdf_two_column",
+      "pages": 1,
+      "seconds": 0.01448,
+      "page_seconds": [
+        0.01448
+      ],
+      "output_preview": "La inteligencia de documentos combina\nextracción de texto, reconocimiento óptico\nde caracteres y análisis de metadatos. Así,\nun archivo escaneado se convierte en\ninformación útil y consultable.\nOptical character recognition converts\nimages of text into machine readable\ncharacters. Accuracy depends o",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1570,
+      "hyp_chars": 1570
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_table_0",
+      "category": "pdf_table",
+      "pages": 1,
+      "seconds": 0.00535,
+      "page_seconds": [
+        0.00535
+      ],
+      "output_preview": "Factura / Invoice INV-20931\nDescription Qty Unit price Amount\nConsulting services (April) 12 $85.00 $1,020.00\nCloud hosting - standard plan 1 $249.99 $249.99\nSoporte técnico prioritario 5 $64.75 $323.75\nUSB-C docking station 2 $139.90 $279.80\nData migration fee 1 $780.00 $780.00\nLicencia de software",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 328,
+      "hyp_chars": 328
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_out_of_order_0",
+      "category": "pdf_out_of_order",
+      "pages": 1,
+      "seconds": 0.01184,
+      "page_seconds": [
+        0.01184
+      ],
+      "output_preview": "Informe trimestral / Quarterly report\nLa facturación electrónica exige que cada Los servicios reales rara vez procesan una\ncomprobante incluya el RFC del emisor, la solicitud de forma síncrona. ¿Qué ocurre\nfecha de expedición, el régimen fiscal y el cuando llegan más documentos de los que el\nuso del",
+      "cer": 0.6534,
+      "wer": 0.7941,
+      "bow_f1": 1.0,
+      "ref_chars": 1255,
+      "hyp_chars": 1255
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_char_positioned_0",
+      "category": "pdf_char_positioned",
+      "pages": 1,
+      "seconds": 0.02548,
+      "page_seconds": [
+        0.02548
+      ],
+      "output_preview": "Thewarehousereceived1,250unitsofproductSKU-4471onMarch3,2024.Qualitycontrolrejected37\nunitsbecauseofdamagedpackaging,andtheremainingstockwasmovedtoaisle14,shelfB.\nOpticalcharacterrecognitionconvertsimagesoftextintomachinereadablecharacters.Accuracydependson\nresolution,contrast,skewandnoise,sopreproc",
+      "cer": 0.141,
+      "wer": 1.0,
+      "bow_f1": 0.094,
+      "ref_chars": 773,
+      "hyp_chars": 664
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_rotated_0",
+      "category": "pdf_rotated",
+      "pages": 1,
+      "seconds": 0.00869,
+      "page_seconds": [
+        0.00869
+      ],
+      "output_preview": "lets\nusers\ntrack\nprogress.\na\nconnection\nopen\nwhile\nheavy\nwork\nruns\nin\nthe\nbackground.\nA\nreliable\ndesign\naccepts\nthe\nupload,\nstores\nit,\nqueues\nthe\nwork\nand\nReal\nservices\nrarely\nprocess\na\nrequest\nsynchronously.\nDocuments\narrive\nfaster\nthan\nthey\ncan\nbe\nprocessed,\nand\nusers\ncannot\nhold\npackaging,\nand\nth",
+      "cer": 0.7239,
+      "wer": 0.9595,
+      "bow_f1": 1.0,
+      "ref_chars": 909,
+      "hyp_chars": 909
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_single_1",
+      "category": "pdf_single",
+      "pages": 1,
+      "seconds": 0.0101,
+      "page_seconds": [
+        0.0101
+      ],
+      "output_preview": "El niño comió piñatas de azúcar en la fiesta de cumpleaños de su abuela, en Mérida, Yucatán. ¡Qué\ndía tan bonito! Después caminaron por el malecón y compraron café y pan dulce.\nPlease send the signed contract to legal@example.com before Friday. If you have questions about\nclause 7.2, call our office",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1033,
+      "hyp_chars": 1033
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_two_column_1",
+      "category": "pdf_two_column",
+      "pages": 1,
+      "seconds": 0.0146,
+      "page_seconds": [
+        0.0146
+      ],
+      "output_preview": "Please send the signed contract to\nlegal@example.com before Friday. If you\nhave questions about clause 7.2, call our\noffice at +1 (415) 555-0199 between 9:00\nand 17:30 Pacific time.\nEstimada señora Núñez: le confirmamos que\nsu pedido número 88213 será entregado el\npróximo miércoles 12 de junio. Si n",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1553,
+      "hyp_chars": 1553
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_table_1",
+      "category": "pdf_table",
+      "pages": 1,
+      "seconds": 0.00533,
+      "page_seconds": [
+        0.00533
+      ],
+      "output_preview": "Factura / Invoice INV-20931\nDescription Qty Unit price Amount\nConsulting services (April) 12 $85.00 $1,020.00\nUSB-C docking station 2 $139.90 $279.80\nLicencia de software anual 3 $1,200.50 $3,601.50\nData migration fee 1 $780.00 $780.00\nCapacitación en línea 8 $45.00 $360.00\nCloud hosting - standard ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 322,
+      "hyp_chars": 322
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_out_of_order_1",
+      "category": "pdf_out_of_order",
+      "pages": 1,
+      "seconds": 0.01187,
+      "page_seconds": [
+        0.01187
+      ],
+      "output_preview": "Informe trimestral / Quarterly report\nPlease send the signed contract to Estimada señora Núñez: le confirmamos que\nlegal@example.com before Friday. If you su pedido número 88213 será entregado el\nhave questions about clause 7.2, call our próximo miércoles 12 de junio. Si necesita\noffice at +1 (415) ",
+      "cer": 0.6534,
+      "wer": 0.7846,
+      "bow_f1": 1.0,
+      "ref_chars": 1232,
+      "hyp_chars": 1232
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_char_positioned_1",
+      "category": "pdf_char_positioned",
+      "pages": 1,
+      "seconds": 0.0269,
+      "page_seconds": [
+        0.0269
+      ],
+      "output_preview": "EstimadaseñoraNúñez:leconfirmamosquesupedidonúmero88213seráentregadoelpróximomiércoles\n12dejunio.Sinecesitacambiarladirección,escríbanosaatención@tienda.mx.\nPleasesendthesignedcontracttolegal@example.combeforeFriday.Ifyouhavequestionsaboutclause7.2,\ncallourofficeat+1(415)555-0199between9:00and17:30P",
+      "cer": 0.1487,
+      "wer": 1.0,
+      "bow_f1": 0.1098,
+      "ref_chars": 780,
+      "hyp_chars": 664
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_rotated_1",
+      "category": "pdf_rotated",
+      "pages": 1,
+      "seconds": 0.00747,
+      "page_seconds": [
+        0.00747
+      ],
+      "output_preview": "packaging,\nand\nthe\nremaining\nstock\nwas\nmoved\nto\naisle\n14,\nshelf\nB.\nThe\nwarehouse\nreceived\n1,250\nunits\nof\nproduct\nSKU-4471\non\nMarch\n3,\n2024.\nQuality\ncontrol\nrejected\n37\nunits\nbecause\nof\ndamaged\ncaminaron\npor\nel\nmalecón\ny\ncompraron\ncafé\ny\npan\ndulce.\nEl\nniño\ncomió\npiñatas\nde\nazúcar\nen\nla\nfiesta\nde\ncump",
+      "cer": 0.7582,
+      "wer": 0.8992,
+      "bow_f1": 1.0,
+      "ref_chars": 732,
+      "hyp_chars": 732
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "pdf_multipage",
+      "category": "pdf_multipage",
+      "pages": 28,
+      "seconds": 0.68269,
+      "page_seconds": [
+        0.02438
+      ],
+      "output_preview": "La inteligencia de documentos combina extracción de texto, reconocimiento óptico\nde caracteres y análisis de metadatos. Así, un archivo escaneado se convierte en\ninformación útil y consultable.\nPlease send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 72488,
+      "hyp_chars": 72488
+    },
+    {
+      "engine": "pdfplumber",
+      "sample": "real_u1t02",
+      "category": "real_pdf",
+      "pages": 2,
+      "seconds": 0.03888,
+      "page_seconds": [
+        0.01944
+      ],
+      "output_preview": "U1T02: Document Intelligence\nAsynchronous Pipeline\nReal services rarely process a request synchronously, file ingestion especially. Documents arrive\nfaster than they can be processed; processing times depend on several factors such as file format\nand size, and users can’t hold a connection open whil",
+      "hyp_chars": 2871
+    }
+  ],
+  "footprint_mb": 14.3
+}

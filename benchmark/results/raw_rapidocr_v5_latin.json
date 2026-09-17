@@ -1,0 +1,655 @@
+{
+  "engine": "rapidocr_v5_latin",
+  "type": "ocr",
+  "threads": 4,
+  "cold_start_s": 0.335,
+  "first_call_s": 0.59,
+  "rss_load_delta_mb": 106.0,
+  "peak_rss_mb": 1128.9,
+  "records": [
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "clean_0",
+      "category": "clean",
+      "pages": 1,
+      "seconds": 0.6562,
+      "page_seconds": [
+        0.6562
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "blur_0",
+      "category": "blur",
+      "pages": 1,
+      "seconds": 1.4576,
+      "page_seconds": [
+        1.4576
+      ],
+      "cer": 0.0065,
+      "wer": 0.027,
+      "bow_f1": 0.9875,
+      "ref_chars": 464,
+      "hyp_chars": 465,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our ofice at +1 (415) 555-0199 between 9:00 and\n17:30 ) Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users c"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "noise_0",
+      "category": "noise",
+      "pages": 1,
+      "seconds": 0.6721,
+      "page_seconds": [
+        0.6721
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "rotated_0",
+      "category": "rotated",
+      "pages": 1,
+      "seconds": 0.6464,
+      "page_seconds": [
+        0.6464
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "lowres_0",
+      "category": "lowres",
+      "pages": 1,
+      "seconds": 1.0692,
+      "page_seconds": [
+        1.0692
+      ],
+      "cer": 0.0129,
+      "wer": 0.0405,
+      "bow_f1": 0.9816,
+      "ref_chars": 464,
+      "hyp_chars": 470,
+      "output_preview": "Please s send  the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific  time.\nReal services rarely process a request synchronously. Documents a arrive faster than\nthey can be processed, and us"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "photo_0",
+      "category": "photo",
+      "pages": 1,
+      "seconds": 0.6444,
+      "page_seconds": [
+        0.6444
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "inverted_0",
+      "category": "inverted",
+      "pages": 1,
+      "seconds": 0.8691,
+      "page_seconds": [
+        0.8691
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "jpeg_q15_0",
+      "category": "jpeg_q15",
+      "pages": 1,
+      "seconds": 0.6371,
+      "page_seconds": [
+        0.6371
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "clean_1",
+      "category": "clean",
+      "pages": 1,
+      "seconds": 0.6474,
+      "page_seconds": [
+        0.6474
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "blur_1",
+      "category": "blur",
+      "pages": 1,
+      "seconds": 0.9101,
+      "page_seconds": [
+        0.9101
+      ],
+      "cer": 0.0092,
+      "wer": 0.0282,
+      "bow_f1": 0.993,
+      "ref_chars": 433,
+      "hyp_chars": 437,
+      "output_preview": "Los servicios reales rara vez procesan una : solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que   el sistema μ puede atender? La solución es aceptar  el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobant"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "noise_1",
+      "category": "noise",
+      "pages": 1,
+      "seconds": 0.6401,
+      "page_seconds": [
+        0.6401
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "rotated_1",
+      "category": "rotated",
+      "pages": 1,
+      "seconds": 0.5839,
+      "page_seconds": [
+        0.5839
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "lowres_1",
+      "category": "lowres",
+      "pages": 1,
+      "seconds": 0.6192,
+      "page_seconds": [
+        0.6192
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "photo_1",
+      "category": "photo",
+      "pages": 1,
+      "seconds": 0.5546,
+      "page_seconds": [
+        0.5546
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "inverted_1",
+      "category": "inverted",
+      "pages": 1,
+      "seconds": 1.3573,
+      "page_seconds": [
+        1.3573
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "jpeg_q15_1",
+      "category": "jpeg_q15",
+      "pages": 1,
+      "seconds": 0.635,
+      "page_seconds": [
+        0.635
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 433,
+      "hyp_chars": 433,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "clean_2",
+      "category": "clean",
+      "pages": 1,
+      "seconds": 0.6512,
+      "page_seconds": [
+        0.6512
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "blur_2",
+      "category": "blur",
+      "pages": 1,
+      "seconds": 1.3105,
+      "page_seconds": [
+        1.3105
+      ],
+      "cer": 0.0108,
+      "wer": 0.0405,
+      "bow_f1": 0.9814,
+      "ref_chars": 464,
+      "hyp_chars": 467,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call I our ofice at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal : services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "noise_2",
+      "category": "noise",
+      "pages": 1,
+      "seconds": 0.6385,
+      "page_seconds": [
+        0.6385
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "rotated_2",
+      "category": "rotated",
+      "pages": 1,
+      "seconds": 0.5963,
+      "page_seconds": [
+        0.5963
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "lowres_2",
+      "category": "lowres",
+      "pages": 1,
+      "seconds": 0.9037,
+      "page_seconds": [
+        0.9037
+      ],
+      "cer": 0.0086,
+      "wer": 0.027,
+      "bow_f1": 0.9877,
+      "ref_chars": 464,
+      "hyp_chars": 468,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, a and users "
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "photo_2",
+      "category": "photo",
+      "pages": 1,
+      "seconds": 0.6033,
+      "page_seconds": [
+        0.6033
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "inverted_2",
+      "category": "inverted",
+      "pages": 1,
+      "seconds": 1.1065,
+      "page_seconds": [
+        1.1065
+      ],
+      "cer": 0.0151,
+      "wer": 0.0541,
+      "bow_f1": 0.9693,
+      "ref_chars": 464,
+      "hyp_chars": 471,
+      "output_preview": "Please send the signed I contract to legal@example.com before Friday. If you have questions\nabout clause e 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and user"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "jpeg_q15_2",
+      "category": "jpeg_q15",
+      "pages": 1,
+      "seconds": 0.6293,
+      "page_seconds": [
+        0.6293
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 464,
+      "hyp_chars": 464,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "two_column_0",
+      "category": "two_column",
+      "pages": 1,
+      "seconds": 1.0976,
+      "page_seconds": [
+        1.0976
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 850,
+      "hyp_chars": 850,
+      "output_preview": "Estimada señora Núñez: le confirmamos que\nsu pedido número 88213 será entregado el\npróximo miércoles 12 de junio. Si necesita\ncambiar la dirección, escríbanos a\natención@tienda.mx.\nReal services rarely process a request\nsynchronously. Documents arrive faster than\nthey can be processed, and users can"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "small_font_0",
+      "category": "small_font",
+      "pages": 1,
+      "seconds": 1.0028,
+      "page_seconds": [
+        1.0028
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 632,
+      "hyp_chars": 632,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más documentos de los que el sistema puede atender? La solución es aceptar el\narchivo, guardarlo y encolar el trabajo para procesarlo después.\nOptical character recognition converts images of text into "
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "invoice_0",
+      "category": "invoice",
+      "pages": 1,
+      "seconds": 0.7979,
+      "page_seconds": [
+        0.7979
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 405,
+      "hyp_chars": 405,
+      "output_preview": "INVOICE / FACTURA No. INV-96160\nDate: 13/03/2024 Due: 13/04/2024\nBill to: Comercializadora del Sureste S.A. de C.V.\nEmail: cuentas.por.pagar@sureste.com.mx Tel: +52 999 123 4567\nConsulting services (April) 12 $85.00 $1,020.00\nData migration fee 1 $780.00 $780.00\nUSB-C docking station 2 $139.90 $279."
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "two_column_1",
+      "category": "two_column",
+      "pages": 1,
+      "seconds": 0.9515,
+      "page_seconds": [
+        0.9515
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 754,
+      "hyp_chars": 754,
+      "output_preview": "Optical character recognition converts images of text into\nmachine readable characters. Accuracy depends on\nresolution, contrast, skew and noise, so preprocessing\noften matters as much as the model.\nThe warehouse received 1,250 units of product SKU-4471\non March 3, 2024. Quality control rejected 37 "
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "small_font_1",
+      "category": "small_font",
+      "pages": 1,
+      "seconds": 0.941,
+      "page_seconds": [
+        0.941
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 716,
+      "hyp_chars": 716,
+      "output_preview": "Real services rarely process a request synchronously. Documents arrive faster than they can be processed, and users cannot hold a connection open while heavy\nwork runs in the background. A reliable design accepts the upload, stores it, queues the work and lets users track progress.\nLos servicios rea"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "invoice_1",
+      "category": "invoice",
+      "pages": 1,
+      "seconds": 0.7239,
+      "page_seconds": [
+        0.7239
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 416,
+      "hyp_chars": 416,
+      "output_preview": "INVOICE / FACTURA No. INV-79426\nDate: 05/11/2024 Due: 05/12/2024\nBill to: Comercializadora del Sureste S.A. de C.V.\nEmail: cuentas.por.pagar@sureste.com.mx Tel: +52 999 123 4567\nLicencia de software anual 3 $1,200.50 $3,601.50\nSoporte técnico prioritario 5 $64.75 $323.75\nConsulting services (April) "
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "two_column_2",
+      "category": "two_column",
+      "pages": 1,
+      "seconds": 1.0353,
+      "page_seconds": [
+        1.0353
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 862,
+      "hyp_chars": 862,
+      "output_preview": "Our quarterly revenue grew 18.4% year over year,\nreaching $2.37 million, while operating costs\ndecreased by 6%. The board approved a new hiring\nplan for the engineering and support teams.\nReal services rarely process a request\nsynchronously. Documents arrive faster than they\ncan be processed, and us"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "small_font_2",
+      "category": "small_font",
+      "pages": 1,
+      "seconds": 0.9662,
+      "page_seconds": [
+        0.9662
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 580,
+      "hyp_chars": 580,
+      "output_preview": "Optical character recognition converts images of text into machine readable characters. Accuracy depends on resolution, contrast, skew and\nnoise, so preprocessing often matters as much as the model.\nOur quarterly revenue grew 18.4% year over year, reaching $2.37 million, while operating costs decrea"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "invoice_2",
+      "category": "invoice",
+      "pages": 1,
+      "seconds": 1.1698,
+      "page_seconds": [
+        1.1698
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 405,
+      "hyp_chars": 405,
+      "output_preview": "INVOICE / FACTURA No. INV-70883\nDate: 02/10/2024 Due: 02/11/2024\nBill to: Comercializadora del Sureste S.A. de C.V.\nEmail: cuentas.por.pagar@sureste.com.mx Tel: +52 999 123 4567\nSoporte técnico prioritario 5 $64.75 $323.75\nLicencia de software anual 3 $1,200.50 $3,601.50\nData migration fee 1 $780.00"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "scanned_0",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 1.5439,
+      "page_seconds": [
+        0.7701,
+        0.7738
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 898,
+      "hyp_chars": 898,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and\n17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than\nthey can be processed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "scanned_1",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 1.5616,
+      "page_seconds": [
+        0.836,
+        0.7257
+      ],
+      "cer": 0.0011,
+      "wer": 0.0069,
+      "bow_f1": 1.0,
+      "ref_chars": 898,
+      "hyp_chars": 898,
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más\ndocumentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "scanned_2",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 1.584,
+      "page_seconds": [
+        0.7633,
+        0.8207
+      ],
+      "cer": 0.0011,
+      "wer": 0.0068,
+      "bow_f1": 1.0,
+      "ref_chars": 929,
+      "hyp_chars": 929,
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions\nabout clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.\nReal services rarely process a request synchronously. Documents arrive faster than they can be\nprocessed, and users ca"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "real_p1_150",
+      "category": "real_150dpi",
+      "pages": 1,
+      "seconds": 2.227,
+      "page_seconds": [
+        2.227
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1805,
+      "hyp_chars": 1805,
+      "output_preview": "U1T02: Document Intelligence\nAsynchronous Pipeline\nReal services rarely process a request synchronously, file ingestion especially. Documents arrive\nfaster than they can be processed; processing times depend on several factors such as file format\nand size, and users can’t hold a connection open whil"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "real_p1_300",
+      "category": "real_300dpi",
+      "pages": 1,
+      "seconds": 2.6356,
+      "page_seconds": [
+        2.6356
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1805,
+      "hyp_chars": 1805,
+      "output_preview": "U1T02: Document Intelligence\nAsynchronous Pipeline\nReal services rarely process a request synchronously, file ingestion especially. Documents arrive\nfaster than they can be processed; processing times depend on several factors such as file format\nand size, and users can’t hold a connection open whil"
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "real_p2_150",
+      "category": "real_150dpi",
+      "pages": 1,
+      "seconds": 1.5956,
+      "page_seconds": [
+        1.5956
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1065,
+      "hyp_chars": 1065,
+      "output_preview": "Part 5: Failure handling\nThe system must survive edge scenarios: unsupported formats, corrupted files, and workers (or\nthe whole stack) being killed and restarted mid-processing; no job may be lost and no document\nmay stay in a non-terminal state forever.\nAdd all necessary warnings, error messages, "
+    },
+    {
+      "engine": "rapidocr_v5_latin",
+      "sample": "real_p2_300",
+      "category": "real_300dpi",
+      "pages": 1,
+      "seconds": 1.7046,
+      "page_seconds": [
+        1.7046
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1065,
+      "hyp_chars": 1065,
+      "output_preview": "Part 5: Failure handling\nThe system must survive edge scenarios: unsupported formats, corrupted files, and workers (or\nthe whole stack) being killed and restarted mid-processing; no job may be lost and no document\nmay stay in a non-terminal state forever.\nAdd all necessary warnings, error messages, "
+    }
+  ],
+  "footprint_mb": 203.8
+}

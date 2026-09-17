@@ -1,0 +1,267 @@
+{
+  "engine": "pymupdf_sorted",
+  "type": "pdf",
+  "threads": 4,
+  "cold_start_s": 0.079,
+  "rss_load_delta_mb": 41.4,
+  "peak_rss_mb": 60.8,
+  "records": [
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "scanned_0",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00018,
+      "page_seconds": [
+        9e-05
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "scanned_1",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00016,
+      "page_seconds": [
+        8e-05
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "scanned_2",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00015,
+      "page_seconds": [
+        8e-05
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_single_0",
+      "category": "pdf_single",
+      "pages": 1,
+      "seconds": 0.00291,
+      "page_seconds": [
+        0.00291
+      ],
+      "output_preview": "La inteligencia de documentos combina extracción de texto, reconocimiento óptico de caracteres y\nanálisis de metadatos. Así, un archivo escaneado se convierte en información útil y consultable.\n\nLa facturación electrónica exige que cada comprobante incluya el RFC del emisor, la fecha de\nexpedición, ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1032,
+      "hyp_chars": 1032
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_two_column_0",
+      "category": "pdf_two_column",
+      "pages": 1,
+      "seconds": 0.00407,
+      "page_seconds": [
+        0.00407
+      ],
+      "output_preview": "La inteligencia de documentos combina\nextracción de texto, reconocimiento óptico\nde caracteres y análisis de metadatos. Así,\nun archivo escaneado se convierte en\ninformación útil y consultable.\n\nOptical character recognition converts\nimages of text into machine readable\ncharacters. Accuracy depends ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1570,
+      "hyp_chars": 1570
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_table_0",
+      "category": "pdf_table",
+      "pages": 1,
+      "seconds": 0.00137,
+      "page_seconds": [
+        0.00137
+      ],
+      "output_preview": "Factura / Invoice INV-20931\n\nDescription                             Qty        Unit price      Amount\n\nConsulting services (April)               12        $85.00         $1,020.00\n\nCloud hosting - standard plan            1         $249.99       $249.99\n\nSoporte técnico prioritario               5 ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 328,
+      "hyp_chars": 328
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_out_of_order_0",
+      "category": "pdf_out_of_order",
+      "pages": 1,
+      "seconds": 0.0036,
+      "page_seconds": [
+        0.0036
+      ],
+      "output_preview": "Informe trimestral / Quarterly report\n\n\n\nLa facturación electrónica exige que cada        Los servicios reales rara vez procesan una\ncomprobante incluya el RFC del emisor, la         solicitud de forma síncrona. ¿Qué ocurre\nfecha de expedición, el régimen fiscal y el       cuando llegan más document",
+      "cer": 0.6534,
+      "wer": 0.7941,
+      "bow_f1": 1.0,
+      "ref_chars": 1255,
+      "hyp_chars": 1255
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_char_positioned_0",
+      "category": "pdf_char_positioned",
+      "pages": 1,
+      "seconds": 0.00282,
+      "page_seconds": [
+        0.00282
+      ],
+      "output_preview": "The warehouse received 1,250 units of product SKU-4471 on March 3, 2024. Quality control rejected 37\nunits because of damaged packaging, and the remaining stock was moved to aisle 14, shelf B.\n\nOptical character recognition converts images of text into machine readable characters. Accuracy depends o",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 773,
+      "hyp_chars": 773
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_rotated_0",
+      "category": "pdf_rotated",
+      "pages": 1,
+      "seconds": 0.00283,
+      "page_seconds": [
+        0.00283
+      ],
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más documentos de los que el\nsistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el trabajo para procesarlo después.\n\nLa facturación electrónica exige que cada comprobante incl",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 909,
+      "hyp_chars": 909
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_single_1",
+      "category": "pdf_single",
+      "pages": 1,
+      "seconds": 0.00309,
+      "page_seconds": [
+        0.00309
+      ],
+      "output_preview": "El niño comió piñatas de azúcar en la fiesta de cumpleaños de su abuela, en Mérida, Yucatán. ¡Qué\ndía tan bonito! Después caminaron por el malecón y compraron café y pan dulce.\n\nPlease send the signed contract to legal@example.com before Friday. If you have questions about\nclause 7.2, call our offic",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1033,
+      "hyp_chars": 1033
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_two_column_1",
+      "category": "pdf_two_column",
+      "pages": 1,
+      "seconds": 0.00393,
+      "page_seconds": [
+        0.00393
+      ],
+      "output_preview": "Please send the signed contract to\nlegal@example.com before Friday. If you\nhave questions about clause 7.2, call our\noffice at +1 (415) 555-0199 between 9:00\nand 17:30 Pacific time.\n\nEstimada señora Núñez: le confirmamos que\nsu pedido número 88213 será entregado el\npróximo miércoles 12 de junio. Si ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1553,
+      "hyp_chars": 1553
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_table_1",
+      "category": "pdf_table",
+      "pages": 1,
+      "seconds": 0.00122,
+      "page_seconds": [
+        0.00122
+      ],
+      "output_preview": "Factura / Invoice INV-20931\n\nDescription                             Qty        Unit price      Amount\n\nConsulting services (April)               12        $85.00         $1,020.00\n\nUSB-C docking station                  2         $139.90       $279.80\n\nLicencia de software anual               3    ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 322,
+      "hyp_chars": 322
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_out_of_order_1",
+      "category": "pdf_out_of_order",
+      "pages": 1,
+      "seconds": 0.00329,
+      "page_seconds": [
+        0.00329
+      ],
+      "output_preview": "Informe trimestral / Quarterly report\n\n\n\nPlease send the signed contract to              Estimada señora Núñez: le confirmamos que\nlegal@example.com before Friday. If you        su pedido número 88213 será entregado el\nhave questions about clause 7.2, call our        próximo miércoles 12 de junio. S",
+      "cer": 0.6534,
+      "wer": 0.7846,
+      "bow_f1": 1.0,
+      "ref_chars": 1232,
+      "hyp_chars": 1232
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_char_positioned_1",
+      "category": "pdf_char_positioned",
+      "pages": 1,
+      "seconds": 0.00294,
+      "page_seconds": [
+        0.00294
+      ],
+      "output_preview": "Estimada señora Núñez: le confirmamos que su pedido número 88213 será entregado el próximo miércoles\n12 de junio. Si necesita cambiar la dirección, escríbanos a atención@tienda.mx.\n\nPlease send the signed contract to legal@example.com before Friday. If you have questions about clause 7.2,\ncall our o",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 780,
+      "hyp_chars": 780
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_rotated_1",
+      "category": "pdf_rotated",
+      "pages": 1,
+      "seconds": 0.0023,
+      "page_seconds": [
+        0.0023
+      ],
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions about clause 7.2, call our office at +1\n(415) 555-0199 between 9:00 and 17:30 Pacific time.\n\nEstimada señora Núñez: le confirmamos que su pedido número 88213 será entregado el próximo miércoles 12 de junio. Si ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 732,
+      "hyp_chars": 732
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "pdf_multipage",
+      "category": "pdf_multipage",
+      "pages": 28,
+      "seconds": 0.15394,
+      "page_seconds": [
+        0.0055
+      ],
+      "output_preview": "La inteligencia de documentos combina extracción de texto, reconocimiento óptico\nde caracteres y análisis de metadatos. Así, un archivo escaneado se convierte en\ninformación útil y consultable.\n\nPlease send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 72488,
+      "hyp_chars": 72488
+    },
+    {
+      "engine": "pymupdf_sorted",
+      "sample": "real_u1t02",
+      "category": "real_pdf",
+      "pages": 2,
+      "seconds": 0.00819,
+      "page_seconds": [
+        0.00409
+      ],
+      "output_preview": "    U1T02: Document Intelligence\n        Asynchronous Pipeline\nReal services rarely process a request synchronously, file ingestion especially. Documents arrive\nfaster than they can be processed; processing times depend on several factors such as file format\nand size, and users can’t hold a connecti",
+      "hyp_chars": 2871
+    }
+  ],
+  "footprint_mb": 49.9
+}

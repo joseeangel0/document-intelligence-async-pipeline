@@ -1,0 +1,267 @@
+{
+  "engine": "pypdf",
+  "type": "pdf",
+  "threads": 4,
+  "cold_start_s": 0.106,
+  "rss_load_delta_mb": 42.5,
+  "peak_rss_mb": 63.8,
+  "records": [
+    {
+      "engine": "pypdf",
+      "sample": "scanned_0",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00033,
+      "page_seconds": [
+        0.00017
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pypdf",
+      "sample": "scanned_1",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00039,
+      "page_seconds": [
+        0.0002
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pypdf",
+      "sample": "scanned_2",
+      "category": "scanned_pdf",
+      "pages": 2,
+      "seconds": 0.00032,
+      "page_seconds": [
+        0.00016
+      ],
+      "output_preview": "\n",
+      "hyp_chars": 0
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_single_0",
+      "category": "pdf_single",
+      "pages": 1,
+      "seconds": 0.00157,
+      "page_seconds": [
+        0.00157
+      ],
+      "output_preview": "La inteligencia de documentos combina extracción de texto, reconocimiento óptico de caracteres y\nanálisis de metadatos. Así, un archivo escaneado se convierte en información útil y consultable.\nLa facturación electrónica exige que cada comprobante incluya el RFC del emisor, la fecha de\nexpedición, e",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1032,
+      "hyp_chars": 1032
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_two_column_0",
+      "category": "pdf_two_column",
+      "pages": 1,
+      "seconds": 0.00159,
+      "page_seconds": [
+        0.00159
+      ],
+      "output_preview": "La inteligencia de documentos combina\nextracción de texto, reconocimiento óptico\nde caracteres y análisis de metadatos. Así,\nun archivo escaneado se convierte en\ninformación útil y consultable.\nOptical character recognition converts\nimages of text into machine readable\ncharacters. Accuracy depends o",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1570,
+      "hyp_chars": 1570
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_table_0",
+      "category": "pdf_table",
+      "pages": 1,
+      "seconds": 0.00141,
+      "page_seconds": [
+        0.00141
+      ],
+      "output_preview": "Factura / Invoice INV-20931\nDescription\nQty\nUnit price\nAmount\nConsulting services (April)\n12\n$85.00\n$1,020.00\nCloud hosting - standard plan\n1\n$249.99\n$249.99\nSoporte técnico prioritario\n5\n$64.75\n$323.75\nUSB-C docking station\n2\n$139.90\n$279.80\nData migration fee\n1\n$780.00\n$780.00\nLicencia de software",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 328,
+      "hyp_chars": 328
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_out_of_order_0",
+      "category": "pdf_out_of_order",
+      "pages": 1,
+      "seconds": 0.00159,
+      "page_seconds": [
+        0.00159
+      ],
+      "output_preview": "Page 1 of 1 - Confidential\nLos servicios reales rara vez procesan una\nsolicitud de forma síncrona. ¿Qué ocurre\ncuando llegan más documentos de los que el\nsistema puede atender? La solución es\naceptar el archivo, guardarlo y encolar el\ntrabajo para procesarlo después.\nThe warehouse received 1,250 uni",
+      "cer": 0.8056,
+      "wer": 0.9804,
+      "bow_f1": 1.0,
+      "ref_chars": 1255,
+      "hyp_chars": 1255
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_char_positioned_0",
+      "category": "pdf_char_positioned",
+      "pages": 1,
+      "seconds": 0.0133,
+      "page_seconds": [
+        0.0133
+      ],
+      "output_preview": "T\nh\ne\nw\na\nr\ne\nh\no\nu\ns\ne\nr\ne\nc\ne\ni\nv\ne\nd\n1\n,\n2\n5\n0\nu\nn\ni\nt\ns\no\nf\np\nr\no\nd\nu\nc\nt\nS\nK\nU\n-\n4\n4\n7\n1\no\nn\nM\na\nr\nc\nh\n3\n,\n2\n0\n2\n4\n.\nQ\nu\na\nl\ni\nt\ny\nc\no\nn\nt\nr\no\nl\nr\ne\nj\ne\nc\nt\ne\nd\n3\n7\nu\nn\ni\nt\ns\nb\ne\nc\na\nu\ns\ne\no\nf\nd\na\nm\na\ng\ne\nd\np\na\nc\nk\na\ng\ni\nn\ng\n,\na\nn\nd\nt\nh\ne\nr\ne\nm\na\ni\nn\ni\nn\ng\ns\nt\no\nc\nk\nw\na\ns\nm\no\nv\ne\nd\nt\no\na\ni\ns\nl\n",
+      "cer": 0.6986,
+      "wer": 5.5897,
+      "bow_f1": 0.0239,
+      "ref_chars": 773,
+      "hyp_chars": 1313
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_rotated_0",
+      "category": "pdf_rotated",
+      "pages": 1,
+      "seconds": 0.00106,
+      "page_seconds": [
+        0.00106
+      ],
+      "output_preview": "Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más documentos de los que el\nsistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el trabajo para procesarlo después.\nLa facturación electrónica exige que cada comprobante inclu",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 909,
+      "hyp_chars": 909
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_single_1",
+      "category": "pdf_single",
+      "pages": 1,
+      "seconds": 0.00117,
+      "page_seconds": [
+        0.00117
+      ],
+      "output_preview": "El niño comió piñatas de azúcar en la fiesta de cumpleaños de su abuela, en Mérida, Yucatán. ¡Qué\ndía tan bonito! Después caminaron por el malecón y compraron café y pan dulce.\nPlease send the signed contract to legal@example.com before Friday. If you have questions about\nclause 7.2, call our office",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1033,
+      "hyp_chars": 1033
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_two_column_1",
+      "category": "pdf_two_column",
+      "pages": 1,
+      "seconds": 0.0015,
+      "page_seconds": [
+        0.0015
+      ],
+      "output_preview": "Please send the signed contract to\nlegal@example.com before Friday. If you\nhave questions about clause 7.2, call our\noffice at +1 (415) 555-0199 between 9:00\nand 17:30 Pacific time.\nEstimada señora Núñez: le confirmamos que\nsu pedido número 88213 será entregado el\npróximo miércoles 12 de junio. Si n",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 1553,
+      "hyp_chars": 1553
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_table_1",
+      "category": "pdf_table",
+      "pages": 1,
+      "seconds": 0.0014,
+      "page_seconds": [
+        0.0014
+      ],
+      "output_preview": "Factura / Invoice INV-20931\nDescription\nQty\nUnit price\nAmount\nConsulting services (April)\n12\n$85.00\n$1,020.00\nUSB-C docking station\n2\n$139.90\n$279.80\nLicencia de software anual\n3\n$1,200.50\n$3,601.50\nData migration fee\n1\n$780.00\n$780.00\nCapacitación en línea\n8\n$45.00\n$360.00\nCloud hosting - standard ",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 322,
+      "hyp_chars": 322
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_out_of_order_1",
+      "category": "pdf_out_of_order",
+      "pages": 1,
+      "seconds": 0.00157,
+      "page_seconds": [
+        0.00157
+      ],
+      "output_preview": "Page 1 of 1 - Confidential\nEstimada señora Núñez: le confirmamos que\nsu pedido número 88213 será entregado el\npróximo miércoles 12 de junio. Si necesita\ncambiar la dirección, escríbanos a\natención@tienda.mx.\nLos servicios reales rara vez procesan una\nsolicitud de forma síncrona. ¿Qué ocurre\ncuando l",
+      "cer": 0.8206,
+      "wer": 0.9846,
+      "bow_f1": 1.0,
+      "ref_chars": 1232,
+      "hyp_chars": 1232
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_char_positioned_1",
+      "category": "pdf_char_positioned",
+      "pages": 1,
+      "seconds": 0.01298,
+      "page_seconds": [
+        0.01298
+      ],
+      "output_preview": "E\ns\nt\ni\nm\na\nd\na\ns\ne\nñ\no\nr\na\nN\nú\nñ\ne\nz\n:\nl\ne\nc\no\nn\nf\ni\nr\nm\na\nm\no\ns\nq\nu\ne\ns\nu\np\ne\nd\ni\nd\no\nn\nú\nm\ne\nr\no\n8\n8\n2\n1\n3\ns\ne\nr\ná\ne\nn\nt\nr\ne\ng\na\nd\no\ne\nl\np\nr\nó\nx\ni\nm\no\nm\ni\né\nr\nc\no\nl\ne\ns\n1\n2\nd\ne\nj\nu\nn\ni\no\n.\nS\ni\nn\ne\nc\ne\ns\ni\nt\na\nc\na\nm\nb\ni\na\nr\nl\na\nd\ni\nr\ne\nc\nc\ni\nó\nn\n,\ne\ns\nc\nr\ní\nb\na\nn\no\ns\na\na\nt\ne\nn\nc\ni\nó\nn\n@\nt\ni\ne\nn\nd\n",
+      "cer": 0.6808,
+      "wer": 5.216,
+      "bow_f1": 0.0211,
+      "ref_chars": 780,
+      "hyp_chars": 1311
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_rotated_1",
+      "category": "pdf_rotated",
+      "pages": 1,
+      "seconds": 0.00101,
+      "page_seconds": [
+        0.00101
+      ],
+      "output_preview": "Please send the signed contract to legal@example.com before Friday. If you have questions about clause 7.2, call our office at +1\n(415) 555-0199 between 9:00 and 17:30 Pacific time.\nEstimada señora Núñez: le confirmamos que su pedido número 88213 será entregado el próximo miércoles 12 de junio. Si n",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 732,
+      "hyp_chars": 732
+    },
+    {
+      "engine": "pypdf",
+      "sample": "pdf_multipage",
+      "category": "pdf_multipage",
+      "pages": 28,
+      "seconds": 0.0436,
+      "page_seconds": [
+        0.00156
+      ],
+      "output_preview": "La inteligencia de documentos combina extracción de texto, reconocimiento óptico\nde caracteres y análisis de metadatos. Así, un archivo escaneado se convierte en\ninformación útil y consultable.\nPlease send the signed contract to legal@example.com before Friday. If you have\nquestions about clause 7.2",
+      "cer": 0.0,
+      "wer": 0.0,
+      "bow_f1": 1.0,
+      "ref_chars": 72488,
+      "hyp_chars": 72488
+    },
+    {
+      "engine": "pypdf",
+      "sample": "real_u1t02",
+      "category": "real_pdf",
+      "pages": 2,
+      "seconds": 0.01097,
+      "page_seconds": [
+        0.00548
+      ],
+      "output_preview": "U1T02: Document Intelligence \nAsynchronous Pipeline \nReal services rarely process a request synchronously, file ingestion especially. Documents arrive \nfaster than they can be processed; processing times depend on several factors such as file format \nand size, and users can’t hold a connection open ",
+      "hyp_chars": 2871
+    }
+  ],
+  "footprint_mb": 2.6
+}

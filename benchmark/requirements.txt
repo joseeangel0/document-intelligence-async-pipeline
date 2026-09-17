@@ -1,0 +1,25 @@
+# Install with: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
+# (on linux/arm64 the default torch wheels are already CPU-only; on x86_64 the extra index avoids CUDA wheels)
+# Dataset generation / metrics / charts
+numpy==1.26.4
+pillow==10.4.0
+reportlab==4.2.5
+rapidfuzz==3.10.1
+psutil==6.1.0
+matplotlib==3.9.2
+
+# PDF text-layer extractors
+pymupdf==1.24.14
+pypdfium2==4.30.0
+pdfplumber==0.11.4
+pdfminer.six==20231228
+pypdf==5.1.0
+
+# OCR engines
+pytesseract==0.3.13
+rapidocr==3.9.2
+onnxruntime==1.20.1
+opencv-python-headless==4.10.0.84
+torch==2.8.0
+torchvision==0.23.0
+easyocr==1.7.2
