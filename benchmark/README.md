@@ -164,3 +164,120 @@ check is reliable.
 * The reference text for the real document comes from its own text layer, so it is only used to score OCR.
 * The results are CPU-only on arm64. x86 with AVX-512, or a GPU, would change the absolute speed,
   especially for EasyOCR.
+
+---
+
+# Structure / LLM-readiness benchmark
+
+Text that is correct but flat is not enough for GenAI. Retrieval and LLM prompts work better when headings, lists and
+tables survive as Markdown. This second benchmark measures **how much document structure each converter preserves**,
+how fast it runs and what it costs to deploy.
+
+## Reproduce
+
+```bash
+docker build -f benchmark/Dockerfile.structure -t docintel-bench-structure benchmark/   # ~5 GB (Docling + torch CPU + 730 MB of models)
+docker run --rm -v "$PWD/benchmark":/bench docintel-bench-structure python fetch_real_structure.py      # optional, needs network
+docker run --rm -v "$PWD/benchmark":/bench docintel-bench-structure python generate_structure_dataset.py
+docker run --rm --add-host host.docker.internal:host-gateway -v "$PWD/benchmark":/bench \
+    docintel-bench-structure python run_structure_benchmark.py         # all candidates; docintel only if the stack is up
+docker run --rm -v "$PWD/benchmark":/bench docintel-bench-structure python run_structure_benchmark.py --summarize
+```
+
+Outputs are written to `results/structure/`:
+
+* `summary.md`: overall table, per-type tables and a per-sample table
+* `summary.csv` and `results.json`: per sample, with an output preview
+* `outputs/<candidate>/<sample>.md`: the raw Markdown from each candidate
+* `raw_*.json`: timings, cold start, peak RSS and install size
+* `structure_by_doc_type.png` and `structure_vs_speed.png`: charts
+
+## Dataset (`generate_structure_dataset.py`, seed 4321)
+
+Each document is written once as a list of blocks (heading with level, paragraph, bullet list, table). That list is
+rendered to a file and also serialized as the ground-truth Markdown.
+
+| Type | Samples | What it exercises |
+|---|---|---|
+| `digital_pdf` | 3 | English report with H1/H2/H3, bullet lists, a grid table, a borderless table and a 60-row table spanning pages; Spanish report with a real **two-column** page; invoice with a line-items table and a borderless totals table |
+| `scanned_pdf` | 2 | Report and invoice rasterized at 200 dpi, with noise, slight skew and JPEG compression (image-only PDFs) |
+| `table_photo` | 1 | Invoice table photographed: tint, uneven light, 1.8° skew, blur, noise |
+| `docx` | 2 | python-docx with Heading 1–3, List Bullet and Table Grid (EN and ES) |
+| `real_pdf` | 3 | **Real public-domain documents** (US federal works, 17 U.S.C. §105): IRS Form W-9, Publication 1 and the first 6 pages of Publication 15-T. These have no hand-made structure ground truth, so they are scored only by word recall (BoW F1) against the publisher's text layer. This catches converters that silently drop text. |
+
+## Metrics
+
+* **Heading F1:** heading text (fuzzy ≥ 90) with the level within ±1. "Any level" recall ignores the level.
+* **Table cell F1:** Markdown pipe tables and HTML `<table>`s are parsed into rows. Predicted rows are matched greedily to
+  ground-truth rows by shared cells. All tables of a document are pooled, so a table split across pages is not
+  penalised, and a header repeated on each page counts once.
+* **List-item recall:** list lines (`-`, `*`, `1.`) that match a ground-truth item.
+* **CER:** computed after stripping Markdown and inline HTML (`<sup>`, `<br>`…).
+* **BoW F1:** word recall and precision, independent of reading order.
+* **Cost:** s/page (warm, after warming up on the smallest digital and scanned inputs), cold start, peak RSS, and
+  install size (the dependency closure plus models).
+* **Macro average:** mean over the synthetic document types. Candidates without OCR score 0 on scans and photos, which
+  is the real behaviour a user would get.
+
+## Results (4 threads, arm64)
+
+| Candidate | Heading F1 | List recall | Table cell F1 | CER | s/page | Real docs BoW F1 (min) | Peak RSS | Install |
+|---|---|---|---|---|---|---|---|---|
+| PyMuPDF `get_text` (baseline) | 0.00 | 0.42 | 0.00 | 0.700 | 0.002 | 1.00 (1.00) | 55 MB | 50 MB |
+| pymupdf4llm 0.0.24 | 0.41 | 0.44 | 0.32 | 0.668 | 0.025 | 0.92 (**0.81**) | 89 MB | 51 MB |
+| pymupdf4llm 0.0.24 + coverage guard | 0.41 | 0.44 | 0.32 | 0.668 | 0.025 | 0.98 (0.95) | 82 MB | 51 MB |
+| pymupdf4llm 1.28 (+ layout model) | 0.82 | 1.00 | 0.34 | 0.453 | 0.446 | 0.98 (0.96) | 869 MB | 257 MB |
+| MarkItDown 0.1.7 | 0.33 | 0.61 | 0.46 | 0.525 | 0.038 | 0.98 (0.97) | 218 MB | 211 MB |
+| **Docling 2.128 + RapidOCR** | **1.00** | **1.00** | **1.00** | **0.009** | 4.409 | 0.98 (0.95) | 3.3 GB | 2.2 GB |
+| docintel service (API, at run time) | 0.64 | 0.57 | 0.49 | 0.262 | 0.846 | 0.98 (0.96) | – | – |
+
+These macro scores average in the scans and photos, which hurts every candidate without OCR. Per document type:
+
+| Table cell F1 / Heading F1 | digital_pdf | scanned_pdf | table_photo | docx |
+|---|---|---|---|---|
+| pymupdf4llm 0.0.24 | 0.95 / 0.81 | 0.00 / 0.00 | 0.00 | unsupported |
+| pymupdf4llm 1.28 (+layout) | 0.97 / 1.00 | 0.04 / 0.63 | 0.00 | unsupported |
+| MarkItDown 0.1.7 | 0.83 / 0.00 | 0.00 / 0.00 | 0.00 | 1.00 / 1.00 |
+| Docling 2.128 + RapidOCR | 1.00 / 1.00 | 1.00 / 1.00 | 1.00 | 1.00 / 1.00 |
+| docintel service | 0.96 / 0.92 | 0.00 / 0.00 | 0.00 | 1.00 / 1.00 |
+
+Speed on digital PDFs: pymupdf4llm 0.0.24 takes 0.025 s/page, 1.28 takes 0.147, and Docling takes 3.4. Docling slows to
+7.6 s/page on scans. The full tables are in `results/structure/summary.md`.
+
+## Gotchas found while benchmarking
+
+* **pymupdf4llm silently drops text drawn over vector graphics.** On the cover of IRS Publication 1 it kept 18 of
+  642 words. `ignore_graphics=True` recovers all of them but disables line-based table detection on that page. The
+  "coverage guard" candidate handles this per page:
+  1. compare Markdown word count with `page.get_text()`;
+  2. below 90%, retry with `ignore_graphics=True`;
+  3. if still below 90%, fall back to plain text.
+
+  The guard costs nothing on normal pages.
+* **pymupdf4llm version compatibility.** 0.0.24 is the newest release compatible with the app's `PyMuPDF==1.25.5`
+  (requires `pymupdf>=1.25.5`). 0.0.25 needs ≥1.26.1, and 1.28.x pins `pymupdf==1.28.2` plus `pymupdf_layout`.
+  1.28 finds headings and lists much better, but reads two-column pages across the columns (CER 0.285, like plain
+  `sort=True`), is 6× slower, and adds 200 MB and ~800 MB RSS. It also OCRs image-only pages with Tesseract when
+  available, poorly (CER 0.58).
+* **pymupdf4llm list artifacts.** When bullet glyph metrics differ from the text, 1.28 wraps list items in
+  `<sup>…</sup>` and 0.0.24 wraps them in `[…]`. The first dataset version triggered this with a 12 pt bullet next to
+  10 pt text, and 1.28 still does it on the real IRS W-9. The generator now uses the same size, and the scorer strips
+  inline HTML.
+* **Docling OCR engine matters more than Docling itself.** With `TesseractCliOcrOptions` the table structure model
+  returned **empty cells** on scans, and a photo produced an empty document (table F1 0.00–0.20). With
+  `RapidOcrOptions` both reached 1.00. `do_cell_matching=False` produced empty grids with both engines, so keep the
+  default `True`. RapidOCR models must be in the artifacts path:
+  `docling-tools models download layout tableformer rapidocr -o <dir>`, then
+  `PdfPipelineOptions(artifacts_path=<dir>)`.
+* **MarkItDown** finds PDF tables (pdfplumber) but no PDF headings, and cannot OCR. It returns empty text for scans
+  and images unless an LLM client is configured, which is not on-device. Its DOCX path (mammoth → HTML → Markdown) is
+  perfect on headings, lists and tables.
+* **Real-document CER is not meaningful** because reading order differs from the publisher's text layer. Use BoW F1.
+
+## Structure-benchmark limitations
+
+* Only 11 inputs (8 synthetic + 3 real). Structure ground truth exists only for the synthetic ones, which use clean
+  fonts and simple layouts, so the ranking is more trustworthy than the absolute scores.
+* The docintel row is a snapshot of the service while its Markdown output was still being developed. Re-run with
+  `--only docintel` after changes.
+* CPU-only timings. Docling's layout and table models are much faster on a GPU.

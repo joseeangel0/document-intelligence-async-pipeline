@@ -1,0 +1,56 @@
+{
+ "markdown": "# Política de retención de documentos\n\nLa presente política define cuánto tiempo se conservan los documentos procesados por la plataforma.\n\n## Alcance\n\n- Documentos originales cargados por los usuarios\n- Texto extraído y archivos Markdown\n- Fragmentos indexados para búsqueda semántica\n\n## Plazos de conservación\n\n| Tipo de dato | Plazo | Responsable |\n|---|---|---|\n| Documento original | 5 años | Archivo general |\n| Texto extraído | 5 años | Equipo de datos |\n| Índices de búsqueda | 1 año | Equipo de IA |\n| Bitácoras técnicas | 90 días | Operaciones |\n\n## Excepciones\n\nLos documentos sujetos a un proceso legal se conservan hasta que el área jurídica autorice su baja.\n",
+ "plain": "Política de retención de documentos\nLa presente política define cuánto tiempo se conservan los documentos procesados por la plataforma.\nAlcance\nDocumentos originales cargados por los usuarios\nTexto extraído y archivos Markdown\nFragmentos indexados para búsqueda semántica\nPlazos de conservación\nTipo de dato Plazo Responsable\nDocumento original 5 años Archivo general\nTexto extraído 5 años Equipo de datos\nÍndices de búsqueda 1 año Equipo de IA\nBitácoras técnicas 90 días Operaciones\nExcepciones\nLos documentos sujetos a un proceso legal se conservan hasta que el área jurídica autorice su baja.",
+ "headings": [
+  [
+   1,
+   "Política de retención de documentos"
+  ],
+  [
+   2,
+   "Alcance"
+  ],
+  [
+   2,
+   "Plazos de conservación"
+  ],
+  [
+   2,
+   "Excepciones"
+  ]
+ ],
+ "list_items": [
+  "Documentos originales cargados por los usuarios",
+  "Texto extraído y archivos Markdown",
+  "Fragmentos indexados para búsqueda semántica"
+ ],
+ "tables": [
+  [
+   [
+    "Tipo de dato",
+    "Plazo",
+    "Responsable"
+   ],
+   [
+    "Documento original",
+    "5 años",
+    "Archivo general"
+   ],
+   [
+    "Texto extraído",
+    "5 años",
+    "Equipo de datos"
+   ],
+   [
+    "Índices de búsqueda",
+    "1 año",
+    "Equipo de IA"
+   ],
+   [
+    "Bitácoras técnicas",
+    "90 días",
+    "Operaciones"
+   ]
+  ]
+ ]
+}

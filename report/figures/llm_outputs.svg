@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 410" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52514e"/>
+    </marker>
+    <style>
+      .t { font-size: 14px; font-weight: 700; fill: #0b0b0b; }
+      .h { font-size: 11px; fill: #898781; letter-spacing: .08em; }
+      .s { font-size: 11.5px; fill: #52514e; }
+      .m { font-family: Menlo, monospace; font-size: 10.2px; fill: #1c5cab; }
+      .src { fill: #ffffff; stroke: #c3c2b7; stroke-width: 1.2; }
+      .stage { fill: #f4f8fd; stroke: #86b6ef; stroke-width: 1.2; }
+      .out { fill: #f3f9f3; stroke: #8cc48c; stroke-width: 1.2; }
+      .use { fill: #faf7f0; stroke: #d9c9a0; stroke-width: 1.2; }
+      .e { stroke: #52514e; stroke-width: 1.4; fill: none; marker-end: url(#a); }
+    </style>
+  </defs>
+
+  <text class="h" x="20" y="22">EVERYDAY FILES</text>
+  <text class="h" x="215" y="22">PIPELINE (PER PAGE)</text>
+  <text class="h" x="505" y="22">LLM-READY ARTIFACTS</text>
+  <text class="h" x="820" y="22">GENAI CONSUMERS</text>
+
+  <!-- sources -->
+  <g>
+    <rect class="src" x="20" y="36" width="165" height="44" rx="7"/><text class="t" x="32" y="55">Digital PDF</text><text class="s" x="32" y="71">contracts, reports</text>
+    <rect class="src" x="20" y="88" width="165" height="44" rx="7"/><text class="t" x="32" y="107">Scans &amp; photos</text><text class="s" x="32" y="123">invoices, IDs, receipts</text>
+    <rect class="src" x="20" y="140" width="165" height="44" rx="7"/><text class="t" x="32" y="159">Office</text><text class="s" x="32" y="175">DOCX · PPTX · XLSX</text>
+    <rect class="src" x="20" y="192" width="165" height="44" rx="7"/><text class="t" x="32" y="211">E-mail (.eml)</text><text class="s" x="32" y="227">body + attachments</text>
+    <rect class="src" x="20" y="244" width="165" height="44" rx="7"/><text class="t" x="32" y="263">Web &amp; text</text><text class="s" x="32" y="279">HTML · CSV · JSON · TXT</text>
+  </g>
+
+  <!-- pipeline -->
+  <rect class="stage" x="215" y="36" width="250" height="52" rx="7"/>
+  <text class="t" x="227" y="56">1 · Detect &amp; route</text>
+  <text class="s" x="227" y="74">magic bytes → queue light / heavy / layout</text>
+  <rect class="stage" x="215" y="98" width="250" height="68" rx="7"/>
+  <text class="t" x="227" y="118">2 · Extract structure</text>
+  <text class="s" x="227" y="136">text layer + XY-cut, ruled/unruled tables</text>
+  <text class="s" x="227" y="152">OCR where no text · Docling for scanned tables</text>
+  <rect class="stage" x="215" y="176" width="250" height="52" rx="7"/>
+  <text class="t" x="227" y="196">3 · Render Markdown</text>
+  <text class="s" x="227" y="214"># headings · - lists · | tables | · page markers</text>
+  <rect class="stage" x="215" y="238" width="250" height="68" rx="7"/>
+  <text class="t" x="227" y="258">4 · Chunk &amp; enrich</text>
+  <text class="s" x="227" y="276">token budget (cl100k) · overlap · no split tables</text>
+  <text class="s" x="227" y="292">language · entities · outline · confidence</text>
+  <path class="e" d="M340,88 V96"/><path class="e" d="M340,166 V174"/><path class="e" d="M340,228 V236"/>
+  <path class="e" d="M185,160 H213"/>
+
+  <!-- artifacts -->
+  <rect class="out" x="495" y="36" width="295" height="44" rx="7"/>
+  <text class="t" x="507" y="55">document.md</text><text class="s" x="507" y="71">structure an LLM can read (and humans can review)</text>
+  <rect class="out" x="495" y="88" width="295" height="150" rx="7"/>
+  <text class="t" x="507" y="107">chunks.jsonl</text>
+  <text class="m" x="507" y="126">{"id": "c00003", "token_count": 412,</text>
+  <text class="m" x="507" y="141"> "page_start": 2, "page_end": 3,</text>
+  <text class="m" x="507" y="156"> "heading_path": ["Agreement",</text>
+  <text class="m" x="507" y="171">                  "2. Payment terms"],</text>
+  <text class="m" x="507" y="186"> "kinds": ["paragraph", "table"],</text>
+  <text class="m" x="507" y="201"> "char_start": 1840, "char_end": 3521,</text>
+  <text class="m" x="507" y="216"> "text": "## 2. Payment terms\n| … |"}</text>
+  <rect class="out" x="495" y="246" width="295" height="44" rx="7"/>
+  <text class="t" x="507" y="265">text.txt</text><text class="s" x="507" y="281">plain text, pages separated by form feed</text>
+  <rect class="out" x="495" y="298" width="295" height="44" rx="7"/>
+  <text class="t" x="507" y="317">result.json + jobs row</text><text class="s" x="507" y="333">per-page method/confidence, metadata, warnings</text>
+  <path class="e" d="M465,200 H493"/>
+
+  <!-- consumers -->
+  <rect class="use" x="820" y="36" width="165" height="60" rx="7"/>
+  <text class="t" x="832" y="56">Embeddings</text><text class="s" x="832" y="73">vector DB, one vector</text><text class="s" x="832" y="88">per chunk</text>
+  <rect class="use" x="820" y="106" width="165" height="60" rx="7"/>
+  <text class="t" x="832" y="126">RAG answers</text><text class="s" x="832" y="143">cite page + section</text><text class="s" x="832" y="158">from chunk provenance</text>
+  <rect class="use" x="820" y="176" width="165" height="60" rx="7"/>
+  <text class="t" x="832" y="196">Prompt budgeting</text><text class="s" x="832" y="213">token counts per chunk</text><text class="s" x="832" y="228">and per document</text>
+  <rect class="use" x="820" y="246" width="165" height="60" rx="7"/>
+  <text class="t" x="832" y="266">Filters &amp; triage</text><text class="s" x="832" y="283">language, entities,</text><text class="s" x="832" y="298">type, confidence</text>
+  <path class="e" d="M790,160 H818"/>
+
+  <text class="s" x="20" y="380">Everything runs on-device (no document or prompt leaves the network). The same bytes + options are processed once (SHA-256 cache),</text>
+  <text class="s" x="20" y="397">and every artifact is addressable by job id; re-processing with new options (e.g. chunk size) stores no new copy of the file.</text>
+</svg>

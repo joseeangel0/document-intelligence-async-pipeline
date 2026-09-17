@@ -10,7 +10,7 @@ celery_app = Celery("docintel", broker=settings.redis_url, include=["app.worker.
 celery_app.conf.update(
     task_default_queue="light",
     # Explicit exchange/routing key per queue, otherwise every queue would bind to the default one.
-    task_queues=[Queue(name, Exchange(name, type="direct"), routing_key=name) for name in ("light", "heavy", "maintenance")],
+    task_queues=[Queue(name, Exchange(name, type="direct"), routing_key=name) for name in ("light", "heavy", "layout", "maintenance")],
     task_default_exchange="light",
     task_default_routing_key="light",
     task_routes={

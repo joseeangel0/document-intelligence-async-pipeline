@@ -1,0 +1,82 @@
+{
+ "markdown": "# Platform Migration Plan\n\nThis document describes how the document intelligence platform moves to the new cluster.\n\n## Goals\n\n- Zero lost jobs during the migration\n- Less than five minutes of upload downtime\n- Keep every stored document and result\n\n## Timeline\n\n| Phase | Start | End | Owner |\n|---|---|---|---|\n| Preparation | 2026-10-01 | 2026-10-07 | Platform team |\n| Data copy | 2026-10-08 | 2026-10-10 | Storage team |\n| Cut-over | 2026-10-11 | 2026-10-11 | On-call engineer |\n| Clean-up | 2026-10-12 | 2026-10-20 | Platform team |\n\n### Rollback\n\nIf the error rate doubles after the cut-over, traffic returns to the old cluster within ten minutes.\n\n## Risks\n\n| Risk | Likelihood | Mitigation |\n|---|---|---|\n| Queue backlog | Medium | Scale OCR workers before cut-over |\n| Certificate expiry | Low | Renew certificates one week earlier |\n",
+ "plain": "Platform Migration Plan\nThis document describes how the document intelligence platform moves to the new cluster.\nGoals\nZero lost jobs during the migration\nLess than five minutes of upload downtime\nKeep every stored document and result\nTimeline\nPhase Start End Owner\nPreparation 2026-10-01 2026-10-07 Platform team\nData copy 2026-10-08 2026-10-10 Storage team\nCut-over 2026-10-11 2026-10-11 On-call engineer\nClean-up 2026-10-12 2026-10-20 Platform team\nRollback\nIf the error rate doubles after the cut-over, traffic returns to the old cluster within ten minutes.\nRisks\nRisk Likelihood Mitigation\nQueue backlog Medium Scale OCR workers before cut-over\nCertificate expiry Low Renew certificates one week earlier",
+ "headings": [
+  [
+   1,
+   "Platform Migration Plan"
+  ],
+  [
+   2,
+   "Goals"
+  ],
+  [
+   2,
+   "Timeline"
+  ],
+  [
+   3,
+   "Rollback"
+  ],
+  [
+   2,
+   "Risks"
+  ]
+ ],
+ "list_items": [
+  "Zero lost jobs during the migration",
+  "Less than five minutes of upload downtime",
+  "Keep every stored document and result"
+ ],
+ "tables": [
+  [
+   [
+    "Phase",
+    "Start",
+    "End",
+    "Owner"
+   ],
+   [
+    "Preparation",
+    "2026-10-01",
+    "2026-10-07",
+    "Platform team"
+   ],
+   [
+    "Data copy",
+    "2026-10-08",
+    "2026-10-10",
+    "Storage team"
+   ],
+   [
+    "Cut-over",
+    "2026-10-11",
+    "2026-10-11",
+    "On-call engineer"
+   ],
+   [
+    "Clean-up",
+    "2026-10-12",
+    "2026-10-20",
+    "Platform team"
+   ]
+  ],
+  [
+   [
+    "Risk",
+    "Likelihood",
+    "Mitigation"
+   ],
+   [
+    "Queue backlog",
+    "Medium",
+    "Scale OCR workers before cut-over"
+   ],
+   [
+    "Certificate expiry",
+    "Low",
+    "Renew certificates one week earlier"
+   ]
+  ]
+ ]
+}

@@ -1,0 +1,64 @@
+{
+  "candidate": "pymupdf4llm_guarded",
+  "cold_start_s": 0.076,
+  "first_call_s": 0.021,
+  "peak_rss_mb": 82.4,
+  "records": [
+    {
+      "id": "report_en",
+      "pages": 3,
+      "seconds": 0.15
+    },
+    {
+      "id": "informe_es",
+      "pages": 3,
+      "seconds": 0.031
+    },
+    {
+      "id": "invoice",
+      "pages": 1,
+      "seconds": 0.017
+    },
+    {
+      "id": "report_en_scanned",
+      "pages": 3,
+      "seconds": 0.072
+    },
+    {
+      "id": "invoice_scanned",
+      "pages": 1,
+      "seconds": 0.023
+    },
+    {
+      "id": "table_photo",
+      "pages": 1,
+      "seconds": 0.011
+    },
+    {
+      "id": "docx_plan_en",
+      "pages": 1,
+      "unsupported": "pymupdf4llm does not read DOCX"
+    },
+    {
+      "id": "docx_politica_es",
+      "pages": 1,
+      "unsupported": "pymupdf4llm does not read DOCX"
+    },
+    {
+      "id": "real_irs_fw9",
+      "pages": 6,
+      "seconds": 1.162
+    },
+    {
+      "id": "real_irs_p1",
+      "pages": 2,
+      "seconds": 0.157
+    },
+    {
+      "id": "real_irs_p15t_excerpt",
+      "pages": 6,
+      "seconds": 1.228
+    }
+  ],
+  "footprint_mb": 50.7
+}

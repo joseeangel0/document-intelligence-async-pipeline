@@ -63,6 +63,8 @@ def collect(window_minutes: int) -> dict:
                 .filter(Job.status == JobStatus.SUCCEEDED, Job.cached_from_job_id.is_(None)).label("p95_duration"),
                 func.sum(Job.page_count).filter(Job.status == JobStatus.SUCCEEDED).label("pages"),
                 func.sum(Job.char_count).filter(Job.status == JobStatus.SUCCEEDED).label("chars"),
+                func.sum(Job.token_count).filter(Job.status == JobStatus.SUCCEEDED).label("tokens"),
+                func.sum(Job.chunk_count).filter(Job.status == JobStatus.SUCCEEDED).label("chunks"),
                 func.count().filter(func.jsonb_array_length(Job.warnings) > 0).label("with_warnings"),
             ).where(Job.created_at >= since)
         ).one()._asdict()

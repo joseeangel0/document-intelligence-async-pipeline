@@ -208,6 +208,7 @@ async function refresh() {
     tile("Processing time p50", fmtDur(w.p50_duration), `p95 ${fmtDur(w.p95_duration)}`),
     tile("Avg queue wait", fmtDur(w.avg_wait), "upload → worker start"),
     tile("Pages extracted", fmtNum(w.pages), `${fmtNum(w.chars)} characters`),
+    tile("LLM-ready tokens", fmtNum(w.tokens), `${fmtNum(w.chunks)} retrieval chunks`),
     tile("Jobs with warnings", fmtNum(w.with_warnings), "low confidence, repairs, mismatches…"),
   ].join("");
 
@@ -219,7 +220,7 @@ async function refresh() {
   const q = data.queues || {};
   $("#queues").innerHTML = (data.broker_ok ? `
     <table><thead><tr><th>Queue</th><th style="text-align:right">Waiting</th></tr></thead><tbody>
-      ${["heavy", "light", "maintenance"].map(n => `<tr><td>${n}</td><td class="num" style="text-align:right">${fmtNum(q[n])}</td></tr>`).join("")}
+      ${["heavy", "light", "layout", "maintenance"].map(n => `<tr><td>${n}</td><td class="num" style="text-align:right">${fmtNum(q[n])}</td></tr>`).join("")}
       <tr><td>reserved / scheduled retries</td><td class="num" style="text-align:right">${fmtNum(q.reserved_or_scheduled)}</td></tr>
     </tbody></table>` : `<div class="alert error">✕ Broker unreachable</div>`) + `
     <table style="margin-top:12px"><thead><tr><th>Worker</th><th>Queues</th><th style="text-align:right">Busy</th></tr></thead><tbody>

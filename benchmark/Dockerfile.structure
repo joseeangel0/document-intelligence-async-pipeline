@@ -1,0 +1,34 @@
+# Structure / LLM-readiness benchmark image: PDF/DOCX/image -> Markdown converters.
+# Build context: the benchmark/ directory.
+FROM python:3.12-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DOCLING_ARTIFACTS=/opt/docling-models \
+    HF_HOME=/opt/hf-cache
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa \
+        fonts-dejavu fonts-liberation \
+        libgl1 libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/bench
+COPY requirements-structure.txt .
+RUN pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements-structure.txt
+
+# Newest pymupdf4llm needs a newer PyMuPDF than the app pins, so it lives in its own venv.
+RUN python -m venv /opt/p4l-latest \
+    && /opt/p4l-latest/bin/pip install pymupdf4llm==1.28.2
+
+# Docling's OCR engine for scanned inputs: RapidOCR (same engine the app uses). Kept in its own layer.
+RUN pip install rapidocr==3.9.2 onnxruntime==1.20.1
+
+# Bake Docling's layout, table-structure and RapidOCR models so runs are offline.
+RUN docling-tools models download layout tableformer rapidocr -o "$DOCLING_ARTIFACTS" \
+    && du -sh "$DOCLING_ARTIFACTS"
+
+WORKDIR /bench
+CMD ["sh", "-c", "python generate_structure_dataset.py && python run_structure_benchmark.py"]

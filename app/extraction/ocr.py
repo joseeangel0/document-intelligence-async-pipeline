@@ -12,6 +12,7 @@ from functools import lru_cache
 from PIL import Image, ImageOps
 
 from app.config import settings
+from app.extraction.layout import group_lines as _group_lines, xy_cut as _xy_cut
 
 log = logging.getLogger(__name__)
 
@@ -21,6 +22,7 @@ class OcrOutput:
     text: str
     confidence: float | None  # 0..100, mean word confidence
     rotated_degrees: int = 0
+    markdown: str = ""  # structure inferred from geometry (engines that expose boxes); "" -> derived from text
 
 
 class OcrEngine:
@@ -104,58 +106,8 @@ class TesseractEngine(OcrEngine):
 # ---------------------------------------------------------------------------------------------- RapidOCR
 
 
-def _group_lines(boxes: list[dict]) -> str:
-    """Join boxes into lines: top-to-bottom, boxes on the same line left-to-right."""
-    if not boxes:
-        return ""
-    boxes = sorted(boxes, key=lambda b: (b["y0"] + b["y1"]) / 2)
-    median_h = statistics.median(b["y1"] - b["y0"] for b in boxes) or 1
-    lines: list[list[dict]] = []
-    for b in boxes:
-        cy = (b["y0"] + b["y1"]) / 2
-        if lines and abs(cy - statistics.mean((x["y0"] + x["y1"]) / 2 for x in lines[-1])) < 0.5 * median_h:
-            lines[-1].append(b)
-        else:
-            lines.append([b])
-    return "\n".join(" ".join(b["text"] for b in sorted(line, key=lambda b: b["x0"])) for line in lines)
-
-
-def _largest_gap(intervals: list[tuple[float, float]]) -> tuple[float, float]:
-    """Largest empty gap in the 1-D projection of intervals -> (gap size, cut position)."""
-    intervals = sorted(intervals)
-    best, cut, reach = 0.0, 0.0, intervals[0][1]
-    for lo, hi in intervals[1:]:
-        if lo - reach > best:
-            best, cut = lo - reach, (lo + reach) / 2
-        reach = max(reach, hi)
-    return best, cut
-
-
-def _xy_cut(boxes: list[dict], median_h: float) -> list[list[dict]]:
-    """Recursive XY-cut: split on the widest whitespace gap (columns need a gap >= 1 line height)."""
-    if len(boxes) <= 1:
-        return [boxes]
-    gap_y, cut_y = _largest_gap([(b["y0"], b["y1"]) for b in boxes])
-    gap_x, cut_x = _largest_gap([(b["x0"], b["x1"]) for b in boxes])
-    if gap_x >= median_h and gap_x > gap_y:
-        left = [b for b in boxes if (b["x0"] + b["x1"]) / 2 < cut_x]
-        right = [b for b in boxes if (b["x0"] + b["x1"]) / 2 >= cut_x]
-        return _xy_cut(left, median_h) + _xy_cut(right, median_h)
-    if gap_y > 0:
-        top = [b for b in boxes if (b["y0"] + b["y1"]) / 2 < cut_y]
-        bottom = [b for b in boxes if (b["y0"] + b["y1"]) / 2 >= cut_y]
-        return _xy_cut(top, median_h) + _xy_cut(bottom, median_h)
-    return [boxes]
-
-
-def reading_order(items: list[tuple[list, str]]) -> str:
-    """Order detector boxes (4 corner points + text) the way a person reads the page.
-
-    Deskew by the median text-line angle, split columns/blocks with XY-cut, then group lines.
-    (Same algorithm that was scored in the benchmark.)
-    """
-    if not items:
-        return ""
+def _ordered_blocks(items: list[tuple[list, str]]) -> list[list[dict]]:
+    """Deskew by the median text-line angle, then split columns/blocks with XY-cut (benchmarked algorithm)."""
     angles = []
     for box, _ in items:
         (x0, y0), (x1, y1) = box[0], box[1]
@@ -169,7 +121,68 @@ def reading_order(items: list[tuple[list, str]]) -> str:
         xs, ys = [p[0] for p in pts], [p[1] for p in pts]
         boxes.append({"x0": min(xs), "x1": max(xs), "y0": min(ys), "y1": max(ys), "text": text})
     median_h = statistics.median(b["y1"] - b["y0"] for b in boxes) or 1
-    return "\n".join(_group_lines(block) for block in _xy_cut(boxes, median_h) if block)
+    return [block for block in _xy_cut(boxes, median_h) if block]
+
+
+def reading_order(items: list[tuple[list, str]]) -> str:
+    """Order detector boxes (4 corner points + text) the way a person reads the page."""
+    if not items:
+        return ""
+    return "\n".join(_group_lines(block) for block in _ordered_blocks(items))
+
+
+def reading_order_markdown(items: list[tuple[list, str]]) -> tuple[str, str]:
+    """(text, markdown). Lines clearly taller than the page's body text become headings; bullets become list items."""
+    from app.extraction.layout import line_records, merge_wrapped_headings
+    from app.extraction.markdown import BULLET_RE, NUMBERED_RE
+
+    if not items:
+        return "", ""
+    blocks = [line_records(block) for block in _ordered_blocks(items)]
+    heights = [r["height"] for block in blocks for r in block]
+    body = statistics.median(heights) or 1
+    heading_heights = sorted({round(h / body, 1) for h in heights if h >= body * 1.35}, reverse=True)[:3]
+    parts: list[str] = []
+    for block in blocks:
+        paragraph: list[str] = []
+        for record in block:
+            text = record["text"].strip()
+            ratio = round(record["height"] / body, 1)
+            if ratio in heading_heights and len(text) <= 90:
+                if paragraph:
+                    parts.append("\n".join(paragraph))
+                    paragraph = []
+                parts.append(f"{'#' * (heading_heights.index(ratio) + 1)} {text}")
+            elif NUMBERED_RE.match(text) or BULLET_RE.match(text):
+                if paragraph:
+                    parts.append("\n".join(paragraph))
+                    paragraph = []
+                numbered = NUMBERED_RE.match(text)
+                parts.append(f"{numbered.group(1)}. {text[numbered.end():]}" if numbered
+                             else "- " + BULLET_RE.sub("", text, count=1))
+            else:
+                paragraph.append(text)
+        if paragraph:
+            parts.append("\n".join(paragraph))
+    # Tiny XY-cut blocks (cells of a table the OCR can't structure) read better as consecutive lines than as
+    # dozens of one-word paragraphs.
+    compact: list[str] = []
+    for part in parts:
+        short = len(part) < 60 and "\n" not in part and not part.startswith(("#", "- ")) and not NUMBERED_RE.match(part)
+        if compact and short and _is_short_run(compact[-1]):
+            compact[-1] += "\n" + part
+        else:
+            compact.append(part)
+    text = "\n".join(_group_lines_from_records(block) for block in blocks)
+    return text, "\n\n".join(merge_wrapped_headings(compact))
+
+
+def _is_short_run(part: str) -> bool:
+    return not part.startswith(("#", "- ")) and all(len(line) < 60 for line in part.split("\n"))
+
+
+def _group_lines_from_records(records: list[dict]) -> str:
+    return "\n".join(r["text"] for r in records)
 
 
 class RapidOcrEngine(OcrEngine):
@@ -201,7 +214,8 @@ class RapidOcrEngine(OcrEngine):
         # Share of boxes taller than wide: high values mean the page is rotated 90/270 degrees.
         vertical = sum(1 for box, _ in items if _box_h(box) > 1.5 * _box_w(box)) / len(items)
         confidence = round(100 * float(sum(out.scores)) / len(out.scores), 1)
-        return OcrOutput(text=reading_order(items), confidence=confidence), vertical
+        text, markdown = reading_order_markdown(items)
+        return OcrOutput(text=text, confidence=confidence, markdown=markdown), vertical
 
     def _orientation(self, image: Image.Image) -> int:
         try:

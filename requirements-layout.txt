@@ -1,0 +1,3 @@
+# Optional high-fidelity pipeline (Dockerfile target "layout"), chosen by benchmark/results/structure.
+# Install with: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements-layout.txt
+docling==2.128.0

@@ -1,0 +1,64 @@
+{
+  "candidate": "docling",
+  "cold_start_s": 1.773,
+  "first_call_s": 3.219,
+  "peak_rss_mb": 3304.7,
+  "records": [
+    {
+      "id": "report_en",
+      "pages": 3,
+      "seconds": 15.54
+    },
+    {
+      "id": "informe_es",
+      "pages": 3,
+      "seconds": 3.429
+    },
+    {
+      "id": "invoice",
+      "pages": 1,
+      "seconds": 3.87
+    },
+    {
+      "id": "report_en_scanned",
+      "pages": 3,
+      "seconds": 28.83
+    },
+    {
+      "id": "invoice_scanned",
+      "pages": 1,
+      "seconds": 5.591
+    },
+    {
+      "id": "table_photo",
+      "pages": 1,
+      "seconds": 4.358
+    },
+    {
+      "id": "docx_plan_en",
+      "pages": 1,
+      "seconds": 0.071
+    },
+    {
+      "id": "docx_politica_es",
+      "pages": 1,
+      "seconds": 0.039
+    },
+    {
+      "id": "real_irs_fw9",
+      "pages": 6,
+      "seconds": 15.76
+    },
+    {
+      "id": "real_irs_p1",
+      "pages": 2,
+      "seconds": 2.925
+    },
+    {
+      "id": "real_irs_p15t_excerpt",
+      "pages": 6,
+      "seconds": 9.867
+    }
+  ],
+  "footprint_mb": 2192.9
+}

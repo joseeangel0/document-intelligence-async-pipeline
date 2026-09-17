@@ -1,0 +1,30 @@
+Part 5: Failure handling
+
+The system must survive edge scenarios: unsupported formats, corrupted files, and workers (or
+the whole stack) being killed and restarted mid-processing; no job may be lost and no document
+may stay in a non-terminal state forever.
+
+Add all necessary warnings, error messages, and status information so the user can understand
+what is happening with the system during normal usage or failure.
+
+Part 6: Monitoring (optional)
+
+Add Celery Flower to track queue tasks
+
+Create a dashboard to monitor tasks or whatever information you consider is worth monitoring.
+
+Create a simple UI to upload documents and read results.
+
+Deliverables
+
+   •  Code (zip, GitHub repo, or else). It all should run with a single docker compose
+      command.
+   •  Report: PDF containing archiecture diagrams, product information, supporting arguments
+        for the technical decisions made about the system.
+
+Notes
+
+Here is an example of the Redis + Celery queue used in class:
+https://github.com/DexterGomez/queue-demo
+
+Claim-check patter: https://commons-os.github.io/patterns/claim-check-pattern/

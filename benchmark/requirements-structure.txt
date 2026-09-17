@@ -1,0 +1,16 @@
+# Structure / LLM-readiness benchmark image (see Dockerfile.structure).
+# Install with: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements-structure.txt
+
+# dataset generation, scoring, charts
+reportlab==4.2.5
+python-docx==1.2.0
+rapidfuzz==3.10.1
+psutil==6.1.0
+matplotlib==3.9.2
+
+# candidates
+pymupdf==1.25.5          # same version as the app image
+pymupdf4llm==0.0.24      # newest release whose requirement (pymupdf>=1.25.5) matches the app pin
+markitdown[pdf,docx]==0.1.7
+docling==2.128.0
+# rapidocr==3.9.2 + onnxruntime==1.20.1 are installed in a separate layer (Docling OCR for scanned inputs)

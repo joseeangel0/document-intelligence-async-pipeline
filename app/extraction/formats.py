@@ -55,6 +55,12 @@ FORMATS: dict[str, dict] = {
         "queue": "light",
         "description": "Microsoft Excel (one page per sheet, tab-separated cells)",
     },
+    "eml": {
+        "mimes": {"message/rfc822"},
+        "extensions": [".eml"],
+        "queue": "heavy",
+        "description": "E-mail (.eml): headers, body and supported attachments (PDFs, images, Office…) in one job",
+    },
     "rtf": {
         "mimes": {"text/rtf", "application/rtf"},
         "extensions": [".rtf"],
@@ -123,6 +129,8 @@ def detect_format(path: str, filename: str) -> DetectedFormat:
             mime = next(iter(FORMATS[kind]["mimes"]))
 
     # Text-ish files that libmagic labels oddly (e.g. "text/x-python" for a .md, "text/x-c" for code).
+    if kind is None and mime.startswith("text/") and ext == ".eml":
+        kind, mime = "eml", "message/rfc822"
     if kind is None and mime.startswith("text/"):
         kind = EXT_TO_KIND.get(ext) if ext in TEXTUAL_EXTENSIONS else "text"
         if kind == "html" and not mime.endswith("html"):
@@ -150,6 +158,22 @@ def detect_format(path: str, filename: str) -> DetectedFormat:
         warnings.append(f"File has no extension; content detected as {mime}.")
 
     return DetectedFormat(kind=kind, mime=mime, extension=canonical_ext, queue=FORMATS[kind]["queue"], warnings=warnings)
+
+
+EMBEDDED_MEDIA_OCR_THRESHOLD = 50 * 1024
+
+
+def route_queue(fmt: DetectedFormat, path: str, options: dict) -> str:
+    """Pick the worker pool: layout pipeline for PDFs/images when requested; Office files carrying pictures may
+    need OCR, so they go to the OCR pool instead of the light pool."""
+    if options.get("pipeline") == "layout" and fmt.kind in ("pdf", "image"):
+        return "layout"
+    if fmt.kind in ("docx", "pptx") and options.get("ocr_mode") != "off":
+        from app.extraction.office import embedded_media_bytes
+
+        if embedded_media_bytes(path) >= EMBEDDED_MEDIA_OCR_THRESHOLD:
+            return "heavy"
+    return fmt.queue
 
 
 def supported_formats_summary() -> dict:

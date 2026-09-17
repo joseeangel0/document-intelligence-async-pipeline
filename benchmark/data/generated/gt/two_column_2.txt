@@ -1,0 +1,4 @@
+Our quarterly revenue grew 18.4% year over year, reaching $2.37 million, while operating costs decreased by 6%. The board approved a new hiring plan for the engineering and support teams.
+Real services rarely process a request synchronously. Documents arrive faster than they can be processed, and users cannot hold a connection open while heavy work runs in the background. A reliable design accepts the upload, stores it, queues the work and lets users track progress.
+Optical character recognition converts images of text into machine readable characters. Accuracy depends on resolution, contrast, skew and noise, so preprocessing often matters as much as the model.
+La facturación electrónica exige que cada comprobante incluya el RFC del emisor, la fecha de expedición, el régimen fiscal y el uso del CFDI. Los errores más comunes están en el código postal.

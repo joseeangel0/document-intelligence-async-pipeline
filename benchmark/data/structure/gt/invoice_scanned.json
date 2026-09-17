@@ -1,0 +1,95 @@
+{
+ "markdown": "# Invoice INV-2026-0142\n\nACME Data Services S.A. de C.V. · Mérida, Yucatán · billing@acme.example.mx\n\nBill to: Universidad Tecnológica · Date: 2026-09-17 · Due: 2026-10-17\n\n## Line items\n\n| Qty | Description | Unit price | Amount |\n|---|---|---|---|\n| 1,200 | OCR processing (pages) | $3.00 | $3,600.00 |\n| 50 | Object storage (GB-month) | $5.00 | $250.00 |\n| 1 | Priority support | $1,150.00 | $1,150.00 |\n| 3 | Custom extraction template | $400.00 | $1,200.00 |\n| 10 | Webhook endpoints | $12.00 | $120.00 |\n| 2 | Additional OCR language pack | $75.00 | $150.00 |\n| 500 | Markdown conversion (pages) | $0.40 | $200.00 |\n| 1 | Onboarding workshop | $900.00 | $900.00 |\n\n## Totals\n\n| Concept | Amount |\n|---|---|\n| Subtotal | $7,570.00 |\n| IVA 16% | $1,211.20 |\n| Total | $8,781.20 |\n\nPayment by bank transfer within 30 days. Thank you for your business.\n",
+ "plain": "Invoice INV-2026-0142\nACME Data Services S.A. de C.V. · Mérida, Yucatán · billing@acme.example.mx\nBill to: Universidad Tecnológica · Date: 2026-09-17 · Due: 2026-10-17\nLine items\nQty Description Unit price Amount\n1,200 OCR processing (pages) $3.00 $3,600.00\n50 Object storage (GB-month) $5.00 $250.00\n1 Priority support $1,150.00 $1,150.00\n3 Custom extraction template $400.00 $1,200.00\n10 Webhook endpoints $12.00 $120.00\n2 Additional OCR language pack $75.00 $150.00\n500 Markdown conversion (pages) $0.40 $200.00\n1 Onboarding workshop $900.00 $900.00\nTotals\nConcept Amount\nSubtotal $7,570.00\nIVA 16% $1,211.20\nTotal $8,781.20\nPayment by bank transfer within 30 days. Thank you for your business.",
+ "headings": [
+  [
+   1,
+   "Invoice INV-2026-0142"
+  ],
+  [
+   2,
+   "Line items"
+  ],
+  [
+   2,
+   "Totals"
+  ]
+ ],
+ "list_items": [],
+ "tables": [
+  [
+   [
+    "Qty",
+    "Description",
+    "Unit price",
+    "Amount"
+   ],
+   [
+    "1,200",
+    "OCR processing (pages)",
+    "$3.00",
+    "$3,600.00"
+   ],
+   [
+    "50",
+    "Object storage (GB-month)",
+    "$5.00",
+    "$250.00"
+   ],
+   [
+    "1",
+    "Priority support",
+    "$1,150.00",
+    "$1,150.00"
+   ],
+   [
+    "3",
+    "Custom extraction template",
+    "$400.00",
+    "$1,200.00"
+   ],
+   [
+    "10",
+    "Webhook endpoints",
+    "$12.00",
+    "$120.00"
+   ],
+   [
+    "2",
+    "Additional OCR language pack",
+    "$75.00",
+    "$150.00"
+   ],
+   [
+    "500",
+    "Markdown conversion (pages)",
+    "$0.40",
+    "$200.00"
+   ],
+   [
+    "1",
+    "Onboarding workshop",
+    "$900.00",
+    "$900.00"
+   ]
+  ],
+  [
+   [
+    "Concept",
+    "Amount"
+   ],
+   [
+    "Subtotal",
+    "$7,570.00"
+   ],
+   [
+    "IVA 16%",
+    "$1,211.20"
+   ],
+   [
+    "Total",
+    "$8,781.20"
+   ]
+  ]
+ ]
+}

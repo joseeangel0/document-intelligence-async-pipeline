@@ -91,6 +91,100 @@ def image_pdf(images: list[Image.Image]) -> pymupdf.Document:
     return doc
 
 
+CONTRACT_SECTIONS = [
+    ("1. Scope of services", "The provider will digitise and index the client's archive of invoices and contracts. "
+     "All processing runs on premises; no document leaves the client's network."),
+    ("2. Payment terms", "Invoices are payable within 30 days. Late payments accrue interest of 1.5% per month."),
+]
+PRICE_ROWS = [["Service", "Unit", "Price (MXN)"], ["OCR page", "page", "3.00"], ["Storage", "GB-month", "5.00"],
+              ["Support", "hour", "1,150.00"]]
+
+
+def structured_pdf() -> None:
+    """Born-digital PDF with a title, headings, a bullet list and a ruled table (ground truth for Markdown)."""
+    doc = pymupdf.open()
+    page = doc.new_page(width=612, height=792)
+    y = 72
+    page.insert_text((72, y), "Service Agreement", fontsize=22, fontname="hebo")
+    y += 40
+    for title, body in CONTRACT_SECTIONS:
+        page.insert_text((72, y), title, fontsize=15, fontname="hebo")
+        y += 10
+        rect = pymupdf.Rect(72, y, 540, y + 50)
+        page.insert_textbox(rect, body, fontsize=11, fontname="helv")
+        y += 60
+    page.insert_text((72, y), "3. Deliverables", fontsize=15, fontname="hebo")
+    y += 22
+    for item in ("Searchable text for every page", "Markdown with tables preserved", "Retrieval chunks with page numbers"):
+        page.insert_text((84, y), f"\u2022 {item}", fontsize=11, fontname="helv")
+        y += 18
+    y += 20
+    page.insert_text((72, y), "4. Price list", fontsize=15, fontname="hebo")
+    y += 14
+    col_x = [72, 250, 380, 520]
+    for r, row in enumerate(PRICE_ROWS):
+        top = y + r * 22
+        for c, value in enumerate(row):
+            page.draw_rect(pymupdf.Rect(col_x[c], top, col_x[c + 1], top + 22), color=(0, 0, 0), width=0.8)
+            page.insert_text((col_x[c] + 6, top + 15), value, fontsize=11, fontname="hebo" if r == 0 else "helv")
+    doc.set_metadata({"title": "Service Agreement", "author": "ACME Data Services"})
+    doc.save(OUT / "contract_structured.pdf")
+
+
+def scanned_structured() -> None:
+    """Image-only scan of the structured contract: tables can only be recovered by layout analysis."""
+    scan = scan_effect(rasterize(pymupdf.open(OUT / "contract_structured.pdf"), dpi=200)[0], angle=0.4, noise=10)
+    image_pdf([scan]).save(OUT / "contract_scanned.pdf")
+
+
+def structured_docx(scan: Image.Image) -> None:
+    """Word file with heading styles, a bullet list, a table and a scanned invoice pasted as a picture."""
+    import docx
+    from docx.shared import Inches
+
+    d = docx.Document()
+    d.add_heading("Service Agreement", 0)
+    for title, body in CONTRACT_SECTIONS:
+        d.add_heading(title, 1)
+        d.add_paragraph(body)
+    d.add_heading("3. Deliverables", 1)
+    for item in ("Searchable text for every page", "Markdown with tables preserved"):
+        d.add_paragraph(item, style="List Bullet")
+    d.add_heading("4. Price list", 1)
+    table = d.add_table(rows=len(PRICE_ROWS), cols=3)
+    for r, row in enumerate(PRICE_ROWS):
+        for c, value in enumerate(row):
+            table.cell(r, c).text = value
+    d.add_heading("Annex A. Scanned invoice", 1)
+    buf = io.BytesIO()
+    scan.convert("L").save(buf, format="PNG")
+    buf.seek(0)
+    d.add_picture(buf, width=Inches(6))
+    d.save(OUT / "contract_with_scan.docx")
+
+
+def email_with_attachments() -> None:
+    from email.message import EmailMessage
+
+    msg = EmailMessage()
+    msg["From"] = "Billing <billing@acme.example.com>"
+    msg["To"] = "accounts@universidad.example.mx"
+    msg["Subject"] = "Factura INV-2026-0917 y contrato"
+    msg["Date"] = "Thu, 17 Sep 2026 10:30:00 -0600"
+    msg.set_content("Hola,\n\nAdjuntamos la factura y el contrato firmado.\n\nSaludos")
+    msg.add_alternative(
+        "<p>Hola,</p><p>Adjuntamos la <b>factura</b> y el contrato firmado.</p>"
+        "<table><tr><th>Documento</th><th>Total</th></tr><tr><td>INV-2026-0917</td><td>$5,800.00 MXN</td></tr></table>"
+        "<p>Saludos</p>", subtype="html")
+    msg.add_attachment((OUT / "invoice_digital.pdf").read_bytes(), maintype="application", subtype="pdf",
+                       filename="invoice_digital.pdf")
+    msg.add_attachment((OUT / "invoice_scan.png").read_bytes(), maintype="image", subtype="png",
+                       filename="invoice_scan.png")
+    msg.add_attachment(b"MZ\x90\x00" + bytes(100), maintype="application", subtype="octet-stream",
+                       filename="tool.exe")
+    (OUT / "email_invoice.eml").write_bytes(bytes(msg))
+
+
 def main() -> None:
     # --- PDFs ---------------------------------------------------------------------------
     doc = text_pdf([INVOICE, "\n\n".join(PARAGRAPHS_EN + PARAGRAPHS_ES)])
@@ -173,6 +267,12 @@ def main() -> None:
     ws.append(["Total", "=SUM(B2:B3)"])
     wb.create_sheet("Notes").append(["Prepared by billing@universidad.example.mx"])
     wb.save(OUT / "budget.xlsx")
+
+    # --- Structured documents for LLM-ready Markdown ------------------------------------
+    structured_pdf()
+    scanned_structured()
+    structured_docx(invoice_img)
+    email_with_attachments()
 
     # --- Edge cases (should be rejected or fail gracefully) -----------------------------
     good = (OUT / "invoice_digital.pdf").read_bytes()

@@ -1,0 +1,4 @@
+Estimada señora Núñez: le confirmamos que su pedido número 88213 será entregado el próximo miércoles 12 de junio. Si necesita cambiar la dirección, escríbanos a atención@tienda.mx.
+Real services rarely process a request synchronously. Documents arrive faster than they can be processed, and users cannot hold a connection open while heavy work runs in the background. A reliable design accepts the upload, stores it, queues the work and lets users track progress.
+The warehouse received 1,250 units of product SKU-4471 on March 3, 2024. Quality control rejected 37 units because of damaged packaging, and the remaining stock was moved to aisle 14, shelf B.
+La inteligencia de documentos combina extracción de texto, reconocimiento óptico de caracteres y análisis de metadatos. Así, un archivo escaneado se convierte en información útil y consultable.

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "report_en",
+    "doc_type": "digital_pdf",
+    "lang": "en",
+    "path": "data/structure/pdf/report_en.pdf",
+    "pages": 3,
+    "scanned": false,
+    "gt": "data/structure/gt/report_en.json"
+  },
+  {
+    "id": "informe_es",
+    "doc_type": "digital_pdf",
+    "lang": "es",
+    "path": "data/structure/pdf/informe_es.pdf",
+    "pages": 3,
+    "scanned": false,
+    "gt": "data/structure/gt/informe_es.json"
+  },
+  {
+    "id": "invoice",
+    "doc_type": "digital_pdf",
+    "lang": "en",
+    "path": "data/structure/pdf/invoice.pdf",
+    "pages": 1,
+    "scanned": false,
+    "gt": "data/structure/gt/invoice.json"
+  },
+  {
+    "id": "report_en_scanned",
+    "doc_type": "scanned_pdf",
+    "lang": "en",
+    "path": "data/structure/scanned/report_en_scanned.pdf",
+    "pages": 3,
+    "scanned": true,
+    "gt": "data/structure/gt/report_en_scanned.json"
+  },
+  {
+    "id": "invoice_scanned",
+    "doc_type": "scanned_pdf",
+    "lang": "en",
+    "path": "data/structure/scanned/invoice_scanned.pdf",
+    "pages": 1,
+    "scanned": true,
+    "gt": "data/structure/gt/invoice_scanned.json"
+  },
+  {
+    "id": "table_photo",
+    "doc_type": "table_photo",
+    "lang": "en",
+    "path": "data/structure/images/table_photo.png",
+    "pages": 1,
+    "scanned": true,
+    "gt": "data/structure/gt/table_photo.json"
+  },
+  {
+    "id": "docx_plan_en",
+    "doc_type": "docx",
+    "lang": "en",
+    "path": "data/structure/docx/docx_plan_en.docx",
+    "pages": 1,
+    "scanned": false,
+    "gt": "data/structure/gt/docx_plan_en.json"
+  },
+  {
+    "id": "docx_politica_es",
+    "doc_type": "docx",
+    "lang": "es",
+    "path": "data/structure/docx/docx_politica_es.docx",
+    "pages": 1,
+    "scanned": false,
+    "gt": "data/structure/gt/docx_politica_es.json"
+  },
+  {
+    "id": "real_irs_fw9",
+    "doc_type": "real_pdf",
+    "lang": "en",
+    "path": "data/structure/real/irs_fw9.pdf",
+    "pages": 6,
+    "scanned": false,
+    "gt": "data/structure/gt/real_irs_fw9.json"
+  },
+  {
+    "id": "real_irs_p1",
+    "doc_type": "real_pdf",
+    "lang": "en",
+    "path": "data/structure/real/irs_p1.pdf",
+    "pages": 2,
+    "scanned": false,
+    "gt": "data/structure/gt/real_irs_p1.json"
+  },
+  {
+    "id": "real_irs_p15t_excerpt",
+    "doc_type": "real_pdf",
+    "lang": "en",
+    "path": "data/structure/real/irs_p15t_excerpt.pdf",
+    "pages": 6,
+    "scanned": false,
+    "gt": "data/structure/gt/real_irs_p15t_excerpt.json"
+  }
+]

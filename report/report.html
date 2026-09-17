@@ -50,19 +50,22 @@
   <h1>Document Intelligence Asynchronous Pipeline</h1>
   <div class="subtitle">Upload any document, get a job id back in milliseconds, and receive its text when processing finishes.
     Uses the claim-check pattern, survives crashes and runs fully on-device.</div>
+  <p style="margin:8pt 0 2pt"><b>Author:</b> Jose Angel Pech Xool · <b>Course:</b> Trends in Data Science · <b>Date:</b> September 2026<br>
+  <b>Repository:</b> github.com/joseeangel0/document-intelligence-async-pipeline</p>
   <p class="small" style="margin-top:6pt">Deliverable: source code (runs with <code>docker compose up --build</code>) and this report.
     The benchmark, chaos test results and every number in this report can be reproduced with the scripts in the repository.</p>
 </section>
 
 <ol class="toc">
-  <li>Product overview</li>
+  <li>Product overview &amp; why it matters for GenAI</li>
   <li>Architecture</li>
   <li>Part 1 · Ingestion &amp; storage</li>
   <li>Part 2 · Job tracking</li>
-  <li>Part 3 · Document intelligence (benchmark)</li>
+  <li>Part 3 · Document intelligence (two benchmarks)</li>
   <li>Part 4 · Queue design</li>
-  <li>Part 5 · Failure handling (chaos tests)</li>
+  <li>Part 5 · Failure handling (chaos &amp; load tests)</li>
   <li>Part 6 · Monitoring &amp; UI</li>
+  <li>Verification: requirement → evidence</li>
   <li>Trade-offs, limits &amp; future work</li>
   <li>Appendix · How to run &amp; reproduce</li>
 </ol>
@@ -74,17 +77,38 @@ milliseconds, while a 30-page scan needs about a minute of OCR. Files also arriv
 A synchronous endpoint would hold the connection open, time out and lose work when a process dies.</p>
 <p><b>Product.</b> <i>DocIntel</i> is a self-hosted service with an HTTP API, a web UI and a monitoring dashboard.
 Clients push a document and get a job id back right away. They can then poll the job (or register a webhook) to follow its
-progress, and download the extracted text together with per-page details and metadata.</p>
+progress, and download the extracted content as plain text, <b>LLM-ready Markdown</b> and <b>retrieval chunks</b>, together with
+per-page details and metadata.</p>
+
+<h3>Why document intelligence is the foundation of GenAI</h3>
+<p>Most enterprise knowledge sits in files: scanned invoices, contracts in PDF, Word reports, spreadsheets, slide decks and e-mails
+with attachments. An LLM can only reason over that knowledge after it has been turned into text, and <i>how</i> it is turned into
+text sets the ceiling for every RAG system, agent or copilot built on top:</p>
+<ul>
+  <li><b>Structure carries meaning.</b> A price table flattened into loose lines ("Storage / GB-month / 5.00 / Support / hour …") is ambiguous
+  to a model. Markdown headings, lists and pipe tables keep the relationships.</li>
+  <li><b>Retrieval needs chunks with provenance.</b> Answers must cite <i>page 3, section "Payment terms"</i>. Chunks must respect section and table
+  boundaries and fit a token budget.</li>
+  <li><b>Scale needs asynchrony and reliability.</b> Indexing a corpus means millions of pages. The pipeline must absorb bursts, never lose a
+  document and say clearly what went wrong with the ones it could not read.</li>
+  <li><b>Privacy needs on-device processing.</b> Every model used here (OCR, layout, table structure, tokenizer, language ID) runs locally.</li>
+</ul>
+<figure>
+  <img src="figures/llm_outputs.svg" alt="From everyday files to LLM-ready artifacts">
+  <figcaption><b>Figure 1.</b> From everyday files to LLM-ready artifacts. Each job produces <code>document.md</code>, <code>chunks.jsonl</code>,
+  <code>text.txt</code> and a structured <code>result.json</code>.</figcaption>
+</figure>
 
 <div class="grid3">
   <div class="box"><h4>For API consumers</h4><ul>
     <li><code>POST /v1/documents</code> → 202 + job id</li>
     <li>status, stage, progress %, queue position, warnings</li>
-    <li>text, per-page JSON, entities, webhook</li></ul></div>
+    <li>text, <b>Markdown</b>, <b>chunks (JSON/JSONL)</b>, per-page JSON, entities, webhook</li></ul></div>
   <div class="box"><h4>Formats (by content, not extension)</h4><ul>
     <li>PDF (digital, scanned or mixed)</li>
     <li>PNG, JPG, TIFF, WebP, BMP, GIF</li>
-    <li>TXT/MD/CSV/JSON/XML (any encoding), HTML, DOCX, PPTX, XLSX, RTF</li></ul></div>
+    <li>TXT/MD/CSV/JSON/XML (any encoding), HTML, DOCX, PPTX, XLSX, RTF</li>
+    <li>E-mail (.eml) with its attachments</li></ul></div>
   <div class="box"><h4>Operational guarantees</h4><ul>
     <li>no job lost on worker, broker or full-stack crash</li>
     <li>every job ends SUCCEEDED / FAILED / CANCELLED</li>
@@ -97,6 +121,8 @@ progress, and download the extracted text together with per-page details and met
   <tr><td><code>language</code></td><td><code>eng+spa</code></td><td>OCR accuracy depends on the language model. The default suits a bilingual (Mexican) user base. The value is validated against the installed traineddata, so a typo returns 422 instead of a failed job later.</td></tr>
   <tr><td><code>ocr_mode</code></td><td><code>auto</code></td><td><code>auto</code> runs OCR only on pages without a usable text layer. <code>force</code> re-OCRs PDFs whose text layer is garbage (a common scanner artefact). <code>off</code> saves minutes when only the embedded text matters.</td></tr>
   <tr><td><code>ocr_engine</code></td><td><code>rapidocr</code></td><td><code>rapidocr</code> is the most accurate on noisy scans and photos. <code>tesseract</code> is about 3× faster and uses about 4× less memory, and suits clean bulk scans (benchmark in §5).</td></tr>
+  <tr><td><code>pipeline</code></td><td><code>standard</code></td><td><code>layout</code> sends PDFs and images to an optional Docling worker that rebuilds tables in scans and photos (table F1 1.00 vs 0.00), at ~8 s/page. It is a different cost/quality point that only the client can choose (§5.3).</td></tr>
+  <tr><td><code>chunk_size_tokens</code>, <code>chunk_overlap_tokens</code></td><td>512, 64</td><td>The right chunk size depends on the client's embedding model and context window. Both are validated (64–4096; overlap &lt; size) and part of the cache key.</td></tr>
   <tr><td><code>force</code></td><td><code>false</code></td><td>Uploads are content-addressed (SHA-256), so identical bytes with identical options return the stored result instantly (HTTP 200, <code>cached_from_job_id</code>). <code>force=true</code> bypasses this.</td></tr>
   <tr><td><code>extract_entities</code></td><td><code>true</code></td><td>Emails, URLs, dates, amounts and phone numbers are cheap regex metadata that help triage invoices or forms.</td></tr>
   <tr><td><code>client_reference</code></td><td>–</td><td>Correlates jobs with the caller's own records (filterable).</td></tr>
@@ -107,7 +133,7 @@ progress, and download the extracted text together with per-page details and met
 <h2>2. Architecture</h2>
 <figure>
   <img src="figures/architecture.svg" alt="Architecture diagram">
-  <figcaption><b>Figure 1.</b> Components and the claim-check flow. Heavy bytes move only between the API, MinIO and the workers.
+  <figcaption><b>Figure 2.</b> Components and the claim-check flow. Heavy bytes move only between the API, MinIO and the workers.
   The broker carries only a job id, and PostgreSQL is the single source of truth for job state. Everything runs as containers from one compose file,
   and the three stateful services keep their data in named volumes.</figcaption>
 </figure>
@@ -115,8 +141,9 @@ progress, and download the extracted text together with per-page details and met
 <table>
   <tr><th>Service</th><th>Technology</th><th>Responsibility</th><th>Why this choice</th></tr>
   <tr><td>api</td><td>FastAPI + Uvicorn</td><td>validation, claim-check in/out, tracking, UI, stats</td><td>OpenAPI docs for free, typed validation, streaming responses</td></tr>
-  <tr><td>worker-heavy</td><td>Celery (prefork)</td><td>PDFs and images (may need OCR), CPU-bound</td><td>isolated so OCR can never starve cheap jobs; memory-capped</td></tr>
-  <tr><td>worker-light</td><td>Celery (prefork)</td><td>txt/html/office + maintenance tasks</td><td>sub-second jobs keep low latency during OCR bursts</td></tr>
+  <tr><td>worker-heavy</td><td>Celery (prefork)</td><td>PDFs, images, e-mails and Office files with pictures (may need OCR)</td><td>isolated so OCR can never starve cheap jobs; memory-capped</td></tr>
+  <tr><td>worker-light</td><td>Celery (prefork)</td><td>txt/html/office without pictures + maintenance tasks</td><td>sub-second jobs keep low latency during OCR bursts</td></tr>
+  <tr><td>worker-layout <span class="tag">optional</span></td><td>Celery + Docling</td><td>PDFs/images with <code>pipeline=layout</code></td><td>3 GB models kept out of the default image; started with <code>--profile layout</code></td></tr>
   <tr><td>scheduler</td><td>Celery beat</td><td>recovery sweep every 20 s</td><td>periodic safety net that does not depend on any single worker</td></tr>
   <tr><td>redis</td><td>Redis 7, AOF</td><td>message broker only</td><td>recommended stack; AOF keeps queued messages across restarts</td></tr>
   <tr><td>postgres</td><td>PostgreSQL 16</td><td>documents, jobs, job_events</td><td>transactions, row locks (<code>SKIP LOCKED</code>), JSONB metadata, aggregates for the dashboard</td></tr>
@@ -126,7 +153,7 @@ progress, and download the extracted text together with per-page details and met
 
 <figure>
   <img src="figures/sequence.svg" alt="Sequence diagram">
-  <figcaption><b>Figure 2.</b> The claim-check lifecycle. The upload call returns as soon as the file is durable in object storage and the job row is committed.
+  <figcaption><b>Figure 3.</b> The claim-check lifecycle. The upload call returns as soon as the file is durable in object storage and the job row is committed.
   The message is published <i>after</i> the commit. Publishing first caused a real race during testing: a fast worker received the
   message before the row existed and dropped it.</figcaption>
 </figure>
@@ -143,7 +170,9 @@ progress, and download the extracted text together with per-page details and met
   <li><b>Store the payload.</b> The object key is <code>documents/sha256/ab/&lt;sha256&gt;.ext</code>. Content addressing makes re-uploads free
   (<code>HEAD</code> first) and gives deduplication and caching at no extra cost.</li>
   <li><b>Record the claim check.</b> <code>documents</code> and <code>jobs</code> rows plus a <code>received</code> event are written in one transaction.</li>
-  <li><b>Publish the ticket.</b> Only <code>{"job_id": …}</code> is published, to the <code>heavy</code> or <code>light</code> queue depending on the kind. The response is <code>202 Accepted</code> with a <code>Location</code> header and links.</li>
+  <li><b>Route and publish the ticket.</b> Only <code>{"job_id": …}</code> is published. The queue depends on the kind and the options:
+  <code>heavy</code> for PDFs, images and e-mails; <code>light</code> for text, HTML and Office files; Office files that embed more than 50 KB of pictures go to
+  <code>heavy</code> because their images will be OCR'd; <code>pipeline=layout</code> goes to <code>layout</code>. The response is <code>202 Accepted</code> with a <code>Location</code> header and links.</li>
 </ol>
 <p>Messages stay around 1 KB whatever the document size. That keeps Redis memory flat and makes redelivery cheap. It also means the payload is stored
 once, in a system built for large objects.</p>
@@ -164,7 +193,7 @@ once, in a system built for large objects.</p>
 <h2>4. Part 2 · Job tracking</h2>
 <figure>
   <img src="figures/states.svg" alt="Job state machine">
-  <figcaption><b>Figure 3.</b> Job lifecycle. Solid arrows are worker transitions. Dashed arrows come from the recovery sweeper, the user or manual retries.
+  <figcaption><b>Figure 4.</b> Job lifecycle. Solid arrows are worker transitions. Dashed arrows come from the recovery sweeper, the user or manual retries.
   Every path ends in one of three terminal states.</figcaption>
 </figure>
 
@@ -188,6 +217,8 @@ once, in a system built for large objects.</p>
   <tr><td><code>GET /v1/jobs</code></td><td>list/filter by status, kind, filename, client_reference</td></tr>
   <tr><td><code>GET /v1/jobs/{id}/result</code></td><td>text + pages + metadata (409 with the reason if not ready)</td></tr>
   <tr><td><code>GET /v1/jobs/{id}/text</code></td><td>streamed plain text (download option)</td></tr>
+  <tr><td><code>GET /v1/jobs/{id}/markdown</code></td><td>LLM-ready Markdown with page markers</td></tr>
+  <tr><td><code>GET /v1/jobs/{id}/chunks</code></td><td>retrieval chunks with provenance (JSON, or JSONL download)</td></tr>
   <tr><td><code>POST …/cancel</code>, <code>…/retry</code></td><td>user control of the lifecycle</td></tr>
 </table>
 </div>
@@ -199,26 +230,24 @@ already declared dead can never overwrite the newer attempt's result. <code>task
 
 <!-- ============================================================ 5 -->
 <h2>5. Part 3 · Document intelligence</h2>
-
-<p>Every page must be accurate on scanned and photographed documents without wasting CPU on files that already contain text.
-The pipeline is therefore <b>hybrid</b>: it uses a native parser whenever the format carries text, and OCR only where it doesn't, decided <i>page by page</i>.</p>
+<p>The goal is not only "text": it is <b>faithful, structured, traceable text</b> that an LLM can use. The pipeline is <b>hybrid and decided per page</b>:
+native parsers wherever the format carries text, layout analysis to recover structure, OCR only where there is no text, and an opt-in
+layout-model pipeline where tables must be rebuilt from pixels. Two benchmarks back the choices: <b>A</b> measures <i>what</i> text is recovered
+(OCR accuracy, text-layer fidelity) and <b>B</b> measures <i>how much structure</i> survives (headings, lists, tables).</p>
 
 <h3>5.1 Extraction strategy per format</h3>
 <table>
-  <tr><th style="width:15%">Kind</th><th style="width:42%">Method</th><th>Notes and safeguards</th></tr>
-  <tr><td>PDF</td><td>PyMuPDF <code>get_text("text", sort=True)</code> per page. A page is OCR'd when it has fewer than 25 non-blank characters, or when images cover more than 60% of it and it has under 200 characters. Such pages are rendered at 300 dpi in grayscale and passed to OCR.</td><td>In <code>auto</code> mode the richer result (native or OCR) wins. Rendering DPI is capped by the pixel budget. Damaged files are auto-repaired (with a warning), encrypted files are reported, and the page limit is enforced.</td></tr>
-  <tr><td>Images</td><td>EXIF orientation fix, 2× upscale if under 600 px, then OCR. Multi-page TIFF frames become pages.</td><td>Pillow <code>verify()</code> catches truncated files, and the decompression-bomb limit is 80 MP. When boxes are mostly vertical or confidence is low, Tesseract OSD detects 90/180/270° rotation and the page is OCR'd again.</td></tr>
-  <tr><td>Text family</td><td>BOM → UTF-8 → charset-normalizer. Newlines normalised; content with more than 5% control characters is rejected as binary.</td><td>Detected encoding and its confidence are returned as metadata. A warning is added below 0.9 confidence (e.g. Latin-1 files).</td></tr>
-  <tr><td>HTML</td><td>BeautifulSoup + lxml; <code>script/style/noscript/svg</code> removed</td><td>title, <code>lang</code>, meta description, link count</td></tr>
-  <tr><td>DOCX</td><td>python-docx, walking the body XML in order so tables stay in place (tab-separated), plus headers</td><td>zip integrity and uncompressed-size guard; core properties; warning if the document is mostly images</td></tr>
-  <tr><td>PPTX / XLSX</td><td>python-pptx: one page per slide, including grouped shapes, tables and speaker notes. openpyxl (read-only, cached formula values): one page per sheet.</td><td>zip guard; XLSX capped at 2 M cells with a truncation warning</td></tr>
-  <tr><td>RTF</td><td>striprtf</td><td>header check</td></tr>
+  <tr><th style="width:13%">Kind</th><th style="width:45%">Text and Markdown</th><th>Safeguards and extras</th></tr>
+  <tr><td>PDF (digital)</td><td>PyMuPDF text layer (<code>sort=True</code>) for <code>text</code>. For Markdown, a layout pass over the same page: headings from font size relative to the body size of the document, bullet/numbered lists (glyphs merged with their text by baseline), ruled tables via <code>find_tables()</code>, <b>unruled tables</b> from runs of column-aligned rows, and <b>XY-cut reading order</b> so two-column pages are read column by column. Wrapped headings are merged.</td><td>Word-coverage guard: if the Markdown keeps under 90% of the page's words, it falls back to plain text (seen on real forms). Damaged files are repaired with a warning; encrypted files and the page limit are reported.</td></tr>
+  <tr><td>PDF (scanned or mixed)</td><td>Pages with under 25 non-blank characters (or mostly images) are rendered at 300 dpi and OCR'd. RapidOCR boxes are deskewed and ordered with XY-cut; lines clearly taller than the body text become headings. With <code>pipeline=layout</code>, Docling rebuilds headings and tables.</td><td>In <code>auto</code> mode the richer of native/OCR text wins per page; the DPI is capped by the pixel budget; OCR confidence is reported per page.</td></tr>
+  <tr><td>Images</td><td>EXIF orientation fix, upscale small images, OCR (as above). Multi-page TIFF frames become pages.</td><td>Truncation check, 80 MP decompression-bomb limit; Tesseract OSD fixes 90/180/270° rotation when boxes are vertical or confidence is low.</td></tr>
+  <tr><td>DOCX</td><td>Body walked in document order: Title/Heading styles → <code>#</code>, list styles and numbering → list items, tables → pipe tables (merged cells de-duplicated). <b>Pictures are OCR'd in place</b> (scans pasted into Word).</td><td>Zip integrity and zip-bomb guard; icons/logos under 150 px skipped; <code>ocr_mode=off</code> respected with a warning.</td></tr>
+  <tr><td>PPTX / XLSX</td><td>One page per slide: <code>## Slide N: title</code>, bullets by paragraph level, tables, OCR of pictures, speaker notes. One page per sheet: a pipe table with cached formula values.</td><td>XLSX capped at 2 M cells; Markdown tables capped at 2 000 rows (plain text keeps everything) with a warning.</td></tr>
+  <tr><td>HTML · CSV · JSON · XML · TXT</td><td>HTML → Markdown (scripts/styles removed, tables kept); CSV/TSV → pipe table; JSON pretty-printed and XML in fenced code blocks; plain text escaped so a leading <code>#</code> never becomes a fake heading.</td><td>Encoding detection with confidence (Latin-1, UTF-16…); binary content disguised as text is rejected.</td></tr>
+  <tr><td>E-mail (.eml)</td><td>Headers as a table, HTML/plain body as Markdown, and <b>every supported attachment extracted in the same job</b> (PDF, image, Office…) as extra pages under <code>## Attachment: name</code>.</td><td>Unsupported attachments (e.g. <code>.exe</code>) are listed with the reason; attachment failures become warnings, not job failures.</td></tr>
 </table>
-<p class="small">Structured formats (DOCX/PPTX/XLSX/HTML/RTF) contain their text explicitly, so libraries were chosen for fidelity (reading order,
-tables, notes), permissive licences and maintenance rather than accuracy. Those libraries return the text exactly and the unit tests assert it.
-PDF and OCR have real accuracy and speed trade-offs, so those were benchmarked.</p>
 
-<h3>5.2 Benchmark</h3>
+<h3>5.2 Benchmark A · OCR accuracy and PDF text layers</h3>
 <p><b>Method</b> (<code>benchmark/</code>, reproducible with one <code>docker run</code>). There are 53 samples with known ground truth, in English and Spanish (accents, ñ, ¿¡, emails,
 amounts, dates). Twelve image conditions: clean, blur, heavy noise, 1–4° skew, 120 dpi, JPEG q15, perspective "photo",
 white-on-colour, two columns, 6 pt font, invoice and 2-page scanned PDFs. There are seven kinds of born-digital PDF: single column, two columns, table,
@@ -236,12 +265,12 @@ warm s/page (mean and p95), cold start, peak RSS and install size. Each engine r
 </table>
 
 <div class="grid2">
-  <figure><img src="../benchmark/results/ocr_cer_by_category.png" alt="CER by category"><figcaption><b>Figure 4.</b> CER per condition. Raw Tesseract is excellent on clean input (0.001–0.002, including the real document) but collapses on
+  <figure><img src="../benchmark/results/ocr_cer_by_category.png" alt="CER by category"><figcaption><b>Figure 5.</b> CER per condition. Raw Tesseract is excellent on clean input (0.001–0.002, including the real document) but collapses on
   noise (0.963, empty output), photos (0.514), noisy scanned pages (0.501), skew (0.335) and columns (0.248). OpenCV preprocessing
   fixes noise and photos but breaks white-on-colour text (0.281). RapidOCR stays at or below 0.009 in every condition.</figcaption></figure>
   <div>
-    <figure><img src="../benchmark/results/ocr_speed_vs_accuracy.png" alt="Speed vs accuracy"><figcaption><b>Figure 5.</b> Speed vs accuracy (log x). EasyOCR is dominated: slower and less accurate than RapidOCR, and it needs 6.4 GB.</figcaption></figure>
-    <figure><img src="../benchmark/results/pdf_extractors.png" alt="PDF extractors"><figcaption><b>Figure 6.</b> PDF text-layer extractors: macro CER and ms/page.</figcaption></figure>
+    <figure><img src="../benchmark/results/ocr_speed_vs_accuracy.png" alt="Speed vs accuracy"><figcaption><b>Figure 6.</b> Speed vs accuracy (log x). EasyOCR is dominated: slower and less accurate than RapidOCR, and it needs 6.4 GB.</figcaption></figure>
+    <figure><img src="../benchmark/results/pdf_extractors.png" alt="PDF extractors"><figcaption><b>Figure 7.</b> PDF text-layer extractors: macro CER and ms/page.</figcaption></figure>
   </div>
 </div>
 
@@ -258,51 +287,105 @@ warm s/page (mean and p95), cold start, peak RSS and install size. Each engine r
 That validates the "few characters on this page, so OCR it" rule. No extractor recovers a content stream written out of visual order.
 That limitation is shared and is also why <code>ocr_mode=force</code> exists.</p>
 
-<h3>5.3 Decisions</h3>
-<div class="grid2">
-  <div class="box"><h4>PDF: PyMuPDF with <code>sort=True</code></h4><p>It was the only candidate without errors on rotated, glyph-positioned and table PDFs, at 2.6 ms/page.
-  The same library also renders pages for OCR and repairs damaged files. <b>Caveat:</b> it is AGPL. For closed-source
-  distribution, pypdfium2 (Apache/BSD, 0.5 ms/page) is the drop-in fallback, but rotated pages would need handling.</p></div>
-  <div class="box"><h4>OCR default: RapidOCR (PP-OCRv6 small)</h4><p>Its accuracy is two orders of magnitude better than raw Tesseract on degraded input, at ≈1 s/page on CPU.
-  Models ship inside the wheel, are baked into the image and run fully offline. The line-orientation classifier is disabled because it flipped
-  upright lines in the benchmark; page rotation is handled with Tesseract OSD instead.</p></div>
-  <div class="box"><h4>Fast option: Tesseract (<code>ocr_engine=tesseract</code>)</h4><p>About 3× faster with ¼ of the memory, and just as accurate on clean scans.
-  It suits bulk, clean, born-scanned archives. It is kept installed anyway for OSD and language validation.</p></div>
-  <div class="box"><h4>Rejected: EasyOCR, VLM/layout pipelines</h4><p>EasyOCR is dominated (7× slower, less accurate, 6.4 GB). Docling, Marker and Nougat
-  were excluded because of GPU/RAM needs on the CPU-only target, and RapidOCR already reaches near-zero CER on the test set.</p></div>
-</div>
-<p><b>Measured in the running service</b> (30-page scanned PDF rendered at 300 dpi, worker-heavy with 2 processes × 2 threads):
-RapidOCR took <b>51.8 s</b> (1.7 s/page including rendering and orientation checks). Tesseract took <b>27.1 s</b>. Peak memory of the
-heavy worker container was 1.3 GB with both engines running at once. On a photographed invoice, RapidOCR occasionally
-merged words ("ACMEData") and read table cells as separate lines, while Tesseract kept table rows together on clean input.
-That is why both engines are exposed.</p>
 
-<h3>5.4 Where and how the extracted text is stored</h3>
+<h3>5.3 Benchmark B · Structure preserved for LLMs</h3>
+<p><b>Method</b> (<code>benchmark/run_structure_benchmark.py</code>). Eleven inputs with ground-truth Markdown, in English and Spanish:
+three digital PDFs (report with H1–H3, ruled, borderless and 60-row multi-page tables; a Spanish report with a real two-column page; an invoice),
+two scanned PDFs, one photographed table and two DOCX. Three real public-domain IRS PDFs (Form W-9, Publication 1, Publication 15-T excerpt)
+are scored by word recall against the publisher's text layer, to catch silently dropped text. The metrics are heading F1 (text match, level ±1),
+list-item recall, <b>table cell F1</b>, CER after stripping Markdown, and s/page. Candidates include the libraries themselves <i>and this service
+end to end through its API</i>, with both pipelines.</p>
+<table>
+  <tr><th>Candidate</th><th class="n">Heading F1</th><th class="n">List recall</th><th class="n">Table F1</th><th class="n">CER</th><th class="n">s/page</th><th class="n">Real docs BoW F1 (min)</th><th class="n">Peak RSS</th><th>Licence</th></tr>
+  <tr><td>PyMuPDF <code>get_text</code> (baseline)</td><td class="n">0.00</td><td class="n">0.42</td><td class="n">0.00</td><td class="n">0.700</td><td class="n">0.002</td><td class="n">1.00 (1.00)</td><td class="n">55 MB</td><td>AGPL / commercial</td></tr>
+  <tr><td>pymupdf4llm 0.0.24 (+ coverage guard)</td><td class="n">0.41</td><td class="n">0.44</td><td class="n">0.32</td><td class="n">0.668</td><td class="n">0.025</td><td class="n">0.98 (0.95)</td><td class="n">82 MB</td><td>AGPL / commercial</td></tr>
+  <tr><td>pymupdf4llm 1.28 (+ layout model)</td><td class="n">0.82</td><td class="n">1.00</td><td class="n">0.34</td><td class="n">0.453</td><td class="n">0.446</td><td class="n">0.98 (0.96)</td><td class="n">869 MB</td><td>AGPL / commercial</td></tr>
+  <tr><td>MarkItDown 0.1.7</td><td class="n">0.33</td><td class="n">0.61</td><td class="n">0.46</td><td class="n">0.525</td><td class="n">0.038</td><td class="n">0.98 (0.97)</td><td class="n">218 MB</td><td>MIT</td></tr>
+  <tr><td>Docling 2.128 + RapidOCR</td><td class="n best">1.00</td><td class="n best">1.00</td><td class="n best">1.00</td><td class="n best">0.009</td><td class="n">4.41</td><td class="n">0.98 (0.95)</td><td class="n">3.3 GB</td><td>MIT (models Apache/CDLA)</td></tr>
+  <tr><td><b>DocIntel service, standard pipeline</b></td><td class="n">0.87</td><td class="n">0.90</td><td class="n">0.50</td><td class="n">0.238</td><td class="n">0.80</td><td class="n">0.98 (0.96)</td><td class="n">–</td><td>this project</td></tr>
+  <tr><td><b>DocIntel service, layout pipeline</b></td><td class="n best">1.00</td><td class="n best">1.00</td><td class="n best">1.00</td><td class="n best">0.009</td><td class="n">7.74</td><td class="n">0.98 (0.95)</td><td class="n">–</td><td>this project</td></tr>
+</table>
+<div class="grid2">
+  <figure><img src="../benchmark/results/structure/structure_by_doc_type.png" alt="Structure by document type"><figcaption><b>Figure 8.</b> Table cell F1 and heading F1 per document type.
+  Macro scores include scans, where tools without OCR score 0.</figcaption></figure>
+  <div>
+    <table>
+      <tr><th>Heading F1 / table F1</th><th class="n">digital PDF</th><th class="n">scanned PDF</th><th class="n">photo</th><th class="n">DOCX</th></tr>
+      <tr><td>pymupdf4llm 0.0.24</td><td class="n">0.81 / 0.95</td><td class="n">0 / 0</td><td class="n">– / 0</td><td class="n">n/a</td></tr>
+      <tr><td>MarkItDown</td><td class="n">0.00 / 0.83</td><td class="n">0 / 0</td><td class="n">– / 0</td><td class="n">1.00 / 1.00</td></tr>
+      <tr><td>DocIntel standard</td><td class="n best">1.00 / 1.00</td><td class="n">0.62 / 0.00</td><td class="n">– / 0.00</td><td class="n best">1.00 / 1.00</td></tr>
+      <tr><td>DocIntel layout</td><td class="n best">1.00 / 1.00</td><td class="n best">1.00 / 1.00</td><td class="n best">– / 1.00</td><td class="n best">1.00 / 1.00</td></tr>
+    </table>
+    <p class="small"><b>The benchmark changed the code.</b> Its first run of the service found three defects in the standard pipeline: bullet glyphs on
+    their own line (digital list recall 0.00), the two-column page read across columns (CER 0.285) and borderless tables emitted as loose lines.
+    The fixes (baseline merging, XY-cut ordering, unruled-table detection, wrapped-heading merge, OCR heading detection) raised digital-PDF
+    list recall to 1.00, table F1 from 0.96 to 1.00, two-column CER to 0.000 and scanned heading F1 from 0.00 to 0.62. Real documents kept a word
+    recall of 0.96 or better throughout.</p>
+  </div>
+</div>
+
+<h3>5.4 Decisions</h3>
+<div class="grid2">
+  <div class="box"><h4>PDF text: PyMuPDF (<code>sort=True</code>) + own layout pass</h4><p>PyMuPDF was the only text-layer extractor without errors on rotated, glyph-positioned and
+  table PDFs (benchmark A). For Markdown, the service's layout pass matched Docling on digital PDFs (1.00 / 1.00) at a fraction of the cost, beat pymupdf4llm
+  0.0.24 (0.81 / 0.95), and avoided pymupdf4llm 1.28, which is 18× slower, adds 800 MB of RAM and read the two-column page across columns.
+  <b>Caveat:</b> AGPL; pypdfium2 is the permissive fallback.</p></div>
+  <div class="box"><h4>OCR: RapidOCR default, Tesseract as fast option</h4><p>RapidOCR (PP-OCRv6): CER 0.001 against 0.214 for raw Tesseract, at ≈1 s/page, fully offline.
+  Its line classifier is disabled (it flipped upright lines); rotation uses Tesseract OSD. Tesseract is ≈3× faster with ¼ of the memory and as accurate on clean scans.
+  EasyOCR was rejected: 7× slower, less accurate, 6.4 GB. In the service, a 30-page scan took 51.8 s with RapidOCR and 27.1 s with Tesseract.</p></div>
+  <div class="box"><h4>Scanned tables: opt-in <code>pipeline=layout</code> (Docling)</h4><p>No OCR-lines heuristic rebuilt tables from pixels (F1 0.00); only a table-structure
+  model did (1.00). Docling costs 2.2 GB of install, ~3 GB RAM and 4–8 s/page, so it is <b>a separate worker, queue and image</b> (compose profile
+  <code>layout</code>). The default path stays fast, and clients who need tables from scans (invoices, statements) opt in per document.</p></div>
+  <div class="box"><h4>Office, HTML, e-mail: native parsers</h4><p>DOCX structure from styles scored 1.00 on headings, lists and tables, the same as Docling and MarkItDown,
+  with no models. HTML goes through markdownify, e-mail through the standard library. Office files with pictures are routed to the OCR pool so pasted scans are read.</p></div>
+</div>
+
+<h3>5.5 LLM-ready outputs and chunking strategy</h3>
+<table>
+  <tr><th style="width:22%">Decision</th><th>Choice and rationale</th></tr>
+  <tr><td>Canonical format</td><td><b>Markdown</b>: models read it natively, it is compact (pipe tables cost far fewer tokens than HTML), humans can review it, and it keeps
+  headings, lists and tables. Multi-page documents carry <code>&lt;!-- page: N --&gt;</code> markers, which are invisible when rendered but give page provenance.</td></tr>
+  <tr><td>Chunk boundaries</td><td>Structure first: a heading closes the current chunk once it holds ≥ ¼ of the budget (no micro-chunks). Paragraphs and lists are packed up to the budget;
+  an oversized paragraph is split by sentences, then by tokens.</td></tr>
+  <tr><td>Tables</td><td>Never split mid-row. A table larger than the budget is split by rows, and <b>the header row is repeated in every part</b>, so each chunk is a
+  self-describing table.</td></tr>
+  <tr><td>Overlap</td><td>Default 64 tokens, only between prose chunks of the same top-level section, cut at a word boundary. Tables and section changes get none, because overlap there
+  would duplicate headers or mix topics.</td></tr>
+  <tr><td>Size &amp; tokenizer</td><td>Default 512 tokens with <code>tiktoken</code> cl100k_base (baked into the image; falls back to chars/4 offline), per-request 64–4096.
+  Token counts per chunk and per document let clients budget prompts and embedding costs.</td></tr>
+  <tr><td>Provenance</td><td>Each chunk: <code>id</code>, <code>index</code>, <code>page_start/page_end</code>, <code>heading_path</code>, <code>char_start/char_end</code> into <code>document.md</code>,
+  <code>kinds</code> (paragraph, list, table, code), <code>token_count</code>, <code>overlap_tokens</code>. This is enough to cite, highlight and re-rank.</td></tr>
+</table>
+
+<h3>5.6 Where and how the extracted content is stored</h3>
 <table>
   <tr><th>Artifact</th><th>Location</th><th>Why there</th></tr>
-  <tr><td>Full text (pages separated by form feed <code>\f</code>)</td><td>MinIO <code>results/jobs/{id}/text.txt</code></td><td>Can be megabytes. Streamed straight to clients, cheap storage with lifecycle rules, and keeps the database small and fast.</td></tr>
-  <tr><td>Structured result: per-page text, method (<code>text_layer</code> / <code>ocr:rapidocr</code>), OCR confidence, duration, warnings, metadata</td><td>MinIO <code>results/jobs/{id}/result.json</code></td><td>One self-contained, versionable document for downstream pipelines (search indexing, embeddings, RAG).</td></tr>
-  <tr><td>Queryable summary: text preview (1 000 chars), char/word/page counts, language, metadata JSONB, warnings</td><td>PostgreSQL <code>jobs</code></td><td>Powers listings, filters and the dashboard without touching object storage.</td></tr>
+  <tr><td>Plain text (pages separated by form feed)</td><td>MinIO <code>results/jobs/{id}/text.txt</code></td><td>Search indexing, diffing, legacy consumers; streamed.</td></tr>
+  <tr><td>Markdown</td><td>MinIO <code>…/document.md</code></td><td>What LLMs and reviewers read; can be megabytes, so it belongs in object storage.</td></tr>
+  <tr><td>Retrieval chunks</td><td>MinIO <code>…/chunks.jsonl</code></td><td>One JSON object per line, ready for bulk loading into a vector database.</td></tr>
+  <tr><td>Structured result: per-page text and Markdown, method (<code>text_layer</code>, <code>ocr:rapidocr</code>, <code>layout:docling</code>), confidence, timings, metadata, warnings, chunks</td><td>MinIO <code>…/result.json</code></td><td>One self-contained, versionable document per job.</td></tr>
+  <tr><td>Queryable summary: preview, char/word/page/<b>token/chunk</b> counts, language, metadata JSONB, warnings, result keys</td><td>PostgreSQL <code>jobs</code></td><td>Powers listings, filters and the dashboard without touching object storage.</td></tr>
 </table>
-<p class="small">The raw document stays content-addressed in <code>documents/</code>, so any job can be reprocessed with new options (<code>force=true</code> or retry) without re-uploading.</p>
+<p class="small">Keeping bytes in object storage and summaries in the database keeps PostgreSQL small and fast. The raw document stays content-addressed, so any job can be
+reprocessed with new options without re-uploading. A vector index is deliberately outside the service: <code>chunks.jsonl</code> is the hand-off to whichever
+embedding model and vector store the client uses.</p>
 
-<h3>5.5 Metadata worth extracting</h3>
+<h3>5.7 Metadata worth extracting</h3>
 <table>
   <tr><th>Group</th><th>Fields</th><th>Use</th></tr>
-  <tr><td>Always</td><td>SHA-256, detected MIME and kind, size, page count, char/word/line counts, reading time, extraction method per page, mean OCR confidence, timings</td><td>dedup, cost accounting, quality triage</td></tr>
-  <tr><td>Language</td><td>ISO code + confidence (fastText lid.176, on-device, ~1 MB)</td><td>route to language-specific NLP, choose the OCR language</td></tr>
-  <tr><td>Entities (regex)</td><td>emails, URLs, dates (ISO / numeric / Spanish and English month names), amounts (MXN/USD/EUR/$), phone numbers</td><td>invoice and form triage without an LLM</td></tr>
-  <tr><td>PDF</td><td>title, author, subject, keywords, creator/producer, created/modified, encryption, repaired flag, page size, outline presence, text-layer vs OCR pages</td><td>provenance, detecting scanned vs digital</td></tr>
-  <tr><td>Image</td><td>format, dimensions, DPI, frames, EXIF (camera make/model, date, software, orientation)</td><td>quality warnings (low resolution), provenance</td></tr>
-  <tr><td>Office / HTML / text</td><td>core properties (title, author, dates), paragraph/table/image counts, slide and sheet names, HTML title/lang/description, text encoding</td><td>search facets, display</td></tr>
+  <tr><td>Always</td><td>SHA-256, detected MIME and kind, size, pages, chars/words/lines, <b>tokens, chunks, tables</b>, <b>outline</b> (heading tree), extraction method per page, mean OCR confidence, timings</td><td>dedup, cost and context budgeting, quality triage, navigation</td></tr>
+  <tr><td>Language</td><td>ISO code + confidence (fastText lid.176, on-device)</td><td>route to language-specific models, pick the OCR language</td></tr>
+  <tr><td>Entities (regex)</td><td>emails, URLs, dates (ISO, numeric, Spanish and English month names), amounts (MXN/USD/EUR/$), phone numbers</td><td>invoice and form triage without an LLM; metadata filters in RAG</td></tr>
+  <tr><td>PDF</td><td>title, author, subject, keywords, creator/producer, dates, encryption, repaired flag, page size, outline, text-layer vs OCR pages, tables detected, body font size</td><td>provenance, scanned-vs-digital routing</td></tr>
+  <tr><td>Image</td><td>format, dimensions, DPI, frames, EXIF (camera, date, software, orientation)</td><td>quality warnings, provenance</td></tr>
+  <tr><td>Office / HTML / e-mail</td><td>core properties, paragraph/heading/table/image counts, embedded images OCR'd, slide and sheet names; HTML title/lang/description; e-mail from/to/cc/date/subject and per-attachment status</td><td>search facets, display, audit</td></tr>
 </table>
-
 
 <!-- ============================================================ 6 -->
 <h2>6. Part 4 · Queue design (Redis + Celery)</h2>
 <table>
   <tr><th>Setting</th><th>Value</th><th>Effect / reason</th></tr>
-  <tr><td>Queues</td><td><code>heavy</code>, <code>light</code>, <code>maintenance</code></td><td>Routing is decided at upload from the detected kind. A burst of 500-page scans cannot delay a 1 KB text file, and each pool can be scaled on its own (<code>--scale worker-heavy=3</code>).</td></tr>
+  <tr><td>Queues</td><td><code>heavy</code>, <code>light</code>, <code>layout</code>, <code>maintenance</code></td><td>Routing is decided at upload from the detected kind and options (§3). A burst of 500-page scans cannot delay a 1 KB text file, and each pool can be scaled on its own (<code>--scale worker-heavy=3</code>).</td></tr>
   <tr><td><code>task_acks_late</code></td><td>True</td><td>The message is acknowledged only after the task finishes, so a crash leaves it unacked and it gets redelivered.</td></tr>
   <tr><td><code>task_reject_on_worker_lost</code></td><td>True</td><td>If a pool child is OOM-killed, the message is requeued instead of being marked failed.</td></tr>
   <tr><td><code>worker_prefetch_multiplier</code></td><td>1</td><td>A busy worker doesn't reserve messages it can't start, so another replica can take them.</td></tr>
@@ -329,23 +412,21 @@ Duplicate deliveries, redelivered messages and re-dispatches find the row not cl
   <tr><td>Whole stack killed</td><td>Durable volumes. On start, every worker runs a sweep (advisory-locked) and beat continues every 20 s.</td><td>Jobs resume by themselves: running ones on attempt 2, queued ones from the AOF-restored queue.</td></tr>
   <tr><td>Broker loses messages / publish fails</td><td>The sweeper compares QUEUED jobs against the Redis lists and <code>unacked</code> hash and re-dispatches missing ones. Duplicates are harmless.</td><td>Upload still returns 202 with a "queue temporarily unavailable" warning. Events show <code>dispatch_failed</code> / <code>message_missing</code>.</td></tr>
   <tr><td>Object storage / DB outage</td><td>API maps errors to 503 + <code>Retry-After</code>. Workers classify them as transient: <code>RETRYING</code> with exponential backoff (10 s, 20 s…).</td><td><code>STORAGE_UNAVAILABLE</code> / <code>DATABASE_UNAVAILABLE</code>. The job shows <code>next_retry_at</code> and the attempt counter.</td></tr>
-  <tr><td>Slow or stuck processing</td><td>Soft/hard time limits; cancellation checked per page</td><td><code>FAILED TIMEOUT</code> with advice, or <code>CANCELLED</code>.</td></tr>
+  <tr><td>Slow or stuck processing</td><td>Soft/hard time limits; cancellation checked per page. The soft limit is also recognised when a native library wraps it (ONNX Runtime raised it as <code>ONNXRuntimeError</code>, which the chaos test caught being retried 3×), by cause chain and elapsed time.</td><td><code>FAILED TIMEOUT</code> on attempt 1 with advice (split, <code>ocr_engine=tesseract</code>, <code>ocr_mode=off</code>), or <code>CANCELLED</code>.</td></tr>
+  <tr><td>Cancel requested, then the worker dies</td><td>The sweeper honours <code>cancel_requested</code> on stale jobs instead of re-queueing them. Found in the audit: such a job would otherwise sit QUEUED unclaimable until the 24 h expiry.</td><td><code>CANCELLED</code> within ~1 min, with the reason in the timeline.</td></tr>
+  <tr><td>Stored file deleted (retention, manual)</td><td><code>NoSuchKey</code> is a non-retryable <code>ObjectMissingError</code>, not a transient storage error.</td><td><code>FAILED DOCUMENT_MISSING</code> on attempt 1; result downloads return 410.</td></tr>
   <tr><td>No workers at all</td><td>Queue TTL expiry; readiness endpoint</td><td><code>/v1/system</code>: "No workers online: jobs will wait…". After 24 h: <code>FAILED EXPIRED</code>.</td></tr>
   <tr><td>Low-quality result</td><td>Per-page confidence, text-layer detection, encoding confidence</td><td>Warnings: low OCR confidence on pages 3–5, mixed document, no text found, extension mismatch, rotation corrected…</td></tr>
 </table>
 
 <h3>Chaos test results</h3>
-<p><code>scripts/chaos_test.py</code> injects each failure into the running compose stack and asserts the outcome from the public API only.</p>
-<table><tr><th style="width:14%">Scenario</th><th style="width:7%">Result</th><th style="width:25%">Expected</th><th>Observed (from the public API)</th><th class="n">Time</th></tr>
-<tr><td><code>rejected_inputs</code></td><td><span class="pass">✓ PASS</span></td><td>unsupported/empty → 4xx at upload; damaged files → terminal state with explicit error code (repairable PDFs succeed with a warning)</td><td class="small">program.exe → HTTP 415; archive.zip → HTTP 415; empty.txt → HTTP 400; binary_named_as.txt → HTTP 415; corrupted.pdf → SUCCEEDED (warnings: 3); garbage.pdf → FAILED CORRUPTED_FILE; truncated.jpg → FAILED CORRUPTED_FILE; encrypted.pdf → FAILED ENCRYPTED_DOCUMENT; huge_400mp.png → FAILED LIMIT_EXCEEDED</td><td class="n">6s</td></tr>
-<tr><td><code>worker_kill</code></td><td><span class="pass">✓ PASS</span></td><td>job re-queued after heartbeat timeout and SUCCEEDED on attempt 2</td><td class="small">SUCCEEDED after 2 attempts; recovered+finished 98s after kill; events: received → dispatched → started → worker_lost → dispatched → started → succeeded</td><td class="n">108s</td></tr>
-<tr><td><code>cancel_running</code></td><td><span class="pass">✓ PASS</span></td><td>a running job stops at the next page and ends CANCELLED</td><td class="small">CANCELLED at 11%</td><td class="n">6s</td></tr>
-<tr><td><code>broker_data_loss</code></td><td><span class="pass">✓ PASS</span></td><td>sweeper detects jobs missing from the broker and re-dispatches them</td><td class="small">[&#x27;SUCCEEDED&#x27;, &#x27;SUCCEEDED&#x27;, &#x27;SUCCEEDED&#x27;] in 61s; message_missing events: True</td><td class="n">64s</td></tr>
-<tr><td><code>broker_down_on_upload</code></td><td><span class="pass">✓ PASS</span></td><td>upload still accepted (202); job dispatched automatically when the broker returns</td><td class="small">HTTP 202; final SUCCEEDED; events: received → dispatched → dispatch_failed → message_missing → dispatched → started → succeeded</td><td class="n">19s</td></tr>
-<tr><td><code>storage_down_during_processing</code></td><td><span class="pass">✓ PASS</span></td><td>job goes RETRYING with backoff, then SUCCEEDED; uploads during the outage get 503 STORAGE_UNAVAILABLE</td><td class="small">upload during outage → HTTP 503 STORAGE_UNAVAILABLE; job SUCCEEDED after 2 attempts; events: received → dispatched → started → retry_scheduled → dispatched → started → succeeded</td><td class="n">17s</td></tr>
-<tr><td><code>database_down</code></td><td><span class="pass">✓ PASS</span></td><td>HTTP 503 DATABASE_UNAVAILABLE while down, /v1/system reports degraded, recovers automatically</td><td class="small">/v1/jobs → 503 DATABASE_UNAVAILABLE; /v1/system → 503 [&#x27;Database unavailable: uploads and status queries will fail until it recovers.&#x27;]; after restart → 200</td><td class="n">11s</td></tr>
-<tr><td><code>stack_kill</code></td><td><span class="pass">✓ PASS</span></td><td>every job (queued, running, finished) reaches SUCCEEDED after a full restart</td><td class="small">scanned_report_30p.pdf: PROCESSING→SUCCEEDED (attempts 2); scanned_letter.pdf: PROCESSING→SUCCEEDED (attempts 2); mixed_text_and_scan.pdf: QUEUED→SUCCEEDED (attempts 1); report.docx: SUCCEEDED→SUCCEEDED (attempts 1); invoice_photo.jpg: QUEUED→SUCCEEDED (attempts 1)</td><td class="n">106s</td></tr>
-</table><p class="small">Run (2026-09-16 21:14) on the compose stack (arm64, OrbStack). Worker loss is detected after 45 s without a heartbeat; the sweeper runs every 20 s. Recovery time therefore includes up to about 65 s of detection plus the re-run.</p>
+<p><code>scripts/chaos_test.py</code> injects each failure into the running compose stack and asserts the outcome through the public API only.</p>
+<!--CHAOS-->
+
+<h3>Burst load test</h3>
+<p><code>scripts/load_test.py</code> uploads a mixed burst of documents with 16 parallel clients, so documents arrive faster than they can be processed. It then checks that every job
+terminates, and that cheap documents are not starved by the OCR backlog.</p>
+<!--LOAD-->
 
 <!-- ============================================================ 8 -->
 <h2>8. Part 6 · Monitoring &amp; UI</h2>
@@ -353,19 +434,53 @@ Duplicate deliveries, redelivered messages and re-dispatches find the row not cl
 <p>Monitoring works on three levels. Each one answers a different question.</p>
 <table>
   <tr><th>Tool</th><th>Question it answers</th><th>Contents</th></tr>
-  <tr><td><b>Dashboard</b> <code>/dashboard</code></td><td>"Is the pipeline healthy and keeping up?" (product and operations view)</td><td>dependency health pills; tiles for received, success rate, in-flight, p50/p95 processing time, queue wait, pages, jobs with warnings; throughput chart (succeeded vs failed per interval); queue depths and per-worker busy slots; jobs and average time by document type; failures by error code; <b>reliability events</b> (worker losses recovered, lost messages re-dispatched, automatic retries, uploads while the broker was down); active jobs with heartbeat age; recent failures. Window 15 min–7 days, auto-refresh 3 s.</td></tr>
+  <tr><td><b>Dashboard</b> <code>/dashboard</code></td><td>"Is the pipeline healthy and keeping up?" (product and operations view)</td><td>dependency health pills; tiles for received, success rate, in-flight, p50/p95 processing time, queue wait, pages, <b>LLM tokens and chunks</b>, jobs with warnings; throughput chart (succeeded vs failed per interval); queue depths and per-worker busy slots; jobs and average time by document type; failures by error code; <b>reliability events</b> (worker losses recovered, lost messages re-dispatched, automatic retries, uploads while the broker was down); active jobs with heartbeat age; recent failures. Window 15 min–7 days, auto-refresh 3 s.</td></tr>
   <tr><td><b>Flower</b> <code>:5555</code></td><td>"What is Celery doing right now?" (task level)</td><td>per-task state, runtime and args (the job id), worker pools, broker queues, rate limits and remote control</td></tr>
   <tr><td><b><code>GET /v1/system</code></b></td><td>"Can I use the service?" (for machines and the UI banner)</td><td>DB, object storage, broker and worker status with human messages; HTTP 503 when degraded</td></tr>
 </table>
-<figure><img src="figures/ui_dashboard.png" alt="Dashboard"><figcaption><b>Figure 7.</b> Monitoring dashboard after the chaos test run. The reliability panel counts the automatic recoveries, and the failure panel shows the
+<figure><img src="figures/ui_dashboard.png" alt="Dashboard"><figcaption><b>Figure 9.</b> Monitoring dashboard after the chaos and load test runs. The reliability panel counts the automatic recoveries, and the failure panel shows the
 explicit error codes of the malformed inputs.</figcaption></figure>
-<figure><img src="figures/ui_documents.png" alt="Upload UI"><figcaption><b>Figure 8.</b> Upload UI: drag and drop with options, a live job list (status badge, progress, stage) and job detail
-with warnings, entities, document metadata, the event timeline and per-page text (OCR pages marked with confidence).</figcaption></figure>
-<figure><img src="figures/flower.png" alt="Flower"><figcaption><b>Figure 9.</b> Celery Flower. Task ids are <code>&lt;job_id&gt;.&lt;dispatch_n&gt;</code>, so re-dispatches after a recovery are visible as <code>.2</code>, <code>.3</code>.</figcaption></figure>
+<figure><img src="figures/ui_documents.png" alt="Upload UI"><figcaption><b>Figure 10.</b> Upload UI: options (OCR, pipeline, chunking), a live job list and job detail. The detail shows entities, metadata,
+the timeline and the extracted content in three views: <b>Markdown (LLM)</b>, plain text and chunks. The downloads are <code>.md</code>, <code>chunks.jsonl</code>, <code>.txt</code> and JSON.</figcaption></figure>
+<figure><img src="figures/flower.png" alt="Flower"><figcaption><b>Figure 11.</b> Celery Flower. Task ids are <code>&lt;job_id&gt;.&lt;dispatch_n&gt;</code>, so re-dispatches after a recovery are visible as <code>.2</code>, <code>.3</code>.</figcaption></figure>
 
+
+<!-- ============================================================ 9V -->
+<h2>9. Verification: requirement → evidence</h2>
+<p>Every requirement of the assignment is backed by an automated check that runs against real containers. The same suites run in <b>GitHub Actions on x86_64</b>
+from a clean checkout. That proves the single-command setup on a machine other than the development laptop (arm64).</p>
+<table>
+  <tr><th>Suite</th><th>What it exercises</th><th class="n">Checks</th><th>Result</th></tr>
+  <tr><td>Unit (<code>pytest</code>, app image)</td><td>format detection and spoofing, every extractor (text and Markdown), OCR engines, rotation, e-mail attachments, embedded-image OCR, chunker invariants, typed errors</td><td class="n">47</td><td class="pass">✓ all pass</td></tr>
+  <tr><td>Unit (layout image)</td><td>Docling pipeline: scanned table rebuilt, digital PDF, image, non-applicable formats</td><td class="n">3 (+15 shared)</td><td class="pass">✓ all pass</td></tr>
+  <tr><td>Integration (<code>tests/integration</code>)</td><td>through HTTP: 17 formats end to end (text, Markdown, chunks, JSONL, result, events); 415/400/413/422 errors; failed-file messages; warnings; dedup cache; cancel and retry; webhook delivery; filters; downloads; system/formats/stats/UI; layout pipeline</td><td class="n">40</td><td class="pass">✓ all pass</td></tr>
+  <tr><td>Chaos (<code>scripts/chaos_test.py</code>)</td><td>13 failure injections (table in §7)</td><td class="n">13</td><td><!--CHAOSSUMMARY--></td></tr>
+  <tr><td>Load (<code>scripts/load_test.py</code>)</td><td>mixed burst; all terminal; upload latency; queue isolation</td><td class="n">1</td><td><!--LOADSUMMARY--></td></tr>
+  <tr><td>Benchmarks A and B</td><td>parser/OCR accuracy and structure, with the service measured end to end</td><td class="n">–</td><td>reproducible with <code>docker run</code></td></tr>
+  <tr><td>CI (GitHub Actions, x86_64)</td><td>build → unit → <code>docker compose up --wait</code> → integration → 9 chaos scenarios → load test</td><td class="n">–</td><td><!--CI--></td></tr>
+</table>
+
+<table>
+  <tr><th style="width:30%">Requirement (assignment)</th><th style="width:40%">Implementation</th><th>Evidence</th></tr>
+  <tr><td>Push documents; accept PDF, PNG/JPG, TXT; reject unsupported</td><td><code>POST /v1/documents</code>, content sniffing (§3)</td><td>integration <code>test_format_end_to_end</code> ×17, <code>test_rejected_uploads</code>; chaos <code>rejected_inputs</code></td></tr>
+  <tr><td>Claim-check pattern</td><td>MinIO payload + <code>{job_id}</code> message after commit (Fig. 3)</td><td>integration end-to-end tests; <code>broker_data_loss</code> (messages rebuilt from DB claims)</td></tr>
+  <tr><td>Additional formats and payload parameters</td><td>HTML, DOCX, PPTX, XLSX, RTF, CSV/JSON/XML, EML; 10 parameters (§1)</td><td><code>test_format_end_to_end</code>, <code>test_invalid_options</code>, <code>test_duplicate_upload_is_served_from_cache</code>, <code>test_webhook_is_delivered</code></td></tr>
+  <tr><td>Reasonable upload limits</td><td>50 MB (pre-buffer), pages, pixels, zip size, time (§3)</td><td><code>test_upload_limit_is_enforced_before_buffering</code>; <code>huge_400mp.png</code>; <code>processing_timeout</code></td></tr>
+  <tr><td>Job tracking endpoints; DB lifecycle</td><td>jobs, events, result, text, markdown, chunks, cancel, retry; PostgreSQL model (§4)</td><td><code>test_result_not_ready_then_cancel_then_retry</code>, <code>test_listing_filters_and_not_found</code></td></tr>
+  <tr><td>Best parsing methods, supported by a benchmark</td><td>hybrid per-page pipeline; RapidOCR; PyMuPDF + layout pass; opt-in Docling (§5)</td><td>Benchmarks A and B (tables in §5.2–5.3), including the service itself</td></tr>
+  <tr><td>How/where to store text; extra metadata</td><td>MinIO artifacts + PostgreSQL summary; metadata catalogue (§5.6–5.7)</td><td>integration checks of <code>/text</code>, <code>/markdown</code>, <code>/chunks</code>, <code>/result</code></td></tr>
+  <tr><td>On-device, open source</td><td>all models baked into images; no external API calls</td><td>CI runs with no credentials; licences in §5</td></tr>
+  <tr><td>Redis + Celery</td><td>queues, acks_late, prefetch 1, beat (§6)</td><td>every chaos scenario</td></tr>
+  <tr><td>Unsupported / corrupted files</td><td>typed errors, no pointless retries</td><td><code>test_bad_files_fail_with_explicit_error</code>; <code>rejected_inputs</code></td></tr>
+  <tr><td>Workers or whole stack killed mid-processing; no job lost</td><td>heartbeats, sweeper, idempotent claim, AOF, volumes</td><td><code>worker_kill</code>, <code>stack_kill</code>, <code>broker_data_loss</code>, <code>broker_down_on_upload</code></td></tr>
+  <tr><td>No document non-terminal forever</td><td>max attempts, time limits, TTL expiry, cancel-on-stale</td><td><code>poison_pill</code>, <code>processing_timeout</code>, <code>queue_expiry</code>, <code>cancel_while_worker_dead</code>, <code>document_missing</code></td></tr>
+  <tr><td>Warnings, errors, status information</td><td>error codes, warnings, timeline, <code>/v1/system</code>, UI banners</td><td><code>test_warnings_are_reported</code>; <code>database_down</code>, <code>storage_down_during_processing</code></td></tr>
+  <tr><td>Flower, dashboard, simple UI (optional)</td><td>§8</td><td><code>test_system_formats_stats_and_ui</code>; screenshots</td></tr>
+  <tr><td>Single docker compose command; report</td><td><code>docker compose up --build</code>; this PDF</td><td>CI job on a clean x86_64 runner</td></tr>
+</table>
 
 <!-- ============================================================ 9 -->
-<h2>9. Trade-offs, limits &amp; future work</h2>
+<h2>10. Trade-offs, limits &amp; future work</h2>
 
 <table>
   <tr><th style="width:24%">Decision</th><th style="width:38%">Cost we accept</th><th>Mitigation / next step</th></tr>
@@ -374,8 +489,10 @@ with warnings, entities, document metadata, the event timeline and per-page text
   <tr><td>Job-level (not page-level) retries</td><td>A crash at page 29/30 re-OCRs the whole document.</td><td>Split large PDFs into page-range subtasks (Celery chord) with per-page checkpoints in object storage.</td></tr>
   <tr><td>Polling API</td><td>Clients must poll.</td><td>Webhook (<code>callback_url</code>) exists. Server-Sent Events on <code>/v1/jobs/{id}/stream</code> would be the next step.</td></tr>
   <tr><td>PyMuPDF (AGPL)</td><td>Licence obligations if the service is distributed closed-source.</td><td>pypdfium2 fallback (benchmarked) or a commercial MuPDF licence.</td></tr>
-  <tr><td>RapidOCR default</td><td>1.1 GB peak per process, ≈3× slower than Tesseract, and it sometimes drops spaces on photos or splits table rows.</td><td><code>ocr_engine=tesseract</code> for clean bulk scans; worker memory limit and concurrency sized for it.</td></tr>
-  <tr><td>Regex entities, flat text</td><td>No table structure, key-value pairs or handwriting.</td><td>Keep per-page boxes. Add layout/table models (e.g. Docling) as an optional <code>layout</code> queue on GPU nodes.</td></tr>
+  <tr><td>RapidOCR default</td><td>1.1 GB peak per process, ≈3× slower than Tesseract, and it sometimes merges words on photos.</td><td><code>ocr_engine=tesseract</code> for clean bulk scans; worker memory limit and concurrency sized for it.</td></tr>
+  <tr><td>Standard pipeline on scans</td><td>Tables in scans/photos are not rebuilt (table F1 0.00); scanned headings are only partly recovered (F1 0.62).</td><td>Opt-in <code>pipeline=layout</code> (F1 1.00). Next step: automatically escalate pages whose OCR geometry looks tabular.</td></tr>
+  <tr><td>Docling as a separate profile</td><td>+2.2 GB image, ~3 GB RAM per process, 4–8 s/page on CPU; not started by default.</td><td>Run it on GPU nodes or scale it independently; the API warns when no layout worker is online.</td></tr>
+  <tr><td>Regex entities; no embeddings</td><td>No key-value extraction, handwriting or semantic enrichment; vectors are left to the client.</td><td><code>chunks.jsonl</code> is the hand-off. A local embedding worker (e.g. bge-m3) could be added behind another queue.</td></tr>
 </table>
 <p><b>Out of scope for a class project, and required before production:</b> authentication with API keys or OAuth, per-tenant quotas and rate limiting,
 an allow-list for <code>callback_url</code> (SSRF risk), antivirus scanning (ClamAV) before processing, encryption at rest and retention policies
@@ -384,20 +501,27 @@ workers on queue depth (e.g. KEDA).</p>
 
 
 <!-- ============================================================ 10 -->
-<h2>10. Appendix · How to run &amp; reproduce</h2>
+<h2>11. Appendix · How to run &amp; reproduce</h2>
 <pre>docker compose up --build              # api :8000 (UI, /dashboard, /docs) · flower :5555 · minio :9001
-docker compose run --rm --no-deps api pytest -q      # 32 unit tests
+docker compose --profile layout up -d --build          # optional high-fidelity pipeline (Docling worker)
+docker compose --profile test run --rm tests           # 40 integration tests against the running stack
+python3 scripts/load_test.py                           # burst load test → docs/load_test_results.md
+docker compose run --rm --no-deps api pytest -q      # 47 unit tests
 python3 scripts/chaos_test.py                        # failure injection → docs/chaos_results.md
-docker build -t docintel-bench benchmark/
-docker run --rm -v "$PWD/benchmark":/bench docintel-bench  # benchmark</pre>
+docker build -t docintel-bench benchmark/ &amp;&amp; docker run --rm -v "$PWD/benchmark":/bench docintel-bench     # benchmark A
+docker build -f benchmark/Dockerfile.structure -t docintel-bench-structure benchmark/                       # benchmark B
+docker run --rm --add-host host.docker.internal:host-gateway -v "$PWD/benchmark":/bench docintel-bench-structure python run_structure_benchmark.py</pre>
 <table>
   <tr><th>Path</th><th>Content</th></tr>
   <tr><td><code>app/api</code></td><td>FastAPI app, schemas, dashboard aggregations</td></tr>
   <tr><td><code>app/worker</code></td><td>Celery config, processing task, heartbeat, progress, retries, webhooks</td></tr>
   <tr><td><code>app/jobs.py</code></td><td>dispatch-after-commit, atomic claim, recovery sweeper</td></tr>
-  <tr><td><code>app/extraction</code></td><td>format detection, PDF/image/text/office extractors, OCR engines, enrichment</td></tr>
+  <tr><td><code>app/extraction</code></td><td>format detection; PDF (+ layout → Markdown), image, text, Office, e-mail extractors; OCR engines; Docling pipeline; chunking; enrichment</td></tr>
   <tr><td><code>benchmark/</code></td><td>dataset generator, runner, raw and summarised results, charts</td></tr>
-  <tr><td><code>samples/</code></td><td>demo documents and 11 edge cases</td></tr>
+  <tr><td><code>samples/</code></td><td>demo documents (incl. structured PDF/DOCX, scanned tables, e-mail) and 11 edge cases</td></tr>
+  <tr><td><code>tests/</code>, <code>scripts/</code></td><td>unit and integration tests; chaos, load and sample-generation scripts</td></tr>
+  <tr><td><code>.github/workflows/ci.yml</code></td><td>CI on x86_64: build, unit, compose, integration, chaos, load</td></tr>
+  <tr><td><code>docs/</code></td><td>implementation plan, verification record, chaos and load results</td></tr>
 </table>
 </body>
 </html>

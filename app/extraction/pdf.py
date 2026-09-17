@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 
 import pymupdf
@@ -17,6 +18,7 @@ from app.extraction.base import (
     PageResult,
 )
 from app.extraction.ocr import get_engine
+from app.extraction.pdf_markdown import font_profile, page_to_markdown
 
 pymupdf.TOOLS.mupdf_display_errors(False)
 
@@ -69,6 +71,8 @@ def extract_pdf(path: str, ctx: ExtractionContext) -> ExtractionResult:
         warnings: list[str] = []
         pages: list[PageResult] = []
         mode = ctx.ocr_mode
+        profile = font_profile(doc)
+        table_count = 0
         engine = None
         repaired = bool(doc.is_repaired)
         if repaired:
@@ -80,6 +84,7 @@ def extract_pdf(path: str, ctx: ExtractionContext) -> ExtractionResult:
             number = index + 1
             ctx.progress(index / doc.page_count, "extracting", f"page {number}/{doc.page_count}")
             page_warnings: list[str] = []
+            ocr_markdown = ""
             try:
                 page = doc.load_page(index)
                 native = page.get_text("text", sort=True).strip()
@@ -104,6 +109,7 @@ def extract_pdf(path: str, ctx: ExtractionContext) -> ExtractionResult:
                     text, method, confidence = native, "text_layer", None
                 else:
                     text, method, confidence = ocr.text, f"ocr:{engine.name}", ocr.confidence
+                    ocr_markdown = ocr.markdown
                     if confidence is not None and confidence < settings.low_confidence_threshold:
                         page_warnings.append(f"Low OCR confidence ({confidence:.0f}/100)")
                     if ocr.rotated_degrees:
@@ -113,12 +119,25 @@ def extract_pdf(path: str, ctx: ExtractionContext) -> ExtractionResult:
                 if mode == "off" and len(native) < settings.pdf_min_text_chars:
                     page_warnings.append("No text layer and OCR is disabled (ocr_mode=off)")
 
+            markdown = ocr_markdown if method.startswith("ocr") else ""
+            if method == "text_layer" and text.strip():
+                try:
+                    markdown, found_tables = page_to_markdown(page, profile)
+                    # Coverage guard: layout analysis must never silently drop text (seen on real-world PDFs).
+                    if _word_coverage(markdown, text) < 0.9:
+                        page_warnings.append("Layout analysis lost text on this page; Markdown falls back to plain text")
+                        markdown = ""
+                    else:
+                        table_count += found_tables
+                except Exception as exc:  # structure is best effort; plain text is always available
+                    page_warnings.append(f"Layout analysis failed ({type(exc).__name__}); Markdown has no structure")
             if not text.strip():
                 page_warnings.append("No text found on this page")
             pages.append(
                 PageResult(
                     number=number,
                     text=text,
+                    markdown=markdown,
                     method=method,
                     char_count=len(text),
                     ocr_confidence=confidence,
@@ -146,6 +165,8 @@ def extract_pdf(path: str, ctx: ExtractionContext) -> ExtractionResult:
                 "has_outline": bool(doc.get_toc(simple=True)),
             },
             "text_layer_pages": [p.number for p in pages if p.method == "text_layer"],
+            "tables_detected": table_count,
+            "body_font_size": profile["body"] or None,
             "ocr_pages": ocr_pages,
         }
         low = [p.number for p in pages if any("Low OCR confidence" in w for w in p.warnings)]
@@ -157,6 +178,16 @@ def extract_pdf(path: str, ctx: ExtractionContext) -> ExtractionResult:
         if empty:
             warnings.append(f"No text was found on {_pages(empty)}.")
         return ExtractionResult(pages=pages, metadata=metadata, warnings=warnings)
+
+
+def _word_coverage(markdown: str, text: str) -> float:
+    from collections import Counter
+
+    reference = Counter(re.findall(r"\w+", text.lower()))
+    if not reference:
+        return 1.0
+    produced = Counter(re.findall(r"\w+", markdown.lower()))
+    return sum(min(count, produced[word]) for word, count in reference.items()) / sum(reference.values())
 
 
 def _pages(numbers: list[int]) -> str:

@@ -95,10 +95,14 @@ class Job(Base):
     result_bucket: Mapped[str | None] = mapped_column(String(64))
     result_text_key: Mapped[str | None] = mapped_column(String(512))
     result_json_key: Mapped[str | None] = mapped_column(String(512))
+    result_markdown_key: Mapped[str | None] = mapped_column(String(512))
+    result_chunks_key: Mapped[str | None] = mapped_column(String(512))
     text_preview: Mapped[str | None] = mapped_column(Text)
     char_count: Mapped[int | None] = mapped_column(Integer)
     word_count: Mapped[int | None] = mapped_column(Integer)
     page_count: Mapped[int | None] = mapped_column(Integer)
+    token_count: Mapped[int | None] = mapped_column(Integer)
+    chunk_count: Mapped[int | None] = mapped_column(Integer)
     metadata_: Mapped[dict] = mapped_column("metadata", JSONB, default=dict)
     cached_from_job_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
 
@@ -158,6 +162,14 @@ def init_db() -> None:
     with engine.begin() as conn:
         conn.execute(text("SELECT pg_advisory_xact_lock(424242)"))
         Base.metadata.create_all(conn)
+        # Additive, idempotent migrations for databases created by earlier versions.
+        for column, ddl in (
+            ("result_markdown_key", "VARCHAR(512)"),
+            ("result_chunks_key", "VARCHAR(512)"),
+            ("token_count", "INTEGER"),
+            ("chunk_count", "INTEGER"),
+        ):
+            conn.execute(text(f"ALTER TABLE jobs ADD COLUMN IF NOT EXISTS {column} {ddl}"))
 
 
 def add_event(session, job_id, event: str, message: str, level: str = "info", **data) -> None:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import socket
@@ -164,9 +165,19 @@ def process_document(self, job_id: str) -> dict:
         progress.set(92, "storing", "saving extracted text", force=True)
         text = result.text
         metadata = {**result.metadata, "timings_ms": {"extraction": extraction_ms}}
+        markdown = result.markdown
+        chunks = [c.to_dict() for c in result.chunks]
         text_key = f"jobs/{job_id}/text.txt"
+        markdown_key = f"jobs/{job_id}/document.md"
+        chunks_key = f"jobs/{job_id}/chunks.jsonl"
         json_key = f"jobs/{job_id}/result.json"
         storage.put_bytes(settings.s3_bucket_results, text_key, text.encode("utf-8"), "text/plain; charset=utf-8")
+        storage.put_bytes(settings.s3_bucket_results, markdown_key, markdown.encode("utf-8"), "text/markdown; charset=utf-8")
+        storage.put_bytes(
+            settings.s3_bucket_results, chunks_key,
+            "".join(json.dumps({"job_id": job_id, **c}, ensure_ascii=False) + "\n" for c in chunks).encode("utf-8"),
+            "application/x-ndjson",
+        )
         storage.put_json(
             settings.s3_bucket_results,
             json_key,
@@ -175,7 +186,9 @@ def process_document(self, job_id: str) -> dict:
                 "document": {"filename": claimed.filename, "kind": claimed.kind, "sha256": claimed.sha256},
                 "options": claimed.options,
                 "text": text,
+                "markdown": markdown,
                 "pages": [p.to_dict() for p in result.pages],
+                "chunks": chunks,
                 "metadata": metadata,
                 "warnings": result.warnings,
             },
@@ -195,6 +208,10 @@ def process_document(self, job_id: str) -> dict:
                     result_bucket=settings.s3_bucket_results,
                     result_text_key=text_key,
                     result_json_key=json_key,
+                    result_markdown_key=markdown_key,
+                    result_chunks_key=chunks_key,
+                    token_count=stats.get("token_count"),
+                    chunk_count=stats.get("chunk_count"),
                     text_preview=text[:PREVIEW_CHARS],
                     char_count=stats.get("char_count"),
                     word_count=stats.get("word_count"),
@@ -207,7 +224,8 @@ def process_document(self, job_id: str) -> dict:
             ).first()
             if not done:
                 raise LostOwnership()
-            msg = f"Extracted {stats.get('char_count', 0):,} characters from {stats.get('page_count', 0)} page(s)."
+            msg = (f"Extracted {stats.get('char_count', 0):,} characters from {stats.get('page_count', 0)} page(s): "
+                   f"{stats.get('token_count', 0):,} tokens in {stats.get('chunk_count', 0)} retrieval chunk(s).")
             if result.warnings:
                 msg += f" {len(result.warnings)} warning(s)."
             add_event(session, uuid.UUID(job_id), "succeeded", msg, level="warning" if result.warnings else "info")
@@ -224,25 +242,44 @@ def process_document(self, job_id: str) -> dict:
     except ExtractionError as exc:
         _finish(job_id, worker_id, JobStatus.FAILED, exc.code, str(exc))
         return {"job_id": job_id, "status": "FAILED", "error_code": exc.code}
-    except SoftTimeLimitExceeded:
+    except storage.ObjectMissingError as exc:
         _finish(
-            job_id, worker_id, JobStatus.FAILED, "TIMEOUT",
-            f"Processing exceeded the time limit ({settings.job_soft_time_limit_s}s). Large scanned documents are "
-            "slow to OCR: split the document, or use ocr_mode=off if it has a text layer.",
+            job_id, worker_id, JobStatus.FAILED, "DOCUMENT_MISSING",
+            f"The stored document is no longer available in object storage ({exc}). It may have been deleted by a "
+            "retention policy; upload the file again.",
         )
-        return {"job_id": job_id, "status": "FAILED", "error_code": "TIMEOUT"}
-    except (storage.StorageError, OperationalError, OSError) as exc:
-        _transient_failure(job_id, worker_id, claimed, "INFRASTRUCTURE_ERROR", exc)
-        return {"job_id": job_id, "status": "RETRYING"}
-    except ValueError as exc:  # invalid options that slipped past API validation (e.g. OCR language)
-        _finish(job_id, worker_id, JobStatus.FAILED, "INVALID_OPTIONS", str(exc))
-        return {"job_id": job_id, "status": "FAILED", "error_code": "INVALID_OPTIONS"}
+        return {"job_id": job_id, "status": "FAILED", "error_code": "DOCUMENT_MISSING"}
     except Exception as exc:
+        # The soft time limit can surface wrapped by native libraries (e.g. as an ONNXRuntimeError), so timeouts
+        # are recognised by cause chain or elapsed time, before any retry decision.
+        if _is_timeout(exc, started):
+            _finish(
+                job_id, worker_id, JobStatus.FAILED, "TIMEOUT",
+                f"Processing exceeded the time limit ({settings.job_soft_time_limit_s}s). Large scanned documents "
+                "are slow to OCR: split the document, use ocr_engine=tesseract (faster), or ocr_mode=off if it has "
+                "a text layer.",
+            )
+            return {"job_id": job_id, "status": "FAILED", "error_code": "TIMEOUT"}
+        if isinstance(exc, (storage.StorageError, OperationalError, OSError)):
+            _transient_failure(job_id, worker_id, claimed, "INFRASTRUCTURE_ERROR", exc)
+            return {"job_id": job_id, "status": "RETRYING"}
+        if isinstance(exc, ValueError):  # invalid options that slipped past API validation (e.g. OCR language)
+            _finish(job_id, worker_id, JobStatus.FAILED, "INVALID_OPTIONS", str(exc))
+            return {"job_id": job_id, "status": "FAILED", "error_code": "INVALID_OPTIONS"}
         log.exception("unexpected error processing job %s", job_id)
         _transient_failure(job_id, worker_id, claimed, "INTERNAL_ERROR", exc)
         return {"job_id": job_id, "status": "RETRYING"}
     finally:
         heartbeat.stop_event.set()
+
+
+def _is_timeout(exc: BaseException, started: float) -> bool:
+    seen: BaseException | None = exc
+    while seen is not None:
+        if isinstance(seen, SoftTimeLimitExceeded) or "SoftTimeLimitExceeded" in str(seen):
+            return True
+        seen = seen.__cause__ or seen.__context__
+    return time.perf_counter() - started >= settings.job_soft_time_limit_s
 
 
 def _merge_warnings(session, job_id: str, new: list[str]) -> list[str]:

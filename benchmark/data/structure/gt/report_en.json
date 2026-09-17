@@ -1,0 +1,550 @@
+{
+ "markdown": "# Quarterly Operations Report\n\nThis report summarizes the document processing platform during the third quarter. It covers volume, regional teams and the incidents that affected availability.\n\n## 1. Summary\n\nThe platform processed more documents than in any previous quarter while keeping the failure rate below the agreed service level.\n\n- Processed 1.2 million pages across all tenants\n- Median time to first result fell to 4.1 seconds\n- Two critical incidents were resolved within the target window\n- Storage costs decreased by 12 percent after lifecycle rules\n\n## 2. Processing volume\n\n### 2.1 Documents by type\n\n| Type | Documents | Pages | Avg time (s) |\n|---|---|---|---|\n| PDF (digital) | 182,400 | 951,220 | 0.8 |\n| PDF (scanned) | 41,730 | 228,915 | 38.2 |\n| Images | 65,110 | 65,110 | 1.4 |\n| Word | 22,905 | 110,340 | 0.3 |\n| Spreadsheets | 8,412 | 20,101 | 0.5 |\n| Email | 15,066 | 15,066 | 0.2 |\n\nScanned PDFs remain the most expensive category because every page requires OCR.\n\n### 2.2 Regional teams\n\n| Region | Lead | Headcount | Budget (USD) |\n|---|---|---|---|\n| North America | A. Johnson | 14 | 1,240,000 |\n| Latin America | M. Hernández | 9 | 610,000 |\n| Europe | K. Müller | 11 | 980,000 |\n| Asia Pacific | S. Tanaka | 7 | 540,000 |\n\n## 3. Incident log\n\nThe following table lists every incident opened during the quarter, ordered by identifier.\n\n| ID | Date | Component | Severity | Resolution |\n|---|---|---|---|---|\n| INC-1001 | 2026-02-08 | Object storage | Low | Replaced disk |\n| INC-1002 | 2026-03-15 | API gateway | Medium | Re-queued jobs |\n| INC-1003 | 2026-04-22 | API gateway | Low | Rotated credentials |\n| INC-1004 | 2026-05-02 | Database | Low | Updated certificate |\n| INC-1005 | 2026-06-09 | Object storage | Critical | Patched parser |\n| INC-1006 | 2026-07-16 | Broker | Critical | Updated certificate |\n| INC-1007 | 2026-08-23 | OCR worker | Critical | Restarted service |\n| INC-1008 | 2026-09-03 | API gateway | Medium | Updated certificate |\n| INC-1009 | 2026-01-10 | OCR worker | High | Patched parser |\n| INC-1010 | 2026-02-17 | Database | High | Replaced disk |\n| INC-1011 | 2026-03-24 | Scheduler | Medium | Updated certificate |\n| INC-1012 | 2026-04-04 | OCR worker | High | Patched parser |\n| INC-1013 | 2026-05-11 | Object storage | Critical | Replaced disk |\n| INC-1014 | 2026-06-18 | API gateway | Low | Re-queued jobs |\n| INC-1015 | 2026-07-25 | Object storage | Medium | Patched parser |\n| INC-1016 | 2026-08-05 | Object storage | Medium | Scaled workers |\n| INC-1017 | 2026-09-12 | Scheduler | High | Replaced disk |\n| INC-1018 | 2026-01-19 | Scheduler | Critical | Re-queued jobs |\n| INC-1019 | 2026-02-26 | Scheduler | Critical | Scaled workers |\n| INC-1020 | 2026-03-06 | Object storage | Critical | Scaled workers |\n| INC-1021 | 2026-04-13 | API gateway | High | Restarted service |\n| INC-1022 | 2026-05-20 | API gateway | Medium | Increased memory limit |\n| INC-1023 | 2026-06-27 | API gateway | Low | Replaced disk |\n| INC-1024 | 2026-07-07 | Database | Critical | Re-queued jobs |\n| INC-1025 | 2026-08-14 | Database | Low | Patched parser |\n| INC-1026 | 2026-09-21 | OCR worker | High | Scaled workers |\n| INC-1027 | 2026-01-01 | API gateway | Critical | Replaced disk |\n| INC-1028 | 2026-02-08 | Database | Low | Rotated credentials |\n| INC-1029 | 2026-03-15 | Database | Low | Increased memory limit |\n| INC-1030 | 2026-04-22 | Broker | High | Patched parser |\n| INC-1031 | 2026-05-02 | Database | Medium | Updated certificate |\n| INC-1032 | 2026-06-09 | Broker | High | Re-queued jobs |\n| INC-1033 | 2026-07-16 | Scheduler | Low | Patched parser |\n| INC-1034 | 2026-08-23 | Object storage | High | Patched parser |\n| INC-1035 | 2026-09-03 | Database | Low | Increased memory limit |\n| INC-1036 | 2026-01-10 | Broker | High | Restarted service |\n| INC-1037 | 2026-02-17 | Scheduler | Low | Restarted service |\n| INC-1038 | 2026-03-24 | OCR worker | Medium | Patched parser |\n| INC-1039 | 2026-04-04 | Object storage | Low | Updated certificate |\n| INC-1040 | 2026-05-11 | Broker | High | Restarted service |\n| INC-1041 | 2026-06-18 | Scheduler | Medium | Rotated credentials |\n| INC-1042 | 2026-07-25 | Database | Low | Patched parser |\n| INC-1043 | 2026-08-05 | API gateway | Medium | Scaled workers |\n| INC-1044 | 2026-09-12 | API gateway | Low | Increased memory limit |\n| INC-1045 | 2026-01-19 | OCR worker | High | Scaled workers |\n| INC-1046 | 2026-02-26 | OCR worker | Critical | Updated certificate |\n| INC-1047 | 2026-03-06 | OCR worker | Critical | Scaled workers |\n| INC-1048 | 2026-04-13 | OCR worker | Medium | Scaled workers |\n| INC-1049 | 2026-05-20 | Scheduler | Medium | Scaled workers |\n| INC-1050 | 2026-06-27 | Object storage | Low | Scaled workers |\n| INC-1051 | 2026-07-07 | Object storage | Low | Increased memory limit |\n| INC-1052 | 2026-08-14 | API gateway | Medium | Re-queued jobs |\n| INC-1053 | 2026-09-21 | Broker | High | Restarted service |\n| INC-1054 | 2026-01-01 | Object storage | High | Scaled workers |\n| INC-1055 | 2026-02-08 | Object storage | Critical | Rotated credentials |\n| INC-1056 | 2026-03-15 | API gateway | High | Replaced disk |\n| INC-1057 | 2026-04-22 | OCR worker | High | Replaced disk |\n| INC-1058 | 2026-05-02 | Object storage | Low | Patched parser |\n| INC-1059 | 2026-06-09 | API gateway | Low | Re-queued jobs |\n| INC-1060 | 2026-07-16 | Scheduler | High | Rotated credentials |\n\n## 4. Next steps\n\n- Split large PDFs into page-range subtasks\n- Offer Markdown and chunked output for retrieval pipelines\n- Add antivirus scanning before processing\n\nThe operations team will review these actions at the next monthly meeting.\n",
+ "plain": "Quarterly Operations Report\nThis report summarizes the document processing platform during the third quarter. It covers volume, regional teams and the incidents that affected availability.\n1. Summary\nThe platform processed more documents than in any previous quarter while keeping the failure rate below the agreed service level.\nProcessed 1.2 million pages across all tenants\nMedian time to first result fell to 4.1 seconds\nTwo critical incidents were resolved within the target window\nStorage costs decreased by 12 percent after lifecycle rules\n2. Processing volume\n2.1 Documents by type\nType Documents Pages Avg time (s)\nPDF (digital) 182,400 951,220 0.8\nPDF (scanned) 41,730 228,915 38.2\nImages 65,110 65,110 1.4\nWord 22,905 110,340 0.3\nSpreadsheets 8,412 20,101 0.5\nEmail 15,066 15,066 0.2\nScanned PDFs remain the most expensive category because every page requires OCR.\n2.2 Regional teams\nRegion Lead Headcount Budget (USD)\nNorth America A. Johnson 14 1,240,000\nLatin America M. Hernández 9 610,000\nEurope K. Müller 11 980,000\nAsia Pacific S. Tanaka 7 540,000\n3. Incident log\nThe following table lists every incident opened during the quarter, ordered by identifier.\nID Date Component Severity Resolution\nINC-1001 2026-02-08 Object storage Low Replaced disk\nINC-1002 2026-03-15 API gateway Medium Re-queued jobs\nINC-1003 2026-04-22 API gateway Low Rotated credentials\nINC-1004 2026-05-02 Database Low Updated certificate\nINC-1005 2026-06-09 Object storage Critical Patched parser\nINC-1006 2026-07-16 Broker Critical Updated certificate\nINC-1007 2026-08-23 OCR worker Critical Restarted service\nINC-1008 2026-09-03 API gateway Medium Updated certificate\nINC-1009 2026-01-10 OCR worker High Patched parser\nINC-1010 2026-02-17 Database High Replaced disk\nINC-1011 2026-03-24 Scheduler Medium Updated certificate\nINC-1012 2026-04-04 OCR worker High Patched parser\nINC-1013 2026-05-11 Object storage Critical Replaced disk\nINC-1014 2026-06-18 API gateway Low Re-queued jobs\nINC-1015 2026-07-25 Object storage Medium Patched parser\nINC-1016 2026-08-05 Object storage Medium Scaled workers\nINC-1017 2026-09-12 Scheduler High Replaced disk\nINC-1018 2026-01-19 Scheduler Critical Re-queued jobs\nINC-1019 2026-02-26 Scheduler Critical Scaled workers\nINC-1020 2026-03-06 Object storage Critical Scaled workers\nINC-1021 2026-04-13 API gateway High Restarted service\nINC-1022 2026-05-20 API gateway Medium Increased memory limit\nINC-1023 2026-06-27 API gateway Low Replaced disk\nINC-1024 2026-07-07 Database Critical Re-queued jobs\nINC-1025 2026-08-14 Database Low Patched parser\nINC-1026 2026-09-21 OCR worker High Scaled workers\nINC-1027 2026-01-01 API gateway Critical Replaced disk\nINC-1028 2026-02-08 Database Low Rotated credentials\nINC-1029 2026-03-15 Database Low Increased memory limit\nINC-1030 2026-04-22 Broker High Patched parser\nINC-1031 2026-05-02 Database Medium Updated certificate\nINC-1032 2026-06-09 Broker High Re-queued jobs\nINC-1033 2026-07-16 Scheduler Low Patched parser\nINC-1034 2026-08-23 Object storage High Patched parser\nINC-1035 2026-09-03 Database Low Increased memory limit\nINC-1036 2026-01-10 Broker High Restarted service\nINC-1037 2026-02-17 Scheduler Low Restarted service\nINC-1038 2026-03-24 OCR worker Medium Patched parser\nINC-1039 2026-04-04 Object storage Low Updated certificate\nINC-1040 2026-05-11 Broker High Restarted service\nINC-1041 2026-06-18 Scheduler Medium Rotated credentials\nINC-1042 2026-07-25 Database Low Patched parser\nINC-1043 2026-08-05 API gateway Medium Scaled workers\nINC-1044 2026-09-12 API gateway Low Increased memory limit\nINC-1045 2026-01-19 OCR worker High Scaled workers\nINC-1046 2026-02-26 OCR worker Critical Updated certificate\nINC-1047 2026-03-06 OCR worker Critical Scaled workers\nINC-1048 2026-04-13 OCR worker Medium Scaled workers\nINC-1049 2026-05-20 Scheduler Medium Scaled workers\nINC-1050 2026-06-27 Object storage Low Scaled workers\nINC-1051 2026-07-07 Object storage Low Increased memory limit\nINC-1052 2026-08-14 API gateway Medium Re-queued jobs\nINC-1053 2026-09-21 Broker High Restarted service\nINC-1054 2026-01-01 Object storage High Scaled workers\nINC-1055 2026-02-08 Object storage Critical Rotated credentials\nINC-1056 2026-03-15 API gateway High Replaced disk\nINC-1057 2026-04-22 OCR worker High Replaced disk\nINC-1058 2026-05-02 Object storage Low Patched parser\nINC-1059 2026-06-09 API gateway Low Re-queued jobs\nINC-1060 2026-07-16 Scheduler High Rotated credentials\n4. Next steps\nSplit large PDFs into page-range subtasks\nOffer Markdown and chunked output for retrieval pipelines\nAdd antivirus scanning before processing\nThe operations team will review these actions at the next monthly meeting.",
+ "headings": [
+  [
+   1,
+   "Quarterly Operations Report"
+  ],
+  [
+   2,
+   "1. Summary"
+  ],
+  [
+   2,
+   "2. Processing volume"
+  ],
+  [
+   3,
+   "2.1 Documents by type"
+  ],
+  [
+   3,
+   "2.2 Regional teams"
+  ],
+  [
+   2,
+   "3. Incident log"
+  ],
+  [
+   2,
+   "4. Next steps"
+  ]
+ ],
+ "list_items": [
+  "Processed 1.2 million pages across all tenants",
+  "Median time to first result fell to 4.1 seconds",
+  "Two critical incidents were resolved within the target window",
+  "Storage costs decreased by 12 percent after lifecycle rules",
+  "Split large PDFs into page-range subtasks",
+  "Offer Markdown and chunked output for retrieval pipelines",
+  "Add antivirus scanning before processing"
+ ],
+ "tables": [
+  [
+   [
+    "Type",
+    "Documents",
+    "Pages",
+    "Avg time (s)"
+   ],
+   [
+    "PDF (digital)",
+    "182,400",
+    "951,220",
+    "0.8"
+   ],
+   [
+    "PDF (scanned)",
+    "41,730",
+    "228,915",
+    "38.2"
+   ],
+   [
+    "Images",
+    "65,110",
+    "65,110",
+    "1.4"
+   ],
+   [
+    "Word",
+    "22,905",
+    "110,340",
+    "0.3"
+   ],
+   [
+    "Spreadsheets",
+    "8,412",
+    "20,101",
+    "0.5"
+   ],
+   [
+    "Email",
+    "15,066",
+    "15,066",
+    "0.2"
+   ]
+  ],
+  [
+   [
+    "Region",
+    "Lead",
+    "Headcount",
+    "Budget (USD)"
+   ],
+   [
+    "North America",
+    "A. Johnson",
+    "14",
+    "1,240,000"
+   ],
+   [
+    "Latin America",
+    "M. Hernández",
+    "9",
+    "610,000"
+   ],
+   [
+    "Europe",
+    "K. Müller",
+    "11",
+    "980,000"
+   ],
+   [
+    "Asia Pacific",
+    "S. Tanaka",
+    "7",
+    "540,000"
+   ]
+  ],
+  [
+   [
+    "ID",
+    "Date",
+    "Component",
+    "Severity",
+    "Resolution"
+   ],
+   [
+    "INC-1001",
+    "2026-02-08",
+    "Object storage",
+    "Low",
+    "Replaced disk"
+   ],
+   [
+    "INC-1002",
+    "2026-03-15",
+    "API gateway",
+    "Medium",
+    "Re-queued jobs"
+   ],
+   [
+    "INC-1003",
+    "2026-04-22",
+    "API gateway",
+    "Low",
+    "Rotated credentials"
+   ],
+   [
+    "INC-1004",
+    "2026-05-02",
+    "Database",
+    "Low",
+    "Updated certificate"
+   ],
+   [
+    "INC-1005",
+    "2026-06-09",
+    "Object storage",
+    "Critical",
+    "Patched parser"
+   ],
+   [
+    "INC-1006",
+    "2026-07-16",
+    "Broker",
+    "Critical",
+    "Updated certificate"
+   ],
+   [
+    "INC-1007",
+    "2026-08-23",
+    "OCR worker",
+    "Critical",
+    "Restarted service"
+   ],
+   [
+    "INC-1008",
+    "2026-09-03",
+    "API gateway",
+    "Medium",
+    "Updated certificate"
+   ],
+   [
+    "INC-1009",
+    "2026-01-10",
+    "OCR worker",
+    "High",
+    "Patched parser"
+   ],
+   [
+    "INC-1010",
+    "2026-02-17",
+    "Database",
+    "High",
+    "Replaced disk"
+   ],
+   [
+    "INC-1011",
+    "2026-03-24",
+    "Scheduler",
+    "Medium",
+    "Updated certificate"
+   ],
+   [
+    "INC-1012",
+    "2026-04-04",
+    "OCR worker",
+    "High",
+    "Patched parser"
+   ],
+   [
+    "INC-1013",
+    "2026-05-11",
+    "Object storage",
+    "Critical",
+    "Replaced disk"
+   ],
+   [
+    "INC-1014",
+    "2026-06-18",
+    "API gateway",
+    "Low",
+    "Re-queued jobs"
+   ],
+   [
+    "INC-1015",
+    "2026-07-25",
+    "Object storage",
+    "Medium",
+    "Patched parser"
+   ],
+   [
+    "INC-1016",
+    "2026-08-05",
+    "Object storage",
+    "Medium",
+    "Scaled workers"
+   ],
+   [
+    "INC-1017",
+    "2026-09-12",
+    "Scheduler",
+    "High",
+    "Replaced disk"
+   ],
+   [
+    "INC-1018",
+    "2026-01-19",
+    "Scheduler",
+    "Critical",
+    "Re-queued jobs"
+   ],
+   [
+    "INC-1019",
+    "2026-02-26",
+    "Scheduler",
+    "Critical",
+    "Scaled workers"
+   ],
+   [
+    "INC-1020",
+    "2026-03-06",
+    "Object storage",
+    "Critical",
+    "Scaled workers"
+   ],
+   [
+    "INC-1021",
+    "2026-04-13",
+    "API gateway",
+    "High",
+    "Restarted service"
+   ],
+   [
+    "INC-1022",
+    "2026-05-20",
+    "API gateway",
+    "Medium",
+    "Increased memory limit"
+   ],
+   [
+    "INC-1023",
+    "2026-06-27",
+    "API gateway",
+    "Low",
+    "Replaced disk"
+   ],
+   [
+    "INC-1024",
+    "2026-07-07",
+    "Database",
+    "Critical",
+    "Re-queued jobs"
+   ],
+   [
+    "INC-1025",
+    "2026-08-14",
+    "Database",
+    "Low",
+    "Patched parser"
+   ],
+   [
+    "INC-1026",
+    "2026-09-21",
+    "OCR worker",
+    "High",
+    "Scaled workers"
+   ],
+   [
+    "INC-1027",
+    "2026-01-01",
+    "API gateway",
+    "Critical",
+    "Replaced disk"
+   ],
+   [
+    "INC-1028",
+    "2026-02-08",
+    "Database",
+    "Low",
+    "Rotated credentials"
+   ],
+   [
+    "INC-1029",
+    "2026-03-15",
+    "Database",
+    "Low",
+    "Increased memory limit"
+   ],
+   [
+    "INC-1030",
+    "2026-04-22",
+    "Broker",
+    "High",
+    "Patched parser"
+   ],
+   [
+    "INC-1031",
+    "2026-05-02",
+    "Database",
+    "Medium",
+    "Updated certificate"
+   ],
+   [
+    "INC-1032",
+    "2026-06-09",
+    "Broker",
+    "High",
+    "Re-queued jobs"
+   ],
+   [
+    "INC-1033",
+    "2026-07-16",
+    "Scheduler",
+    "Low",
+    "Patched parser"
+   ],
+   [
+    "INC-1034",
+    "2026-08-23",
+    "Object storage",
+    "High",
+    "Patched parser"
+   ],
+   [
+    "INC-1035",
+    "2026-09-03",
+    "Database",
+    "Low",
+    "Increased memory limit"
+   ],
+   [
+    "INC-1036",
+    "2026-01-10",
+    "Broker",
+    "High",
+    "Restarted service"
+   ],
+   [
+    "INC-1037",
+    "2026-02-17",
+    "Scheduler",
+    "Low",
+    "Restarted service"
+   ],
+   [
+    "INC-1038",
+    "2026-03-24",
+    "OCR worker",
+    "Medium",
+    "Patched parser"
+   ],
+   [
+    "INC-1039",
+    "2026-04-04",
+    "Object storage",
+    "Low",
+    "Updated certificate"
+   ],
+   [
+    "INC-1040",
+    "2026-05-11",
+    "Broker",
+    "High",
+    "Restarted service"
+   ],
+   [
+    "INC-1041",
+    "2026-06-18",
+    "Scheduler",
+    "Medium",
+    "Rotated credentials"
+   ],
+   [
+    "INC-1042",
+    "2026-07-25",
+    "Database",
+    "Low",
+    "Patched parser"
+   ],
+   [
+    "INC-1043",
+    "2026-08-05",
+    "API gateway",
+    "Medium",
+    "Scaled workers"
+   ],
+   [
+    "INC-1044",
+    "2026-09-12",
+    "API gateway",
+    "Low",
+    "Increased memory limit"
+   ],
+   [
+    "INC-1045",
+    "2026-01-19",
+    "OCR worker",
+    "High",
+    "Scaled workers"
+   ],
+   [
+    "INC-1046",
+    "2026-02-26",
+    "OCR worker",
+    "Critical",
+    "Updated certificate"
+   ],
+   [
+    "INC-1047",
+    "2026-03-06",
+    "OCR worker",
+    "Critical",
+    "Scaled workers"
+   ],
+   [
+    "INC-1048",
+    "2026-04-13",
+    "OCR worker",
+    "Medium",
+    "Scaled workers"
+   ],
+   [
+    "INC-1049",
+    "2026-05-20",
+    "Scheduler",
+    "Medium",
+    "Scaled workers"
+   ],
+   [
+    "INC-1050",
+    "2026-06-27",
+    "Object storage",
+    "Low",
+    "Scaled workers"
+   ],
+   [
+    "INC-1051",
+    "2026-07-07",
+    "Object storage",
+    "Low",
+    "Increased memory limit"
+   ],
+   [
+    "INC-1052",
+    "2026-08-14",
+    "API gateway",
+    "Medium",
+    "Re-queued jobs"
+   ],
+   [
+    "INC-1053",
+    "2026-09-21",
+    "Broker",
+    "High",
+    "Restarted service"
+   ],
+   [
+    "INC-1054",
+    "2026-01-01",
+    "Object storage",
+    "High",
+    "Scaled workers"
+   ],
+   [
+    "INC-1055",
+    "2026-02-08",
+    "Object storage",
+    "Critical",
+    "Rotated credentials"
+   ],
+   [
+    "INC-1056",
+    "2026-03-15",
+    "API gateway",
+    "High",
+    "Replaced disk"
+   ],
+   [
+    "INC-1057",
+    "2026-04-22",
+    "OCR worker",
+    "High",
+    "Replaced disk"
+   ],
+   [
+    "INC-1058",
+    "2026-05-02",
+    "Object storage",
+    "Low",
+    "Patched parser"
+   ],
+   [
+    "INC-1059",
+    "2026-06-09",
+    "API gateway",
+    "Low",
+    "Re-queued jobs"
+   ],
+   [
+    "INC-1060",
+    "2026-07-16",
+    "Scheduler",
+    "High",
+    "Rotated credentials"
+   ]
+  ]
+ ]
+}

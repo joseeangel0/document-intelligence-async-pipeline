@@ -1,0 +1,11 @@
+INVOICE / FACTURA No. INV-96160
+Date: 13/03/2024   Due: 13/04/2024
+Bill to: Comercializadora del Sureste S.A. de C.V.
+Email: cuentas.por.pagar@sureste.com.mx   Tel: +52 999 123 4567
+Consulting services (April)   12   $85.00   $1,020.00
+Data migration fee   1   $780.00   $780.00
+USB-C docking station   2   $139.90   $279.80
+Soporte técnico prioritario   5   $64.75   $323.75
+Subtotal: $2,403.55
+IVA 16%: $384.57
+Total: $2,788.12 MXN

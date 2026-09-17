@@ -1,0 +1,3 @@
+Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más documentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el trabajo para procesarlo después.
+Optical character recognition converts images of text into machine readable characters. Accuracy depends on resolution, contrast, skew and noise, so preprocessing often matters as much as the model.
+La facturación electrónica exige que cada comprobante incluya el RFC del emisor, la fecha de expedición, el régimen fiscal y el uso del CFDI. Los errores más comunes están en el código postal.

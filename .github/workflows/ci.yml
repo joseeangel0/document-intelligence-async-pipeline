@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Build, unit, integration & chaos (x86_64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker compose build
+
+      - name: Unit tests
+        run: docker compose run --rm --no-deps api pytest -q
+
+      - name: Start the stack (single command)
+        run: docker compose up -d --wait --wait-timeout 300
+
+      - name: Integration tests (public API, every format, errors, cache, cancel/retry, webhook)
+        run: docker compose --profile test run --rm tests
+
+      - name: Chaos tests (failure injection)
+        run: >
+          python3 scripts/chaos_test.py rejected_inputs worker_kill broker_data_loss broker_down_on_upload
+          storage_down_during_processing database_down document_missing processing_timeout queue_expiry
+
+      - name: Load test (burst)
+        run: python3 scripts/load_test.py --scale 0.5 --concurrency 8
+
+      - name: Service logs on failure
+        if: failure()
+        run: docker compose logs --tail 200
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: docs/*_results.md

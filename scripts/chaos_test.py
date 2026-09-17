@@ -247,6 +247,110 @@ def rejected_inputs() -> dict:
     }
 
 
+def poison_pill() -> dict:
+    """A document whose processing kills the worker every time must end FAILED after max attempts, not loop forever."""
+    _, j = upload(SAMPLES / "scanned_report_30p.pdf")
+    kills = 0
+    for attempt in (1, 2, 3):
+        running = wait_for(j["id"], lambda s, a=attempt: s["status"] == "PROCESSING" and s["attempts"] == a
+                           and s["progress"] > 8, timeout=240)
+        log(f"attempt {attempt} at {running['progress']:.0f}%: SIGKILL worker-heavy")
+        compose("kill", "-s", "SIGKILL", "worker-heavy")
+        kills += 1
+        time.sleep(2)
+        compose("start", "worker-heavy")
+    final = wait_terminal(j["id"], timeout=300)
+    ev = events(j["id"])
+    return {
+        "expect": "after 3 crashed attempts the job ends FAILED WORKER_LOST with an explanation",
+        "ok": final["status"] == "FAILED" and final["error"]["code"] == "WORKER_LOST" and ev.count("worker_lost") == 2,
+        "observed": f"{kills} kills → {final['status']} {final['error'] and final['error']['code']} after "
+                    f"{final['attempts']} attempts: {(final['error'] or {}).get('message', '')[:120]}",
+    }
+
+
+def processing_timeout() -> dict:
+    """A job exceeding the processing time limit ends FAILED TIMEOUT (worker started with a 5 s soft limit)."""
+    compose("stop", "worker-heavy")
+    name = "docintel-chaos-timeout-worker"
+    subprocess.run(["docker", "rm", "-f", name], capture_output=True)
+    compose("run", "-d", "--no-deps", "--name", name, "-e", "JOB_SOFT_TIME_LIMIT_S=5", "-e", "JOB_HARD_TIME_LIMIT_S=20",
+            "worker-heavy")
+    try:
+        _, j = upload(SAMPLES / "scanned_report_30p.pdf")
+        final = wait_terminal(j["id"], timeout=180)
+    finally:
+        subprocess.run(["docker", "rm", "-f", name], capture_output=True)
+        compose("start", "worker-heavy")
+    return {
+        "expect": "FAILED TIMEOUT with actionable advice; no retry loop",
+        "ok": final["status"] == "FAILED" and final["error"]["code"] == "TIMEOUT" and final["attempts"] == 1,
+        "observed": f"{final['status']} {final['error'] and final['error']['code']} after {final['duration_s']}s, "
+                    f"attempts {final['attempts']}: {(final['error'] or {}).get('message', '')[:100]}",
+    }
+
+
+def queue_expiry() -> dict:
+    """No worker ever picks the job up: it expires with an explicit error instead of waiting forever."""
+    compose("stop", "worker-light", "worker-heavy")
+    try:
+        _, j = upload(SAMPLES / "readme.md")
+        time.sleep(3)
+        out = compose("run", "--rm", "--no-deps", "-e", "QUEUED_TTL_S=1", "scheduler", "python", "-c",
+                      "from app.jobs import recover_jobs; print(recover_jobs())")
+        final = job(j["id"])
+    finally:
+        compose("start", "worker-light", "worker-heavy")
+    return {
+        "expect": "QUEUED job older than the queue TTL → FAILED EXPIRED",
+        "ok": final["status"] == "FAILED" and final["error"]["code"] == "EXPIRED",
+        "observed": f"sweep {out.strip().splitlines()[-1] if out.strip() else ''} → {final['status']} "
+                    f"{final['error'] and final['error']['code']}",
+    }
+
+
+def cancel_while_worker_dead() -> dict:
+    """User cancels a running job whose worker has just died: it must end CANCELLED (not re-queued forever)."""
+    _, j = upload(SAMPLES / "scanned_report_30p.pdf")
+    wait_for(j["id"], lambda s: s["status"] == "PROCESSING" and s["progress"] > 8, timeout=180)
+    compose("kill", "-s", "SIGKILL", "worker-heavy")
+    status, _ = request("POST", f"/v1/jobs/{j['id']}/cancel")
+    log(f"worker killed, cancel requested (HTTP {status}); worker stays down until the sweeper decides")
+    try:
+        final = wait_terminal(j["id"], timeout=180)
+    finally:
+        compose("start", "worker-heavy")
+    return {
+        "expect": "CANCELLED by the sweeper once the heartbeat is stale (no re-queue)",
+        "ok": final["status"] == "CANCELLED" and final["attempts"] == 1,
+        "observed": f"{final['status']} (attempts {final['attempts']}); events: {' → '.join(events(j['id']))}",
+    }
+
+
+def document_missing() -> dict:
+    """The stored file disappears (retention policy / manual deletion) before processing: non-retryable failure."""
+    compose("stop", "worker-light")
+    try:
+        content = f"document that will vanish {uuid.uuid4()}".encode()
+        path = ROOT / "docs" / ".vanishing.txt"
+        path.parent.mkdir(exist_ok=True)
+        path.write_bytes(content)
+        _, j = upload(path)
+        path.unlink()
+        sha = j["document"]["sha256"]
+        compose("exec", "-T", "minio", "sh", "-c",
+                f"mc alias set local http://127.0.0.1:9000 docintel docintel-secret >/dev/null && "
+                f"mc rm local/documents/sha256/{sha[:2]}/{sha}.txt")
+    finally:
+        compose("start", "worker-light")
+    final = wait_terminal(j["id"], timeout=120)
+    return {
+        "expect": "FAILED DOCUMENT_MISSING on the first attempt (retrying cannot help)",
+        "ok": final["status"] == "FAILED" and final["error"]["code"] == "DOCUMENT_MISSING" and final["attempts"] == 1,
+        "observed": f"{final['status']} {final['error'] and final['error']['code']} (attempts {final['attempts']})",
+    }
+
+
 SCENARIOS = {
     "rejected_inputs": rejected_inputs,
     "worker_kill": worker_kill,
@@ -255,6 +359,11 @@ SCENARIOS = {
     "broker_down_on_upload": broker_down_on_upload,
     "storage_down_during_processing": storage_down_during_processing,
     "database_down": database_down,
+    "document_missing": document_missing,
+    "cancel_while_worker_dead": cancel_while_worker_dead,
+    "queue_expiry": queue_expiry,
+    "processing_timeout": processing_timeout,
+    "poison_pill": poison_pill,
     "stack_kill": stack_kill,
 }
 

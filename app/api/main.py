@@ -26,7 +26,7 @@ from app.api import stats as stats_module
 from app.api.schemas import JobEventOut, JobList, JobOut, ResultOut, event_to_out, job_to_out
 from app.config import settings
 from app.db import ACTIVE_STATUSES, Document, Job, JobStatus, add_event, init_db, session_scope, utcnow
-from app.extraction.formats import UnsupportedFormatError, detect_format, supported_formats_summary
+from app.extraction.formats import UnsupportedFormatError, detect_format, route_queue, supported_formats_summary
 from app.extraction.ocr import ENGINE_DESCRIPTIONS, available_engines, installed_languages
 
 log = logging.getLogger("docintel.api")
@@ -89,6 +89,16 @@ async def db_down_handler(_: Request, exc: OperationalError):
     )
 
 
+@app.exception_handler(storage.ObjectMissingError)
+async def object_missing_handler(_: Request, exc: storage.ObjectMissingError):
+    return JSONResponse(
+        status_code=410,
+        content={"error": {"code": "OUTPUT_GONE",
+                           "message": "The stored file for this job no longer exists (deleted by retention?). "
+                                      "Upload the document again."}},
+    )
+
+
 @app.exception_handler(storage.StorageError)
 async def storage_down_handler(_: Request, exc: storage.StorageError):
     log.error("object storage unavailable: %s", exc)
@@ -103,7 +113,7 @@ async def storage_down_handler(_: Request, exc: storage.StorageError):
 # --------------------------------------------------------------------------- upload
 
 
-def _options(language, ocr_mode, ocr_engine, extract_entities) -> dict:
+def _options(language, ocr_mode, ocr_engine, extract_entities, chunk_size_tokens, chunk_overlap_tokens, pipeline) -> dict:
     language = (language or settings.default_ocr_languages).strip().replace(",", "+")
     engine = ocr_engine or settings.default_ocr_engine
     if engine not in available_engines():
@@ -113,7 +123,10 @@ def _options(language, ocr_mode, ocr_engine, extract_entities) -> dict:
     if missing:
         raise ApiError(422, "INVALID_LANGUAGE", f"OCR language(s) not available: {', '.join(missing)}.",
                        available=sorted(installed))
-    return {"language": language, "ocr_mode": ocr_mode, "ocr_engine": engine, "extract_entities": extract_entities}
+    if chunk_overlap_tokens >= chunk_size_tokens:
+        raise ApiError(422, "INVALID_CHUNKING", "chunk_overlap_tokens must be smaller than chunk_size_tokens.")
+    return {"language": language, "ocr_mode": ocr_mode, "ocr_engine": engine, "extract_entities": extract_entities,
+            "chunk_size_tokens": chunk_size_tokens, "chunk_overlap_tokens": chunk_overlap_tokens, "pipeline": pipeline}
 
 
 def _spool(upload: UploadFile) -> tuple[str, str, int]:
@@ -149,6 +162,11 @@ def upload_document(
         "auto", description="auto: OCR only pages without a text layer; force: OCR everything; off: never OCR"),
     ocr_engine: str | None = Form(None, description="OCR engine (see GET /v1/formats)"),
     extract_entities: bool = Form(True, description="Extract emails, URLs, dates, amounts and phones as metadata"),
+    pipeline: Literal["standard", "layout"] = Form(
+        "standard", description="standard: fast parsers + OCR. layout: Docling layout/table models for PDFs and images "
+        "(best for scanned tables and complex layouts; ~5 s/page; needs the 'layout' worker profile)"),
+    chunk_size_tokens: int = Form(512, ge=64, le=4096, description="Target size of retrieval chunks (tokens, cl100k)"),
+    chunk_overlap_tokens: int = Form(64, ge=0, le=1024, description="Tokens repeated between consecutive prose chunks"),
     force: bool = Form(False, description="Re-process even if the same file was already processed with the same options"),
     client_reference: str | None = Form(None, max_length=256, description="Your own id, returned with the job"),
     callback_url: str | None = Form(None, max_length=1024, description="URL to POST the job to when it finishes"),
@@ -156,7 +174,8 @@ def upload_document(
     filename = os.path.basename(file.filename or "upload")[: settings.max_filename_length]
     if callback_url and urlparse(callback_url).scheme not in ("http", "https"):
         raise ApiError(422, "INVALID_CALLBACK_URL", "callback_url must be an http(s) URL.")
-    options = _options(language, ocr_mode, ocr_engine, extract_entities)
+    options = _options(language, ocr_mode, ocr_engine, extract_entities, chunk_size_tokens, chunk_overlap_tokens,
+                       pipeline)
 
     path, sha256, size = _spool(file)
     try:
@@ -172,6 +191,13 @@ def upload_document(
                 supported_extensions=sorted({e for f in supported_formats_summary()["formats"] for e in f["extensions"]}),
             ) from exc
 
+        queue = route_queue(fmt, path, options)
+        if pipeline == "layout" and queue != "layout":
+            fmt.warnings.append(f"pipeline=layout applies to PDFs and images; this {fmt.kind} file uses the standard "
+                                "pipeline (its structure is already read natively).")
+        elif queue == "layout" and not any("layout" in w["queues"] for w in stats_module.workers_info()):
+            fmt.warnings.append("No high-fidelity layout workers are online, so the job will wait in the 'layout' "
+                                "queue. Start them with: docker compose --profile layout up -d")
         key = storage.document_key(sha256, fmt.extension)
         if not storage.exists(settings.s3_bucket_documents, key):
             storage.upload_file(path, settings.s3_bucket_documents, key, fmt.mime,
@@ -187,7 +213,7 @@ def upload_document(
         session.add(document)
         session.flush()
         job = Job(
-            document_id=document.id, status=JobStatus.QUEUED, stage="queued", queue=fmt.queue, options=options,
+            document_id=document.id, status=JobStatus.QUEUED, stage="queued", queue=queue, options=options,
             client_reference=client_reference, callback_url=callback_url, warnings=list(fmt.warnings),
             max_attempts=settings.max_attempts,
         )
@@ -206,8 +232,9 @@ def upload_document(
             .order_by(Job.finished_at.desc()).limit(1)
         ).first()
         if cached:
-            for attr in ("result_bucket", "result_text_key", "result_json_key", "text_preview", "char_count",
-                         "word_count", "page_count", "metadata_"):
+            for attr in ("result_bucket", "result_text_key", "result_json_key", "result_markdown_key",
+                         "result_chunks_key", "text_preview", "char_count", "word_count", "page_count", "token_count",
+                         "chunk_count", "metadata_"):
                 setattr(job, attr, getattr(cached, attr))
             job.warnings = list(dict.fromkeys((job.warnings or []) + (cached.warnings or [])))
             job.status, job.stage, job.progress = JobStatus.SUCCEEDED, "done", 100.0
@@ -306,7 +333,8 @@ def _require_result(job: Job) -> None:
 
 
 @app.get("/v1/jobs/{job_id}/result", response_model=ResultOut, tags=["results"])
-def get_result(job_id: uuid.UUID, include_text: bool = True, include_pages: bool = True):
+def get_result(job_id: uuid.UUID, include_text: bool = True, include_pages: bool = True, include_chunks: bool = False):
+    """Everything in one JSON document: text, Markdown, per-page details, metadata and (optionally) chunks."""
     with session_scope() as session:
         job = _get_job(session, job_id)
         _require_result(job)
@@ -315,24 +343,59 @@ def get_result(job_id: uuid.UUID, include_text: bool = True, include_pages: bool
     return ResultOut(
         job_id=job_id,
         text=payload["text"] if include_text else "",
-        pages=[p if include_text else {k: v for k, v in p.items() if k != "text"} for p in payload["pages"]]
-        if include_pages else [],
+        markdown=payload.get("markdown", "") if include_text else "",
+        chunks=payload.get("chunks", []) if include_chunks else [],
+        pages=[p if include_text else {k: v for k, v in p.items() if k not in ("text", "markdown")}
+               for p in payload["pages"]] if include_pages else [],
         metadata=payload["metadata"],
         warnings=payload["warnings"],
     )
 
 
-@app.get("/v1/jobs/{job_id}/text", response_class=PlainTextResponse, tags=["results"])
-def get_text(job_id: uuid.UUID, download: bool = False):
+def _stream_result(job_id: uuid.UUID, attr: str, media_type: str, suffix: str, download: bool):
     with session_scope() as session:
         job = _get_job(session, job_id)
         _require_result(job)
-        bucket, key, name = job.result_bucket, job.result_text_key, job.document.original_filename
+        key = getattr(job, attr)
+        if not key:
+            raise ApiError(404, "OUTPUT_NOT_AVAILABLE",
+                           "This output was not generated for this job (it was processed by an older version). "
+                           "Retry the job to generate it.")
+        bucket, name = job.result_bucket, job.document.original_filename
     body, length, _ = storage.get_object_stream(bucket, key)
     headers = {"Content-Length": str(length)} if length is not None else {}
     if download:
-        headers["Content-Disposition"] = f'attachment; filename="{Path(name).stem}.txt"'
-    return StreamingResponse(body.iter_chunks(), media_type="text/plain; charset=utf-8", headers=headers)
+        safe = Path(name).stem.encode("ascii", "ignore").decode().replace('"', "") or "document"
+        headers["Content-Disposition"] = f'attachment; filename="{safe}{suffix}"'
+    return StreamingResponse(body.iter_chunks(), media_type=media_type, headers=headers)
+
+
+@app.get("/v1/jobs/{job_id}/text", response_class=PlainTextResponse, tags=["results"])
+def get_text(job_id: uuid.UUID, download: bool = False):
+    """Plain text; pages separated by form feed (\\f)."""
+    return _stream_result(job_id, "result_text_key", "text/plain; charset=utf-8", ".txt", download)
+
+
+@app.get("/v1/jobs/{job_id}/markdown", response_class=PlainTextResponse, tags=["results"])
+def get_markdown(job_id: uuid.UUID, download: bool = False):
+    """LLM-ready Markdown (headings, lists, tables). Multi-page documents contain `<!-- page: N -->` markers."""
+    return _stream_result(job_id, "result_markdown_key", "text/markdown; charset=utf-8", ".md", download)
+
+
+@app.get("/v1/jobs/{job_id}/chunks", tags=["results"])
+def get_chunks(job_id: uuid.UUID, format: Literal["json", "jsonl"] = "json", download: bool = False):
+    """Retrieval chunks with provenance (page range, heading path, char offsets, token count)."""
+    if format == "jsonl":
+        return _stream_result(job_id, "result_chunks_key", "application/x-ndjson", ".chunks.jsonl", download)
+    with session_scope() as session:
+        job = _get_job(session, job_id)
+        _require_result(job)
+        if not job.result_chunks_key:
+            raise ApiError(404, "OUTPUT_NOT_AVAILABLE", "Chunks were not generated for this job; retry it.")
+        bucket, key = job.result_bucket, job.result_chunks_key
+    lines = storage.get_bytes(bucket, key).decode("utf-8").splitlines()
+    chunks = [json.loads(line) for line in lines if line.strip()]
+    return {"job_id": str(job_id), "count": len(chunks), "chunks": chunks}
 
 
 @app.get("/v1/jobs/{job_id}/document", tags=["results"])
@@ -393,6 +456,12 @@ def formats():
         "default_engine": settings.default_ocr_engine,
         "default_languages": settings.default_ocr_languages,
         "modes": ["auto", "force", "off"],
+    }
+    summary["pipelines"] = {
+        "standard": {"description": "Native parsers, PyMuPDF layout analysis and OCR (default).", "online": True},
+        "layout": {"description": "Docling layout + TableFormer + RapidOCR for PDFs and images: rebuilds tables in "
+                                  "scans and photos; ~5 s/page.",
+                   "online": any("layout" in w["queues"] for w in stats_module.workers_info())},
     }
     return summary
 

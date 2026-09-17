@@ -1,0 +1,81 @@
+{
+ "markdown": "# Informe de digitalización documental\n\nEste informe describe el proyecto de digitalización de expedientes de la universidad y los resultados obtenidos durante el primer semestre.\n\n## Resumen ejecutivo\n\nSe digitalizaron más de cuarenta mil expedientes con una tasa de error menor al dos por ciento.\n\n- Reducción del tiempo de búsqueda de días a minutos\n- Expedientes disponibles para asistentes basados en IA\n- Cumplimiento de la política de protección de datos\n\n## Metodología\n\nCada expediente se escaneó a doscientos puntos por pulgada. Las páginas con baja calidad se volvieron a capturar antes de continuar con el reconocimiento óptico de caracteres.\n\nEl texto extraído se revisó mediante muestreo aleatorio. Los revisores compararon cada página con el documento original y registraron las diferencias encontradas en una bitácora compartida.\n\n### Muestreo\n\nSe eligió una muestra estratificada por área académica para que cada facultad tuviera la misma representación en la evaluación de calidad.\n\n- Tamaño de muestra de mil doscientas páginas\n- Nivel de confianza del noventa y cinco por ciento\n- Revisión doble en páginas con tablas\n\nLas discrepancias se clasificaron como omisiones, sustituciones o errores de orden de lectura, lo que permitió priorizar las mejoras del proceso de captura en las siguientes semanas.\n\n### Validación\n\nUn segundo equipo verificó de manera independiente una submuestra de doscientas páginas. La concordancia entre ambos equipos superó el noventa y ocho por ciento en todas las facultades.\n\nCuando los revisores no coincidían, un especialista en archivo tomaba la decisión final y la registraba junto con una breve justificación que después sirvió para capacitar al personal.\n\nLas páginas con sellos, firmas o anotaciones manuscritas se marcaron para revisión manual, ya que el reconocimiento automático no garantiza una lectura confiable de esos elementos.\n\n- Registro de cada decisión en la bitácora\n- Capacitación mensual del personal de captura\n- Revisión trimestral de los criterios de calidad\n\nCon estos controles, el proceso quedó documentado y puede repetirse en otras dependencias de la universidad que deseen digitalizar sus archivos históricos.\n\nEl equipo recomienda mantener el mismo procedimiento para los expedientes que se reciban en el futuro, de modo que toda la colección conserve una calidad homogénea.\n\n## Resultados\n\n| Área | Expedientes | Páginas | Errores |\n|---|---|---|---|\n| Ingeniería | 12,480 | 96,310 | 1.2% |\n| Medicina | 9,125 | 88,904 | 1.9% |\n| Derecho | 7,770 | 61,002 | 0.8% |\n| Arquitectura | 5,310 | 30,447 | 1.5% |\n| Contaduría | 6,915 | 41,218 | 1.1% |\n\nLos errores se concentraron en expedientes antiguos escritos a máquina y con papel deteriorado.\n",
+ "plain": "Informe de digitalización documental\nEste informe describe el proyecto de digitalización de expedientes de la universidad y los resultados obtenidos durante el primer semestre.\nResumen ejecutivo\nSe digitalizaron más de cuarenta mil expedientes con una tasa de error menor al dos por ciento.\nReducción del tiempo de búsqueda de días a minutos\nExpedientes disponibles para asistentes basados en IA\nCumplimiento de la política de protección de datos\nMetodología\nCada expediente se escaneó a doscientos puntos por pulgada. Las páginas con baja calidad se volvieron a capturar antes de continuar con el reconocimiento óptico de caracteres.\nEl texto extraído se revisó mediante muestreo aleatorio. Los revisores compararon cada página con el documento original y registraron las diferencias encontradas en una bitácora compartida.\nMuestreo\nSe eligió una muestra estratificada por área académica para que cada facultad tuviera la misma representación en la evaluación de calidad.\nTamaño de muestra de mil doscientas páginas\nNivel de confianza del noventa y cinco por ciento\nRevisión doble en páginas con tablas\nLas discrepancias se clasificaron como omisiones, sustituciones o errores de orden de lectura, lo que permitió priorizar las mejoras del proceso de captura en las siguientes semanas.\nValidación\nUn segundo equipo verificó de manera independiente una submuestra de doscientas páginas. La concordancia entre ambos equipos superó el noventa y ocho por ciento en todas las facultades.\nCuando los revisores no coincidían, un especialista en archivo tomaba la decisión final y la registraba junto con una breve justificación que después sirvió para capacitar al personal.\nLas páginas con sellos, firmas o anotaciones manuscritas se marcaron para revisión manual, ya que el reconocimiento automático no garantiza una lectura confiable de esos elementos.\nRegistro de cada decisión en la bitácora\nCapacitación mensual del personal de captura\nRevisión trimestral de los criterios de calidad\nCon estos controles, el proceso quedó documentado y puede repetirse en otras dependencias de la universidad que deseen digitalizar sus archivos históricos.\nEl equipo recomienda mantener el mismo procedimiento para los expedientes que se reciban en el futuro, de modo que toda la colección conserve una calidad homogénea.\nResultados\nÁrea Expedientes Páginas Errores\nIngeniería 12,480 96,310 1.2%\nMedicina 9,125 88,904 1.9%\nDerecho 7,770 61,002 0.8%\nArquitectura 5,310 30,447 1.5%\nContaduría 6,915 41,218 1.1%\nLos errores se concentraron en expedientes antiguos escritos a máquina y con papel deteriorado.",
+ "headings": [
+  [
+   1,
+   "Informe de digitalización documental"
+  ],
+  [
+   2,
+   "Resumen ejecutivo"
+  ],
+  [
+   2,
+   "Metodología"
+  ],
+  [
+   3,
+   "Muestreo"
+  ],
+  [
+   3,
+   "Validación"
+  ],
+  [
+   2,
+   "Resultados"
+  ]
+ ],
+ "list_items": [
+  "Reducción del tiempo de búsqueda de días a minutos",
+  "Expedientes disponibles para asistentes basados en IA",
+  "Cumplimiento de la política de protección de datos",
+  "Tamaño de muestra de mil doscientas páginas",
+  "Nivel de confianza del noventa y cinco por ciento",
+  "Revisión doble en páginas con tablas",
+  "Registro de cada decisión en la bitácora",
+  "Capacitación mensual del personal de captura",
+  "Revisión trimestral de los criterios de calidad"
+ ],
+ "tables": [
+  [
+   [
+    "Área",
+    "Expedientes",
+    "Páginas",
+    "Errores"
+   ],
+   [
+    "Ingeniería",
+    "12,480",
+    "96,310",
+    "1.2%"
+   ],
+   [
+    "Medicina",
+    "9,125",
+    "88,904",
+    "1.9%"
+   ],
+   [
+    "Derecho",
+    "7,770",
+    "61,002",
+    "0.8%"
+   ],
+   [
+    "Arquitectura",
+    "5,310",
+    "30,447",
+    "1.5%"
+   ],
+   [
+    "Contaduría",
+    "6,915",
+    "41,218",
+    "1.1%"
+   ]
+  ]
+ ]
+}

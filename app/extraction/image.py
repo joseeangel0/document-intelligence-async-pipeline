@@ -100,6 +100,7 @@ def extract_image(path: str, ctx: ExtractionContext) -> ExtractionResult:
             PageResult(
                 number=index + 1,
                 text=result.text,
+                markdown=result.markdown,
                 method=f"ocr:{engine.name}",
                 char_count=len(result.text),
                 ocr_confidence=result.confidence,

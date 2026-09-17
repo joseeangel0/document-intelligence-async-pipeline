@@ -1,0 +1,11 @@
+INVOICE / FACTURA No. INV-79426
+Date: 05/11/2024   Due: 05/12/2024
+Bill to: Comercializadora del Sureste S.A. de C.V.
+Email: cuentas.por.pagar@sureste.com.mx   Tel: +52 999 123 4567
+Licencia de software anual   3   $1,200.50   $3,601.50
+Soporte técnico prioritario   5   $64.75   $323.75
+Consulting services (April)   12   $85.00   $1,020.00
+Capacitación en línea   8   $45.00   $360.00
+Subtotal: $5,305.25
+IVA 16%: $848.84
+Total: $6,154.09 MXN

@@ -40,7 +40,7 @@
   <text class="s" x="40" y="278">Upload UI  (/)</text>
   <text class="s" x="40" y="296">Dashboard (/dashboard)</text>
   <text class="s" x="40" y="314">curl · HTTP clients</text>
-  <text class="s" x="40" y="332">webhook receivers</text>
+  <text class="s" x="40" y="332">RAG / LLM pipelines</text>
 
   <!-- api -->
   <rect class="box" x="220" y="215" width="175" height="150" rx="8"/>
@@ -56,9 +56,9 @@
   <rect class="store" x="445" y="60" width="220" height="120" rx="8"/>
   <text class="t" x="460" y="86">MinIO (S3 API)</text>
   <text class="s" x="460" y="108">documents/sha256/…  raw files</text>
-  <text class="s" x="460" y="126">results/jobs/{id}/text.txt</text>
-  <text class="s" x="460" y="144">results/jobs/{id}/result.json</text>
-  <text class="s" x="460" y="162">heavy payloads live here</text>
+  <text class="s" x="460" y="126">results/…/text.txt · document.md</text>
+  <text class="s" x="460" y="144">results/…/chunks.jsonl · result.json</text>
+  <text class="s" x="460" y="162">heavy payloads + LLM-ready outputs</text>
 
   <rect class="store" x="445" y="230" width="220" height="120" rx="8"/>
   <text class="t" x="460" y="256">PostgreSQL</text>
@@ -69,24 +69,27 @@
 
   <rect class="store" x="445" y="400" width="220" height="120" rx="8"/>
   <text class="t" x="460" y="426">Redis (broker, AOF)</text>
-  <text class="s" x="460" y="448">queue heavy · light · maintenance</text>
+  <text class="s" x="460" y="448">queues heavy · light · layout · maint.</text>
   <text class="s" x="460" y="466">message = claim check</text>
   <text class="s" x="460" y="484">{"job_id": "…"}  (~1 KB)</text>
   <text class="s" x="460" y="502">acks_late · unacked hash</text>
 
   <!-- workers -->
-  <rect class="work" x="760" y="75" width="215" height="110" rx="8"/>
-  <text class="t" x="775" y="101">worker-heavy ×N</text>
-  <text class="s" x="775" y="123">queue: heavy</text>
-  <text class="s" x="775" y="141">PDF (PyMuPDF) · images</text>
-  <text class="s" x="775" y="159">OCR: RapidOCR · Tesseract 5</text>
-  <text class="s" x="775" y="177">2 procs × 2 threads · 4 GB</text>
+  <rect class="work" x="760" y="55" width="215" height="92" rx="8"/>
+  <text class="t" x="775" y="79">worker-heavy ×N</text>
+  <text class="s" x="775" y="99">queue heavy: PDF · images · e-mail</text>
+  <text class="s" x="775" y="116">PyMuPDF layout → Markdown</text>
+  <text class="s" x="775" y="133">OCR: RapidOCR · Tesseract 5</text>
 
-  <rect class="work" x="760" y="215" width="215" height="95" rx="8"/>
-  <text class="t" x="775" y="241">worker-light ×N</text>
-  <text class="s" x="775" y="263">queues: light, maintenance</text>
-  <text class="s" x="775" y="281">txt · html · docx · pptx · xlsx · rtf</text>
-  <text class="s" x="775" y="299">sweeps · webhooks</text>
+  <rect class="work" x="760" y="157" width="215" height="75" rx="8"/>
+  <text class="t" x="775" y="181">worker-light ×N</text>
+  <text class="s" x="775" y="201">queues light, maintenance</text>
+  <text class="s" x="775" y="218">txt · html · docx · pptx · xlsx · rtf</text>
+
+  <rect class="work" x="760" y="242" width="215" height="75" rx="8" stroke-dasharray="5 4"/>
+  <text class="t" x="775" y="266">worker-layout (optional)</text>
+  <text class="s" x="775" y="286">queue layout · profile "layout"</text>
+  <text class="s" x="775" y="303">Docling: tables in scans &amp; photos</text>
 
   <rect class="ops" x="760" y="345" width="215" height="80" rx="8"/>
   <text class="t" x="775" y="371">scheduler (beat)</text>
@@ -99,9 +102,10 @@
   <text class="s" x="775" y="526">:5555</text>
 
   <!-- worker bus -->
-  <line x1="735" y1="120" x2="735" y2="270" stroke="#8cc48c" stroke-width="3"/>
-  <line x1="735" y1="130" x2="760" y2="130" stroke="#8cc48c" stroke-width="3"/>
-  <line x1="735" y1="262" x2="760" y2="262" stroke="#8cc48c" stroke-width="3"/>
+  <line x1="735" y1="100" x2="735" y2="280" stroke="#8cc48c" stroke-width="3"/>
+  <line x1="735" y1="100" x2="760" y2="100" stroke="#8cc48c" stroke-width="3"/>
+  <line x1="735" y1="195" x2="760" y2="195" stroke="#8cc48c" stroke-width="3"/>
+  <line x1="735" y1="280" x2="760" y2="280" stroke="#8cc48c" stroke-width="3"/>
 
   <!-- flows -->
   <path class="flow" d="M170,275 H218"/>

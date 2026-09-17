@@ -39,6 +39,8 @@ class Links(BaseModel):
     events: str
     result: str
     text: str
+    markdown: str
+    chunks: str
     document: str
 
 
@@ -61,6 +63,8 @@ class JobOut(BaseModel):
     char_count: int | None
     word_count: int | None
     page_count: int | None
+    token_count: int | None
+    chunk_count: int | None
     language: dict | None
     cached_from_job_id: UUID | None
     created_at: datetime
@@ -91,6 +95,8 @@ class JobList(BaseModel):
 class ResultOut(BaseModel):
     job_id: UUID
     text: str
+    markdown: str
+    chunks: list[dict[str, Any]]
     pages: list[dict[str, Any]]
     metadata: dict
     warnings: list[str]
@@ -126,6 +132,8 @@ def job_to_out(job: Job) -> JobOut:
         char_count=job.char_count,
         word_count=job.word_count,
         page_count=job.page_count,
+        token_count=job.token_count,
+        chunk_count=job.chunk_count,
         language=(job.metadata_ or {}).get("language"),
         cached_from_job_id=job.cached_from_job_id,
         created_at=job.created_at,
@@ -136,7 +144,7 @@ def job_to_out(job: Job) -> JobOut:
         duration_s=duration,
         queue_wait_s=queue_wait,
         links=Links(self=base, events=f"{base}/events", result=f"{base}/result", text=f"{base}/text",
-                    document=f"{base}/document"),
+                    markdown=f"{base}/markdown", chunks=f"{base}/chunks", document=f"{base}/document"),
     )
 
 

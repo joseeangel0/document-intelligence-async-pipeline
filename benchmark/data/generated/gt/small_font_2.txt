@@ -1,0 +1,3 @@
+Optical character recognition converts images of text into machine readable characters. Accuracy depends on resolution, contrast, skew and noise, so preprocessing often matters as much as the model.
+Our quarterly revenue grew 18.4% year over year, reaching $2.37 million, while operating costs decreased by 6%. The board approved a new hiring plan for the engineering and support teams.
+La inteligencia de documentos combina extracción de texto, reconocimiento óptico de caracteres y análisis de metadatos. Así, un archivo escaneado se convierte en información útil y consultable.

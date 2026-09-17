@@ -1,0 +1,389 @@
+[
+  {
+    "id": "clean_0",
+    "kind": "image",
+    "category": "clean",
+    "path": "data/generated/images/clean_0.png",
+    "gt": "data/generated/gt/clean_0.txt"
+  },
+  {
+    "id": "blur_0",
+    "kind": "image",
+    "category": "blur",
+    "path": "data/generated/images/blur_0.png",
+    "gt": "data/generated/gt/blur_0.txt"
+  },
+  {
+    "id": "noise_0",
+    "kind": "image",
+    "category": "noise",
+    "path": "data/generated/images/noise_0.png",
+    "gt": "data/generated/gt/noise_0.txt"
+  },
+  {
+    "id": "rotated_0",
+    "kind": "image",
+    "category": "rotated",
+    "path": "data/generated/images/rotated_0.png",
+    "gt": "data/generated/gt/rotated_0.txt"
+  },
+  {
+    "id": "lowres_0",
+    "kind": "image",
+    "category": "lowres",
+    "path": "data/generated/images/lowres_0.png",
+    "gt": "data/generated/gt/lowres_0.txt"
+  },
+  {
+    "id": "photo_0",
+    "kind": "image",
+    "category": "photo",
+    "path": "data/generated/images/photo_0.jpg",
+    "gt": "data/generated/gt/photo_0.txt"
+  },
+  {
+    "id": "inverted_0",
+    "kind": "image",
+    "category": "inverted",
+    "path": "data/generated/images/inverted_0.png",
+    "gt": "data/generated/gt/inverted_0.txt"
+  },
+  {
+    "id": "jpeg_q15_0",
+    "kind": "image",
+    "category": "jpeg_q15",
+    "path": "data/generated/images/jpeg_q15_0.jpg",
+    "gt": "data/generated/gt/jpeg_q15_0.txt"
+  },
+  {
+    "id": "clean_1",
+    "kind": "image",
+    "category": "clean",
+    "path": "data/generated/images/clean_1.png",
+    "gt": "data/generated/gt/clean_1.txt"
+  },
+  {
+    "id": "blur_1",
+    "kind": "image",
+    "category": "blur",
+    "path": "data/generated/images/blur_1.png",
+    "gt": "data/generated/gt/blur_1.txt"
+  },
+  {
+    "id": "noise_1",
+    "kind": "image",
+    "category": "noise",
+    "path": "data/generated/images/noise_1.png",
+    "gt": "data/generated/gt/noise_1.txt"
+  },
+  {
+    "id": "rotated_1",
+    "kind": "image",
+    "category": "rotated",
+    "path": "data/generated/images/rotated_1.png",
+    "gt": "data/generated/gt/rotated_1.txt"
+  },
+  {
+    "id": "lowres_1",
+    "kind": "image",
+    "category": "lowres",
+    "path": "data/generated/images/lowres_1.png",
+    "gt": "data/generated/gt/lowres_1.txt"
+  },
+  {
+    "id": "photo_1",
+    "kind": "image",
+    "category": "photo",
+    "path": "data/generated/images/photo_1.jpg",
+    "gt": "data/generated/gt/photo_1.txt"
+  },
+  {
+    "id": "inverted_1",
+    "kind": "image",
+    "category": "inverted",
+    "path": "data/generated/images/inverted_1.png",
+    "gt": "data/generated/gt/inverted_1.txt"
+  },
+  {
+    "id": "jpeg_q15_1",
+    "kind": "image",
+    "category": "jpeg_q15",
+    "path": "data/generated/images/jpeg_q15_1.jpg",
+    "gt": "data/generated/gt/jpeg_q15_1.txt"
+  },
+  {
+    "id": "clean_2",
+    "kind": "image",
+    "category": "clean",
+    "path": "data/generated/images/clean_2.png",
+    "gt": "data/generated/gt/clean_2.txt"
+  },
+  {
+    "id": "blur_2",
+    "kind": "image",
+    "category": "blur",
+    "path": "data/generated/images/blur_2.png",
+    "gt": "data/generated/gt/blur_2.txt"
+  },
+  {
+    "id": "noise_2",
+    "kind": "image",
+    "category": "noise",
+    "path": "data/generated/images/noise_2.png",
+    "gt": "data/generated/gt/noise_2.txt"
+  },
+  {
+    "id": "rotated_2",
+    "kind": "image",
+    "category": "rotated",
+    "path": "data/generated/images/rotated_2.png",
+    "gt": "data/generated/gt/rotated_2.txt"
+  },
+  {
+    "id": "lowres_2",
+    "kind": "image",
+    "category": "lowres",
+    "path": "data/generated/images/lowres_2.png",
+    "gt": "data/generated/gt/lowres_2.txt"
+  },
+  {
+    "id": "photo_2",
+    "kind": "image",
+    "category": "photo",
+    "path": "data/generated/images/photo_2.jpg",
+    "gt": "data/generated/gt/photo_2.txt"
+  },
+  {
+    "id": "inverted_2",
+    "kind": "image",
+    "category": "inverted",
+    "path": "data/generated/images/inverted_2.png",
+    "gt": "data/generated/gt/inverted_2.txt"
+  },
+  {
+    "id": "jpeg_q15_2",
+    "kind": "image",
+    "category": "jpeg_q15",
+    "path": "data/generated/images/jpeg_q15_2.jpg",
+    "gt": "data/generated/gt/jpeg_q15_2.txt"
+  },
+  {
+    "id": "two_column_0",
+    "kind": "image",
+    "category": "two_column",
+    "path": "data/generated/images/two_column_0.png",
+    "gt": "data/generated/gt/two_column_0.txt"
+  },
+  {
+    "id": "small_font_0",
+    "kind": "image",
+    "category": "small_font",
+    "path": "data/generated/images/small_font_0.png",
+    "gt": "data/generated/gt/small_font_0.txt"
+  },
+  {
+    "id": "invoice_0",
+    "kind": "image",
+    "category": "invoice",
+    "path": "data/generated/images/invoice_0.png",
+    "gt": "data/generated/gt/invoice_0.txt"
+  },
+  {
+    "id": "two_column_1",
+    "kind": "image",
+    "category": "two_column",
+    "path": "data/generated/images/two_column_1.png",
+    "gt": "data/generated/gt/two_column_1.txt"
+  },
+  {
+    "id": "small_font_1",
+    "kind": "image",
+    "category": "small_font",
+    "path": "data/generated/images/small_font_1.png",
+    "gt": "data/generated/gt/small_font_1.txt"
+  },
+  {
+    "id": "invoice_1",
+    "kind": "image",
+    "category": "invoice",
+    "path": "data/generated/images/invoice_1.png",
+    "gt": "data/generated/gt/invoice_1.txt"
+  },
+  {
+    "id": "two_column_2",
+    "kind": "image",
+    "category": "two_column",
+    "path": "data/generated/images/two_column_2.png",
+    "gt": "data/generated/gt/two_column_2.txt"
+  },
+  {
+    "id": "small_font_2",
+    "kind": "image",
+    "category": "small_font",
+    "path": "data/generated/images/small_font_2.png",
+    "gt": "data/generated/gt/small_font_2.txt"
+  },
+  {
+    "id": "invoice_2",
+    "kind": "image",
+    "category": "invoice",
+    "path": "data/generated/images/invoice_2.png",
+    "gt": "data/generated/gt/invoice_2.txt"
+  },
+  {
+    "id": "scanned_0",
+    "kind": "pdf",
+    "category": "scanned_pdf",
+    "path": "data/generated/pdf_scanned/scanned_0.pdf",
+    "gt": "data/generated/gt/scanned_0.txt",
+    "pages": 2
+  },
+  {
+    "id": "scanned_1",
+    "kind": "pdf",
+    "category": "scanned_pdf",
+    "path": "data/generated/pdf_scanned/scanned_1.pdf",
+    "gt": "data/generated/gt/scanned_1.txt",
+    "pages": 2
+  },
+  {
+    "id": "scanned_2",
+    "kind": "pdf",
+    "category": "scanned_pdf",
+    "path": "data/generated/pdf_scanned/scanned_2.pdf",
+    "gt": "data/generated/gt/scanned_2.txt",
+    "pages": 2
+  },
+  {
+    "id": "pdf_single_0",
+    "kind": "pdf",
+    "category": "pdf_single",
+    "path": "data/generated/pdf_text/single_0.pdf",
+    "gt": "data/generated/gt/pdf_single_0.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_two_column_0",
+    "kind": "pdf",
+    "category": "pdf_two_column",
+    "path": "data/generated/pdf_text/two_column_0.pdf",
+    "gt": "data/generated/gt/pdf_two_column_0.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_table_0",
+    "kind": "pdf",
+    "category": "pdf_table",
+    "path": "data/generated/pdf_text/table_0.pdf",
+    "gt": "data/generated/gt/pdf_table_0.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_out_of_order_0",
+    "kind": "pdf",
+    "category": "pdf_out_of_order",
+    "path": "data/generated/pdf_text/out_of_order_0.pdf",
+    "gt": "data/generated/gt/pdf_out_of_order_0.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_char_positioned_0",
+    "kind": "pdf",
+    "category": "pdf_char_positioned",
+    "path": "data/generated/pdf_text/char_positioned_0.pdf",
+    "gt": "data/generated/gt/pdf_char_positioned_0.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_rotated_0",
+    "kind": "pdf",
+    "category": "pdf_rotated",
+    "path": "data/generated/pdf_text/rotated_0.pdf",
+    "gt": "data/generated/gt/pdf_rotated_0.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_single_1",
+    "kind": "pdf",
+    "category": "pdf_single",
+    "path": "data/generated/pdf_text/single_1.pdf",
+    "gt": "data/generated/gt/pdf_single_1.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_two_column_1",
+    "kind": "pdf",
+    "category": "pdf_two_column",
+    "path": "data/generated/pdf_text/two_column_1.pdf",
+    "gt": "data/generated/gt/pdf_two_column_1.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_table_1",
+    "kind": "pdf",
+    "category": "pdf_table",
+    "path": "data/generated/pdf_text/table_1.pdf",
+    "gt": "data/generated/gt/pdf_table_1.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_out_of_order_1",
+    "kind": "pdf",
+    "category": "pdf_out_of_order",
+    "path": "data/generated/pdf_text/out_of_order_1.pdf",
+    "gt": "data/generated/gt/pdf_out_of_order_1.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_char_positioned_1",
+    "kind": "pdf",
+    "category": "pdf_char_positioned",
+    "path": "data/generated/pdf_text/char_positioned_1.pdf",
+    "gt": "data/generated/gt/pdf_char_positioned_1.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_rotated_1",
+    "kind": "pdf",
+    "category": "pdf_rotated",
+    "path": "data/generated/pdf_text/rotated_1.pdf",
+    "gt": "data/generated/gt/pdf_rotated_1.txt",
+    "pages": 1
+  },
+  {
+    "id": "pdf_multipage",
+    "kind": "pdf",
+    "category": "pdf_multipage",
+    "path": "data/generated/pdf_text/multipage.pdf",
+    "gt": "data/generated/gt/pdf_multipage.txt",
+    "pages": 28
+  },
+  {
+    "id": "real_p1_150",
+    "kind": "image",
+    "category": "real_150dpi",
+    "path": "data/generated/real/u1t02_p1_150dpi.png",
+    "gt": "data/generated/gt/real_p1_150.txt"
+  },
+  {
+    "id": "real_p1_300",
+    "kind": "image",
+    "category": "real_300dpi",
+    "path": "data/generated/real/u1t02_p1_300dpi.png",
+    "gt": "data/generated/gt/real_p1_300.txt"
+  },
+  {
+    "id": "real_p2_150",
+    "kind": "image",
+    "category": "real_150dpi",
+    "path": "data/generated/real/u1t02_p2_150dpi.png",
+    "gt": "data/generated/gt/real_p2_150.txt"
+  },
+  {
+    "id": "real_p2_300",
+    "kind": "image",
+    "category": "real_300dpi",
+    "path": "data/generated/real/u1t02_p2_300dpi.png",
+    "gt": "data/generated/gt/real_p2_300.txt"
+  }
+]

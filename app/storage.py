@@ -16,6 +16,14 @@ class StorageError(Exception):
     """Raised when the object store is unreachable or misbehaves (transient)."""
 
 
+class ObjectMissingError(StorageError):
+    """The object does not exist (deleted or never written). Retrying cannot help."""
+
+
+def _is_missing(exc: ClientError) -> bool:
+    return exc.response.get("Error", {}).get("Code") in ("404", "NoSuchKey", "NotFound")
+
+
 def _drop_expect_on_empty_body(request, **_):
     # An empty PUT sent with "Expect: 100-continue" makes MinIO answer twice (100 + 200); the stray 200
     # stays in the keep-alive socket and desynchronises the *next* request (it hangs until read timeout).
@@ -62,7 +70,7 @@ def exists(bucket: str, key: str) -> bool:
         client(fast=True).head_object(Bucket=bucket, Key=key)
         return True
     except ClientError as exc:
-        if exc.response.get("Error", {}).get("Code") in ("404", "NoSuchKey", "NotFound"):
+        if _is_missing(exc):
             return False
         raise StorageError(str(exc)) from exc
     except BotoCoreError as exc:
@@ -81,7 +89,11 @@ def upload_file(path: str, bucket: str, key: str, content_type: str, metadata: d
 def download_file(bucket: str, key: str, path: str) -> None:
     try:
         client().download_file(bucket, key, path)
-    except (BotoCoreError, ClientError) as exc:
+    except ClientError as exc:
+        if _is_missing(exc):
+            raise ObjectMissingError(f"{bucket}/{key} does not exist") from exc
+        raise StorageError(str(exc)) from exc
+    except BotoCoreError as exc:
         raise StorageError(str(exc)) from exc
 
 
@@ -100,7 +112,11 @@ def get_object_stream(bucket: str, key: str):
     try:
         obj = client().get_object(Bucket=bucket, Key=key)
         return obj["Body"], obj.get("ContentLength"), obj.get("ContentType")
-    except (BotoCoreError, ClientError) as exc:
+    except ClientError as exc:
+        if _is_missing(exc):
+            raise ObjectMissingError(f"{bucket}/{key} does not exist") from exc
+        raise StorageError(str(exc)) from exc
+    except BotoCoreError as exc:
         raise StorageError(str(exc)) from exc
 
 

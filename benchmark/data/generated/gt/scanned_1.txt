@@ -1,0 +1,4 @@
+Los servicios reales rara vez procesan una solicitud de forma síncrona. ¿Qué ocurre cuando llegan más documentos de los que el sistema puede atender? La solución es aceptar el archivo, guardarlo y encolar el trabajo para procesarlo después.
+La facturación electrónica exige que cada comprobante incluya el RFC del emisor, la fecha de expedición, el régimen fiscal y el uso del CFDI. Los errores más comunes están en el código postal.
+Please send the signed contract to legal@example.com before Friday. If you have questions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.
+Real services rarely process a request synchronously. Documents arrive faster than they can be processed, and users cannot hold a connection open while heavy work runs in the background. A reliable design accepts the upload, stores it, queues the work and lets users track progress.

@@ -1,0 +1,4 @@
+Optical character recognition converts images of text into machine readable characters. Accuracy depends on resolution, contrast, skew and noise, so preprocessing often matters as much as the model.
+The warehouse received 1,250 units of product SKU-4471 on March 3, 2024. Quality control rejected 37 units because of damaged packaging, and the remaining stock was moved to aisle 14, shelf B.
+Please send the signed contract to legal@example.com before Friday. If you have questions about clause 7.2, call our office at +1 (415) 555-0199 between 9:00 and 17:30 Pacific time.
+Estimada señora Núñez: le confirmamos que su pedido número 88213 será entregado el próximo miércoles 12 de junio. Si necesita cambiar la dirección, escríbanos a atención@tienda.mx.

@@ -1,0 +1,74 @@
+{
+  "candidate": "docintel_layout",
+  "cold_start_s": null,
+  "first_call_s": null,
+  "peak_rss_mb": null,
+  "records": [
+    {
+      "id": "report_en",
+      "pages": 3,
+      "seconds": 35.59,
+      "service_pages": 3
+    },
+    {
+      "id": "informe_es",
+      "pages": 3,
+      "seconds": 7.07,
+      "service_pages": 3
+    },
+    {
+      "id": "invoice",
+      "pages": 1,
+      "seconds": 6.52,
+      "service_pages": 1
+    },
+    {
+      "id": "report_en_scanned",
+      "pages": 3,
+      "seconds": 44.75,
+      "service_pages": 3
+    },
+    {
+      "id": "invoice_scanned",
+      "pages": 1,
+      "seconds": 8.17,
+      "service_pages": 1
+    },
+    {
+      "id": "table_photo",
+      "pages": 1,
+      "seconds": 6.18,
+      "service_pages": 1
+    },
+    {
+      "id": "docx_plan_en",
+      "pages": 1,
+      "seconds": 0.07,
+      "service_pages": 1
+    },
+    {
+      "id": "docx_politica_es",
+      "pages": 1,
+      "seconds": 0.05,
+      "service_pages": 1
+    },
+    {
+      "id": "real_irs_fw9",
+      "pages": 6,
+      "seconds": 27.49,
+      "service_pages": 6
+    },
+    {
+      "id": "real_irs_p1",
+      "pages": 2,
+      "seconds": 8.65,
+      "service_pages": 2
+    },
+    {
+      "id": "real_irs_p15t_excerpt",
+      "pages": 6,
+      "seconds": 34.94,
+      "service_pages": 6
+    }
+  ]
+}

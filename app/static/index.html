@@ -18,6 +18,8 @@
   details summary { cursor: pointer; color: var(--ink-2); margin: 10px 0 6px; }
   .uploads { margin-top: 10px; font-size: 13px; }
   .uploads div { padding: 3px 0; }
+  .chunk { border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 8px; }
+  .chunk pre.text { margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -55,6 +57,18 @@
           </label>
           <label class="field">OCR engine
             <select id="engine"></select>
+          </label>
+          <label class="field">Pipeline
+            <select id="pipeline">
+              <option value="standard">standard (fast)</option>
+              <option value="layout">layout (tables in scans, slower)</option>
+            </select>
+          </label>
+          <label class="field">Chunk size (tokens)
+            <select id="chunkSize"><option>256</option><option selected>512</option><option>1024</option><option>2048</option></select>
+          </label>
+          <label class="field">Chunk overlap (tokens)
+            <select id="chunkOverlap"><option>0</option><option>32</option><option selected>64</option><option>128</option></select>
           </label>
           <label class="field">Client reference
             <input type="text" id="clientRef" placeholder="optional" maxlength="256">
@@ -103,6 +117,7 @@ const fmtDur = (s) => s == null ? "—" : s < 1 ? `${Math.round(s*1000)} ms` : s
 let selected = new URLSearchParams(location.search).get("job");
 let resultCache = {};
 let pageTab = "all";
+let outputTab = "markdown";
 
 async function api(path, opts) {
   const res = await fetch(path, opts);
@@ -124,6 +139,9 @@ async function loadFormats() {
   const langs = body.ocr.engines[body.ocr.default_engine] || [];
   const combos = [body.ocr.default_languages, ...langs.filter(l => l !== body.ocr.default_languages)];
   $("#language").innerHTML = combos.map(l => `<option>${esc(l)}</option>`).join("");
+  if (body.pipelines && !body.pipelines.layout.online) {
+    $("#pipeline").querySelector('option[value="layout"]').textContent = "layout (no workers online)";
+  }
 }
 
 // ---------------------------------------------------------------- upload
@@ -147,6 +165,9 @@ async function uploadFiles(files) {
     form.append("ocr_engine", $("#engine").value);
     form.append("extract_entities", $("#entities").checked);
     form.append("force", $("#force").checked);
+    form.append("chunk_size_tokens", $("#chunkSize").value);
+    form.append("pipeline", $("#pipeline").value);
+    form.append("chunk_overlap_tokens", $("#chunkOverlap").value);
     if ($("#clientRef").value) form.append("client_reference", $("#clientRef").value);
     try {
       const { ok, status, body } = await api("/v1/documents", { method: "POST", body: form });
@@ -208,10 +229,10 @@ async function refreshDetail(force = false) {
   if (!ok) { $("#detail").innerHTML = `<div class="alert error">${esc(job?.error?.message || "Job not found")}</div>`; return; }
   let result = resultCache[id];
   if (job.status === "SUCCEEDED" && !result) {
-    const r = await api(`/v1/jobs/${id}/result`);
+    const r = await api(`/v1/jobs/${id}/result?include_chunks=true`);
     if (r.ok) result = resultCache[id] = r.body;
   }
-  const key = [id, job.status, job.progress, job.stage_detail, (events || []).length, pageTab, !!result].join("|");
+  const key = [id, job.status, job.progress, job.stage_detail, (events || []).length, pageTab, outputTab, !!result].join("|");
   if (!force && key === lastRender) return;  // don't re-render (and collapse sections) when nothing changed
   lastRender = key;
   const scrollTop = $("#detail pre.text")?.scrollTop || 0;
@@ -235,9 +256,20 @@ function renderDetail(j, events, result) {
     const tabs = pages.length > 1 ? `<div class="tabs"><button class="${pageTab === "all" ? "on" : ""}" data-tab="all">All</button>${
       pages.map(p => `<button class="${pageTab == p.number ? "on" : ""}" data-tab="${p.number}" title="${esc(p.method)}${p.ocr_confidence != null ? ` · conf ${p.ocr_confidence}` : ""}">${p.number}${p.method.startsWith("ocr") ? "·ocr" : ""}</button>`).join("")}</div>` : "";
     const page = pageTab === "all" ? null : pages.find(p => p.number == pageTab);
-    const shown = page ? page.text : result.text;
     const pageInfo = page ? `<div class="small muted" style="margin-bottom:6px">Page ${page.number} · ${esc(page.method)}${page.ocr_confidence != null ? ` · OCR confidence ${page.ocr_confidence}` : ""} · ${page.char_count} chars · ${page.duration_ms ?? "?"} ms</div>` : "";
-    text = `<h2 style="margin-top:14px">Extracted text</h2>${tabs}${pageInfo}<pre class="text">${esc(shown) || '<span class="muted">(empty)</span>'}</pre>`;
+    const outTabs = `<div class="tabs">${[["markdown", "Markdown (LLM)"], ["text", "Plain text"], ["chunks", `Chunks (${(result.chunks || []).length})`]]
+      .map(([k, label]) => `<button class="${outputTab === k ? "on" : ""}" data-out="${k}">${label}</button>`).join("")}</div>`;
+    let body;
+    if (outputTab === "chunks") {
+      const chunks = result.chunks || [];
+      body = chunks.length ? `<div class="chunks">${chunks.map(c => `<div class="chunk">
+          <div class="small muted">#${c.index} · ${c.token_count} tokens · page ${c.page_start}${c.page_end !== c.page_start ? `–${c.page_end}` : ""}${c.heading_path.length ? ` · ${esc(c.heading_path.join(" › "))}` : ""} · ${esc(c.kinds.join(", "))}${c.overlap_tokens ? ` · ${c.overlap_tokens} overlap` : ""}</div>
+          <pre class="text" style="max-height:220px">${esc(c.text)}</pre></div>`).join("")}</div>` : `<p class="muted">No chunks (empty document).</p>`;
+    } else {
+      const shown = outputTab === "markdown" ? (page ? page.markdown : result.markdown) : (page ? page.text : result.text);
+      body = `${tabs}${pageInfo}<pre class="text">${esc(shown) || '<span class="muted">(empty)</span>'}</pre>`;
+    }
+    text = `<h2 style="margin-top:14px">Extracted content</h2>${outTabs}${body}`;
   }
 
   const icon = { info: "•", warning: "⚠", error: "✕" };
@@ -251,7 +283,7 @@ function renderDetail(j, events, result) {
     ${j.warnings.length ? `<div class="alert warning"><strong>⚠ ${j.warnings.length} warning${j.warnings.length > 1 ? "s" : ""}</strong><ul>${j.warnings.map(w => `<li>${esc(w)}</li>`).join("")}</ul></div>` : ""}
     ${j.cached_from_job_id ? `<div class="alert info"><strong>ℹ</strong>Result reused from job <a href="#" data-job="${j.cached_from_job_id}">${j.cached_from_job_id.slice(0, 8)}</a> (identical file and options).</div>` : ""}
     <div class="actions">
-      ${j.status === "SUCCEEDED" ? `<a class="btn" href="${j.links.text}?download=true">⬇ .txt</a><a class="btn" href="${j.links.result}" target="_blank">{ } JSON</a>` : ""}
+      ${j.status === "SUCCEEDED" ? `<a class="btn" href="${j.links.markdown}?download=true">⬇ .md</a><a class="btn" href="${j.links.chunks}?format=jsonl&download=true">⬇ chunks.jsonl</a><a class="btn" href="${j.links.text}?download=true">⬇ .txt</a><a class="btn" href="${j.links.result}?include_chunks=true" target="_blank">{ } JSON</a>` : ""}
       <a class="btn" href="${j.links.document}" target="_blank">Original</a>
       ${!j.is_terminal ? `<button data-action="cancel">Cancel</button>` : ""}
       ${["FAILED", "CANCELLED"].includes(j.status) ? `<button data-action="retry">Retry</button>` : ""}
@@ -262,7 +294,7 @@ function renderDetail(j, events, result) {
       <dt>Options</dt><dd>${Object.entries(j.options).map(([k, v]) => `<span class="chip">${esc(k)}=${esc(v)}</span>`).join("")}</dd>
       <dt>Queue</dt><dd>${esc(j.queue)} · attempt ${j.attempts}/${j.max_attempts}</dd>
       <dt>Timing</dt><dd>waited ${fmtDur(j.queue_wait_s)} · processed in ${fmtDur(j.duration_s)}</dd>
-      ${result ? `<dt>Result</dt><dd>${stats.page_count} page(s) · ${stats.word_count?.toLocaleString()} words · ${stats.char_count?.toLocaleString()} chars · language ${esc(lang)}${stats.mean_ocr_confidence != null ? ` · OCR confidence ${stats.mean_ocr_confidence}` : ""}</dd>` : ""}
+      ${result ? `<dt>Result</dt><dd>${stats.page_count} page(s) · ${stats.word_count?.toLocaleString()} words · ${stats.char_count?.toLocaleString()} chars · ${stats.token_count?.toLocaleString() ?? "?"} tokens · ${stats.chunk_count ?? 0} chunks · ${stats.tables ?? 0} tables · language ${esc(lang)}${stats.mean_ocr_confidence != null ? ` · OCR confidence ${stats.mean_ocr_confidence}` : ""}</dd>` : ""}
       ${j.client_reference ? `<dt>Reference</dt><dd>${esc(j.client_reference)}</dd>` : ""}
     </dl>
     ${entities ? `<details open><summary>Entities</summary><dl class="kv">${entities}</dl></details>` : ""}
@@ -276,6 +308,8 @@ function renderDetail(j, events, result) {
 $("#detail").onclick = async (e) => {
   const tab = e.target.dataset?.tab;
   if (tab) { pageTab = tab; refreshDetail(true); return; }
+  const out = e.target.dataset?.out;
+  if (out) { outputTab = out; refreshDetail(true); return; }
   const jobLink = e.target.dataset?.job;
   if (jobLink) { e.preventDefault(); selectJob(jobLink); return; }
   const action = e.target.dataset?.action;

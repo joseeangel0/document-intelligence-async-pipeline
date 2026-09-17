@@ -18,7 +18,7 @@ from app.worker.celery_app import celery_app
 log = logging.getLogger(__name__)
 
 PROCESS_TASK = "docintel.process_document"
-QUEUES = ("light", "heavy")
+QUEUES = ("light", "heavy", "layout")
 
 
 def dispatch(session, job: Job, reason: str = "queued", countdown: int | None = None) -> None:
@@ -144,7 +144,16 @@ def recover_jobs() -> dict:
         ).all()
         for job in stale:
             silent_for = int((now - (job.heartbeat_at or job.started_at or job.created_at)).total_seconds())
-            if job.attempts >= job.max_attempts:
+            if job.cancel_requested:
+                # The user asked to cancel and the worker died before reaching a checkpoint: honour the request
+                # instead of re-queueing a job that no worker would ever claim.
+                job.status, job.stage, job.stage_detail, job.finished_at = JobStatus.CANCELLED, "cancelled", None, now
+                add_event(session, job.id, "cancelled",
+                          f"Cancelled: cancellation was requested and the worker stopped responding "
+                          f"(last heartbeat {silent_for}s ago).", level="warning")
+                notify_terminal(job)
+                stats["cancelled"] = stats.get("cancelled", 0) + 1
+            elif job.attempts >= job.max_attempts:
                 mark_failed(
                     session, job, "WORKER_LOST",
                     f"The worker processing this document stopped responding (last heartbeat {silent_for}s ago) "

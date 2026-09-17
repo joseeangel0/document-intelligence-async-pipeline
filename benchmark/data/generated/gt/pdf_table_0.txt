@@ -1,0 +1,8 @@
+Factura / Invoice INV-20931
+Description Qty Unit price Amount
+Consulting services (April) 12 $85.00 $1,020.00
+Cloud hosting - standard plan 1 $249.99 $249.99
+Soporte técnico prioritario 5 $64.75 $323.75
+USB-C docking station 2 $139.90 $279.80
+Data migration fee 1 $780.00 $780.00
+Licencia de software anual 3 $1,200.50 $3,601.50
