@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/joseeangel0/document-intelligence-async-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/joseeangel0/document-intelligence-async-pipeline/actions/workflows/ci.yml)
 
+**Team:** Jose Angel Pech Xool · Valeria Nicol Hernandez León · Lorena Danae Perez Lopez · Julio Cesar de Aquino Castellanos · Gustavo Fuentes Marin · Leonora Horta Sanchez
+
 This service turns the files companies handle every day (scanned invoices, PDFs, Word, Excel, PowerPoint, HTML, e-mails with
 attachments) into **LLM-ready content**: plain text, structured **Markdown** and **retrieval chunks** that keep their page and section.
 It runs asynchronously: push a document, get a job id back immediately, then poll or receive a webhook.
